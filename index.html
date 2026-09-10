@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>Tool Vault</title>
+<meta name="theme-color" content="#F3F1EC" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F3F1EC;
+  --surface: #FFFFFF;
+  --surface-sunken: #EBE8E2;
+  --text: #201D19;
+  --text-secondary: #77726A;
+  --text-faint: #A39D93;
+  --accent: #D9560A;
+  --accent-dark: #B8460A;
+  --accent-wash: #FBE7D9;
+  --border: #E1DDD4;
+  --success: #2F7D4F;
+  --success-wash: #E3F1E8;
+  --danger: #C23B2C;
+  --danger-wash: #FAE5E1;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow: 0 1px 2px rgba(32,29,25,0.06), 0 4px 16px rgba(32,29,25,0.05);
+  --font-display: 'Archivo', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+button {
+  font-family: inherit;
+}
+
+a { color: inherit; }
+
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  padding: 18px 20px 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar .back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--text);
+}
+
+.topbar h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  margin: 4px 0 2px;
+}
+.wordmark span { color: var(--accent); }
+
+.tagline {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 0 0 18px;
+}
+
+/* ---------- Main content ---------- */
+.content {
+  flex: 1;
+  padding: 0 20px 100px;
+  overflow-y: auto;
+}
+
+/* ---------- Search ---------- */
+.search-wrap {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.search-input {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 16px 16px 16px 46px;
+  font-size: 16px;
+  font-family: var(--font-body);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--text-faint); }
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+/* ---------- Stats row ---------- */
+.stats-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stat-pill {
+  flex: 1;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+.stat-pill .num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text);
+}
+.stat-pill .num.warn { color: var(--accent); }
+.stat-pill .label {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ---------- Quick actions ---------- */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.quick-action {
+  background: var(--surface);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  padding: 14px 6px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+.quick-action .qa-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent-wash);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quick-action span.qa-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ---------- Section headers ---------- */
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  margin: 22px 0 10px;
+}
+
+/* ---------- Item cards ---------- */
+.item-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.item-card .cat-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-wash);
+  color: var(--accent-dark);
+}
+.item-card .item-info { flex: 1; min-width: 0; }
+.item-card .item-name {
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-card .item-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.item-card .item-qty {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.item-card.missing { opacity: 0.6; }
+.badge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.badge.unknown { background: var(--danger-wash); color: var(--danger); }
+.badge.temp { background: var(--accent-wash); color: var(--accent-dark); }
+
+/* ---------- Location rows ---------- */
+.loc-row {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.loc-row .loc-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.loc-row .loc-name { font-weight: 600; font-size: 15px; }
+.loc-row .loc-sub { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; }
+.loc-row .chev { color: var(--text-faint); flex-shrink: 0; }
+
+.breadcrumb {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.breadcrumb .crumb {
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.breadcrumb .crumb:hover { color: var(--accent-dark); }
+.breadcrumb .crumb.current { color: var(--text); font-weight: 600; }
+.breadcrumb .sep { color: var(--text-faint); }
+
+/* ---------- Empty state ---------- */
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-secondary);
+}
+.empty-state .empty-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+}
+.empty-state h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  margin: 0 0 4px;
+  color: var(--text);
+}
+.empty-state p { font-size: 13.5px; margin: 0; }
+
+/* ---------- Bottom nav ---------- */
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  z-index: 30;
+}
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 0;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+.nav-btn.active { color: var(--accent-dark); }
+.nav-btn .nav-label { font-size: 10.5px; font-weight: 600; }
+.nav-btn.fab {
+  position: relative;
+  top: -18px;
+}
+.nav-btn.fab .fab-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(217,86,10,0.4);
+}
+.nav-btn.fab .nav-label { color: var(--text-secondary); }
+
+/* ---------- Forms ---------- */
+.field-group { margin-bottom: 16px; }
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: block;
+}
+.field-input, .field-select, .field-textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 13px 14px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  color: var(--text);
+  outline: none;
+}
+.field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--accent); }
+.field-textarea { resize: vertical; min-height: 70px; }
+.field-row { display: flex; gap: 10px; }
+.field-row .field-group { flex: 1; }
+
+.category-picker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.cat-chip {
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 12px 4px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+.cat-chip.selected {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent-dark);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 13px 14px;
+  margin-bottom: 16px;
+}
+.toggle-row .toggle-label { font-size: 14px; font-weight: 600; }
+.toggle-row .toggle-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.switch {
+  width: 44px;
+  height: 26px;
+  border-radius: 14px;
+  background: var(--surface-sunken);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+.switch.on { background: var(--accent); }
+.switch::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px;
+  left: 3px;
+  transition: left 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.switch.on::after { left: 21px; }
+
+details.optional-fields {
+  margin-bottom: 16px;
+}
+details.optional-fields summary {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  cursor: pointer;
+  padding: 6px 0;
+  list-style: none;
+}
+details.optional-fields summary::-webkit-details-marker { display: none; }
+details.optional-fields[open] summary { margin-bottom: 6px; }
+
+.btn-primary {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 15px;
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+.btn-primary:active { background: var(--accent-dark); }
+.btn-secondary {
+  width: 100%;
+  background: var(--surface);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 15px;
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  margin-top: 10px;
+}
+.btn-danger-text {
+  width: 100%;
+  background: none;
+  color: var(--danger);
+  border: none;
+  padding: 14px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  margin-top: 6px;
+}
+
+/* ---------- Duplicate warning ---------- */
+.dup-warning {
+  background: var(--accent-wash);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.dup-warning .dup-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--accent-dark);
+  margin-bottom: 8px;
+}
+.dup-item {
+  font-size: 13.5px;
+  color: var(--text);
+  padding: 6px 0;
+  border-top: 1px solid rgba(217,86,10,0.15);
+}
+.dup-item:first-child { border-top: none; }
+.dup-item .dup-loc { color: var(--text-secondary); font-size: 12px; }
+
+/* ---------- Item detail ---------- */
+.detail-hero {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.detail-hero .detail-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.detail-hero .detail-brand { color: var(--text-secondary); font-size: 14px; margin-bottom: 14px; }
+.detail-stats { display: flex; gap: 10px; margin-bottom: 4px; }
+.detail-stat {
+  flex: 1;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.detail-stat .ds-label { font-size: 11px; color: var(--text-secondary); }
+.detail-stat .ds-val { font-weight: 700; font-size: 15px; margin-top: 2px; }
+
+.info-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.info-card .ic-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+  border-top: 1px solid var(--border);
+}
+.spec-row:first-child { border-top: none; }
+.spec-row .spec-key { color: var(--text-secondary); }
+.spec-row .spec-val { font-weight: 600; }
+
+.action-row { display: flex; gap: 10px; margin-top: 4px; }
+.action-row .btn-primary, .action-row .btn-secondary { margin-top: 0; }
+
+/* ---------- Modal / sheet ---------- */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(32,29,25,0.45);
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sheet {
+  background: var(--bg);
+  width: 100%;
+  max-width: 480px;
+  border-radius: 22px 22px 0 0;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 10px 20px 28px;
+  animation: sheet-up 0.2s ease;
+}
+@keyframes sheet-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 8px auto 16px;
+}
+.sheet-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.sheet-option {
+  padding: 14px 4px;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sheet-option:first-child { border-top: none; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 13.5px;
+  font-weight: 600;
+  z-index: 100;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  max-width: 90%;
+  text-align: center;
+  animation: toast-in 0.2s ease;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ---------- QR ---------- */
+.qr-box {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+#qr-reader {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-faint);
+  font-size: 14px;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+.check-row:first-child { border-top: none; }
+.check-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.check-circle.checked {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+.check-row .check-name { flex: 1; font-size: 14.5px; }
+.check-row.missing .check-name { color: var(--danger); text-decoration: line-through; }
+
+</style>
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <div id="screen" class="content" style="padding-top:0;"></div>
+    <nav class="bottom-nav">
+      <button class="nav-btn" data-nav="home">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-btn" data-nav="locations">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.1 7-12a7 7 0 0 0-14 0c0 4.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <span class="nav-label">Locations</span>
+      </button>
+      <button class="nav-btn fab" data-nav="add">
+        <span class="fab-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
+      </button>
+      <button class="nav-btn" data-nav="scan">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
+        <span class="nav-label">Scan</span>
+      </button>
+      <button class="nav-btn" data-nav="unknown">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.7-2 3.5" /><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/></svg>
+        <span class="nav-label">Missing</span>
+      </button>
+    </nav>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/davidshimjs-qrcodejs/0.0.2/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  
+<script type="module">
+const firebaseConfig = {
+  apiKey: "AIzaSyAPlz-NgGlnPCGs23qLAtATtS8nBtQtsZk",
+  authDomain: "tool-vault-886aa.firebaseapp.com",
+  projectId: "tool-vault-886aa",
+  storageBucket: "tool-vault-886aa.firebasestorage.app",
+  messagingSenderId: "1072804091036",
+  appId: "1:1072804091036:web:4e687fd4fd4b1addc70959",
+  measurementId: "G-KK29XZ4WHH"
+};
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc,
+  onSnapshot, serverTimestamp, arrayUnion
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const itemsCol = collection(db, 'items');
+const locationsCol = collection(db, 'locations');
+
+/* ---------------- State ---------------- */
+const state = {
+  items: [],
+  locations: [],
+  loaded: { items: false, locations: false },
+  screen: 'home',
+  params: {},
+  searchQuery: ''
+};
+
+const screenEl = document.getElementById('screen');
+
+/* ---------------- Icons ---------------- */
+const ICONS = {
+  search: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`,
+  chev: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
+  back: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>`,
+  powerTool: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5 21 9l-3 3-6.5-6.5 3-3ZM11 6 3 14l3 7 8-8"/></svg>`,
+  handTool: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 2 14l3 3L17 5Z"/><path d="m14 6 4 4"/></svg>`,
+  bit: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h13l5 5-2 2-5-5"/><path d="m16 12 5-5-2-2-5 5"/></svg>`,
+  consumable: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="14" rx="1.5"/><path d="M9 7V4h6v3"/></svg>`,
+  kit: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="11" rx="1.5"/><path d="M8 9V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/></svg>`,
+  pin: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.1 7-12a7 7 0 0 0-14 0c0 4.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>`,
+  box: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>`,
+  qr: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM19 14h2v2h-2zM14 19h2v2h-2zM19 19h2v2h-2z"/></svg>`,
+  plus: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`,
+  move: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9V5h4M19 9V5h-4M5 15v4h4M19 15v4h-4"/></svg>`,
+  edit: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
+  check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,
+  question: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.7-2 3.5" /><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/></svg>`
+};
+
+const CATEGORIES = [
+  { id: 'power', label: 'Power Tool', icon: 'powerTool' },
+  { id: 'hand', label: 'Hand Tool', icon: 'handTool' },
+  { id: 'bit', label: 'Bit / Accessory', icon: 'bit' },
+  { id: 'consumable', label: 'Consumable', icon: 'consumable' },
+  { id: 'kit', label: 'Kit / Set', icon: 'kit' },
+];
+
+function catMeta(catId) {
+  return CATEGORIES.find(c => c.id === catId) || CATEGORIES[0];
+}
+
+/* ---------------- Utilities ---------------- */
+function esc(str) {
+  if (str === undefined || str === null) return '';
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
+
+function go(screen, params = {}) {
+  state.screen = screen;
+  state.params = params;
+  window.scrollTo(0, 0);
+  render();
+}
+
+function locationById(id) {
+  return state.locations.find(l => l.id === id);
+}
+
+// Full breadcrumb path array from root to this location (inclusive)
+function pathTo(locId) {
+  const path = [];
+  let current = locationById(locId);
+  let guard = 0;
+  while (current && guard < 20) {
+    path.unshift(current);
+    current = current.parentId ? locationById(current.parentId) : null;
+    guard++;
+  }
+  return path;
+}
+
+function pathLabel(locId, sep = ' → ') {
+  if (!locId) return 'Unknown location';
+  const path = pathTo(locId);
+  if (!path.length) return 'Unknown location';
+  return path.map(l => l.name).join(sep);
+}
+
+function directChildren(locId) {
+  return state.locations.filter(l => (l.parentId || null) === (locId || null));
+}
+
+function itemsInLocation(locId) {
+  return state.items.filter(i => i.effectiveLocationId === locId && !i.missing);
+}
+
+// Recursively gather all descendant location ids (including self)
+// Guarded against cycles (shouldn't exist, but a corrupted move could create one)
+function descendantIds(locId, guard) {
+  guard = guard || 0;
+  if (guard > 40) return [locId];
+  const out = [locId];
+  const children = state.locations.filter(l => l.parentId === locId);
+  children.forEach(c => out.push(...descendantIds(c.id, guard + 1)));
+  return out;
+}
+
+// True if any item — home OR temporary — currently references this location
+function locationHasAnyItemRef(locId) {
+  return state.items.some(i => i.locationId === locId || i.tempLocationId === locId);
+}
+
+function fmtSpecs(item) {
+  const parts = [];
+  if (item.specSize) parts.push(item.specSize);
+  if (item.specShank) parts.push(`${item.specShank} shank`);
+  return parts.join(' · ');
+}
+
+function fuzzyMatch(text, query) {
+  if (!text) return false;
+  const t = text.toLowerCase();
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  return words.every(w => t.includes(w));
+}
+
+function searchItems(query) {
+  if (!query.trim()) return [];
+  const q = query.trim();
+  return state.items.filter(i => {
+    const hay = [i.name, i.brand, catMeta(i.category).label, i.specSize, i.specModel, i.specDiameter, i.specShank, i.notes].filter(Boolean).join(' ');
+    return fuzzyMatch(hay, q) || q.toLowerCase().split(/\s+/).some(w => hay.toLowerCase().includes(w));
+  }).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+}
+
+function findPossibleDuplicates(name, brand, excludeId) {
+  if (!name || name.trim().length < 3) return [];
+  const nameWords = name.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+  return state.items.filter(i => {
+    if (i.id === excludeId) return false;
+    const iName = (i.name || '').toLowerCase();
+    const overlap = nameWords.filter(w => iName.includes(w)).length;
+    const brandMatch = brand && i.brand && i.brand.toLowerCase() === brand.toLowerCase();
+    return overlap >= Math.max(1, Math.ceil(nameWords.length * 0.6)) || (brandMatch && overlap >= 1);
+  });
+}
+
+/* ---------------- Data sync ---------------- */
+function computeEffectiveLocations() {
+  state.items.forEach(i => {
+    i.effectiveLocationId = i.tempLocationId || i.locationId || null;
+  });
+}
+
+onSnapshot(itemsCol, snap => {
+  state.items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  computeEffectiveLocations();
+  state.loaded.items = true;
+  render();
+}, err => console.error('items snapshot error', err));
+
+onSnapshot(locationsCol, snap => {
+  state.locations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  computeEffectiveLocations();
+  state.loaded.locations = true;
+  render();
+}, err => console.error('locations snapshot error', err));
+
+/* ---------------- Firestore actions ---------------- */
+async function addItem(data) {
+  await addDoc(itemsCol, {
+    ...data,
+    missing: false,
+    history: [{ note: 'Added', at: new Date().toISOString() }],
+    createdAt: serverTimestamp()
+  });
+}
+
+async function updateItem(id, data) {
+  await updateDoc(doc(db, 'items', id), data);
+}
+
+async function deleteItem(id) {
+  await deleteDoc(doc(db, 'items', id));
+}
+
+async function addLocation(data) {
+  const ref = await addDoc(locationsCol, { ...data, createdAt: serverTimestamp() });
+  return ref.id;
+}
+
+async function updateLocation(id, data) {
+  await updateDoc(doc(db, 'locations', id), data);
+}
+
+async function deleteLocation(id) {
+  await deleteDoc(doc(db, 'locations', id));
+}
+
+async function moveItemPermanent(item, newLocId) {
+  await updateItem(item.id, {
+    locationId: newLocId,
+    tempLocationId: null,
+    history: arrayUnion({ note: `Moved to ${pathLabel(newLocId)}`, at: new Date().toISOString() })
+  });
+  toast('Moved');
+}
+
+async function moveItemTemp(item, newLocId) {
+  await updateItem(item.id, {
+    tempLocationId: newLocId,
+    history: arrayUnion({ note: `Temporarily moved to ${pathLabel(newLocId)}`, at: new Date().toISOString() })
+  });
+  toast('Marked as temporarily moved');
+}
+
+async function returnItemHome(item) {
+  await updateItem(item.id, {
+    tempLocationId: null,
+    history: arrayUnion({ note: `Returned home to ${pathLabel(item.locationId)}`, at: new Date().toISOString() })
+  });
+  toast('Returned home');
+}
+
+async function moveLocation(locId, newParentId) {
+  await updateLocation(locId, { parentId: newParentId || null });
+  toast('Location moved — everything inside moved with it');
+}
+
+/* ================= RENDER ROOT ================= */
+function render() {
+  if (!state.loaded.items || !state.loaded.locations) {
+    screenEl.innerHTML = `<div class="loading-state">Loading your inventory…</div>`;
+    return;
+  }
+  updateNav();
+  const s = state.screen;
+  if (s === 'home') return renderHome();
+  if (s === 'search') return renderSearch();
+  if (s === 'locations') return renderLocations();
+  if (s === 'locationDetail') return renderLocationDetail();
+  if (s === 'itemDetail') return renderItemDetail();
+  if (s === 'addItem') return renderItemForm();
+  if (s === 'editItem') return renderItemForm(true);
+  if (s === 'addLocation') return renderLocationForm();
+  if (s === 'editLocation') return renderLocationForm(true);
+  if (s === 'scan') return renderScan();
+  if (s === 'unknown') return renderUnknown();
+  if (s === 'missing') return renderMissing();
+  if (s === 'inventoryCheck') return renderInventoryCheck();
+  renderHome();
+}
+
+function updateNav() {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const map = { home: 'home', search: 'home', locations: 'locations', locationDetail: 'locations', addItem: 'add', addLocation: 'add', scan: 'scan', unknown: 'unknown' };
+  const active = map[state.screen];
+  if (active) {
+    const btn = document.querySelector(`.nav-btn[data-nav="${active}"]`);
+    if (btn) btn.classList.add('active');
+  }
+}
+
+function topbar({ title, back, backTo }) {
+  return `<div class="topbar">
+    ${back ? `<button class="back-btn" data-back="${backTo || ''}">${ICONS.back}</button>` : ''}
+    <h1>${esc(title)}</h1>
+  </div>`;
+}
+
+/* ================= HOME ================= */
+function renderHome() {
+  const totalItems = state.items.filter(i => !i.missing).length;
+  const totalLocations = state.locations.length;
+  const unknownCount = state.items.filter(i => !i.locationId && !i.missing).length;
+  const recent = [...state.items].filter(i => !i.missing).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)).slice(0, 6);
+
+  screenEl.innerHTML = `
+    <div style="padding-top:20px;">
+      <div class="wordmark">Tool<span>Vault</span></div>
+      <p class="tagline">Know what you own. Know where it is.</p>
+
+      <div class="search-wrap">
+        <span class="search-icon">${ICONS.search}</span>
+        <input id="home-search" class="search-input" placeholder="Search tools, bits, blades, accessories…" autocomplete="off" value="${esc(state.searchQuery)}" />
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-pill"><div class="num">${totalItems}</div><div class="label">Items</div></div>
+        <div class="stat-pill"><div class="num">${totalLocations}</div><div class="label">Locations</div></div>
+        <div class="stat-pill"><div class="num ${unknownCount ? 'warn' : ''}">${unknownCount}</div><div class="label">Unknown spot</div></div>
+      </div>
+
+      <div class="quick-actions">
+        <button class="quick-action" data-go="addItem"><span class="qa-icon">${ICONS.plus}</span><span class="qa-label">Add Item</span></button>
+        <button class="quick-action" data-go="scan"><span class="qa-icon">${ICONS.qr}</span><span class="qa-label">Scan QR</span></button>
+        <button class="quick-action" data-go="locations"><span class="qa-icon">${ICONS.pin}</span><span class="qa-label">Locations</span></button>
+        <button class="quick-action" data-go="addLocation"><span class="qa-icon">${ICONS.box}</span><span class="qa-label">New Container</span></button>
+      </div>
+
+      <div class="section-title">Recently added</div>
+      ${recent.length ? recent.map(itemCardHtml).join('') : emptyState('No items yet', 'Add your first tool to get started.')}
+    </div>
+  `;
+
+  document.getElementById('home-search').addEventListener('input', (e) => {
+    state.searchQuery = e.target.value;
+    if (state.searchQuery.trim()) go('search');
+  });
+  document.getElementById('home-search').addEventListener('focus', () => {
+    if (state.searchQuery.trim()) go('search');
+  });
+  bindCommon();
+}
+
+function itemCardHtml(item) {
+  const cat = catMeta(item.category);
+  const locLabel = item.missing ? `Last seen: ${pathLabel(item.locationId)}` : (item.effectiveLocationId ? pathLabel(item.effectiveLocationId) : 'Unknown location');
+  const tempBadge = (!item.missing && item.tempLocationId) ? `<span class="badge temp">TEMP</span>` : '';
+  const unknownBadge = (!item.missing && !item.locationId) ? `<span class="badge unknown">UNKNOWN</span>` : '';
+  return `
+    <div class="item-card ${item.missing ? 'missing' : ''}" data-go="itemDetail" data-id="${item.id}">
+      <div class="cat-dot">${ICONS[cat.icon]}</div>
+      <div class="item-info">
+        <div class="item-name">${esc(item.name)}${tempBadge}${unknownBadge}</div>
+        <div class="item-meta">${esc(item.brand || cat.label)} · ${esc(locLabel)}</div>
+      </div>
+      <div class="item-qty">×${item.quantity || 1}</div>
+    </div>`;
+}
+
+function emptyState(title, sub, iconSvg) {
+  return `<div class="empty-state">
+    <div class="empty-icon">${iconSvg || ICONS.box}</div>
+    <h3>${esc(title)}</h3>
+    <p>${esc(sub)}</p>
+  </div>`;
+}
+
+/* ================= SEARCH ================= */
+function renderSearch() {
+  const results = searchItems(state.searchQuery);
+  screenEl.innerHTML = `
+    ${topbar({ title: 'Search', back: true, backTo: 'home' })}
+    <div class="search-wrap">
+      <span class="search-icon">${ICONS.search}</span>
+      <input id="search-input" class="search-input" placeholder="Search tools, bits, blades, accessories…" autocomplete="off" value="${esc(state.searchQuery)}" />
+    </div>
+    ${state.searchQuery.trim() ? `
+      <div class="section-title">${results.length} result${results.length === 1 ? '' : 's'}</div>
+      ${results.length ? results.map(itemCardHtml).join('') : emptyState('Nothing found', 'Try different words, or add it as a new item.', ICONS.search)}
+    ` : ''}
+  `;
+  const input = document.getElementById('search-input');
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+  input.addEventListener('input', (e) => {
+    state.searchQuery = e.target.value;
+    render();
+    document.getElementById('search-input').focus();
+  });
+  bindCommon();
+}
+
+/* ================= LOCATIONS ================= */
+function renderLocations() {
+  const roots = directChildren(null);
+  screenEl.innerHTML = `
+    ${topbar({ title: 'Locations' })}
+    <button class="quick-action" style="width:100%;flex-direction:row;justify-content:center;padding:14px;margin-bottom:18px;" data-go="addLocation">
+      <span class="qa-icon">${ICONS.plus}</span><span class="qa-label" style="font-size:13px;">Add Top-Level Location</span>
+    </button>
+    ${roots.length ? roots.map(locRowHtml).join('') : emptyState('No locations yet', 'Add a place like "Parents\' House" or "Condo" to start organizing.', ICONS.pin)}
+  `;
+  bindCommon();
+}
+
+function locRowHtml(loc) {
+  const childLocs = directChildren(loc.id);
+  const childItems = itemsInLocation(loc.id);
+  const subParts = [];
+  if (childLocs.length) subParts.push(`${childLocs.length} inside`);
+  if (childItems.length) subParts.push(`${childItems.length} item${childItems.length === 1 ? '' : 's'}`);
+  return `
+    <div class="loc-row" data-go="locationDetail" data-id="${loc.id}">
+      <div class="loc-icon">${ICONS[loc.kind === 'container' ? 'box' : 'pin']}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="loc-name">${esc(loc.name)}</div>
+        <div class="loc-sub">${subParts.length ? esc(subParts.join(' · ')) : 'Empty'}</div>
+      </div>
+      <span class="chev">${ICONS.chev}</span>
+    </div>`;
+}
+
+function renderLocationDetail() {
+  const loc = locationById(state.params.id);
+  if (!loc) return go('locations');
+  const path = pathTo(loc.id);
+  const childLocs = directChildren(loc.id);
+  const childItems = itemsInLocation(loc.id);
+
+  screenEl.innerHTML = `
+    ${topbar({ title: loc.name, back: true, backTo: loc.parentId ? `locationDetail:${loc.parentId}` : 'locations' })}
+    <div class="breadcrumb">
+      ${path.map((p, idx) => `
+        ${idx > 0 ? `<span class="sep">→</span>` : ''}
+        <span class="crumb ${idx === path.length - 1 ? 'current' : ''}" data-go="locationDetail" data-id="${p.id}">${esc(p.name)}</span>
+      `).join('')}
+    </div>
+
+    <div class="action-row" style="margin-bottom:18px;">
+      <button class="btn-secondary" data-open-sheet="locationActions" data-id="${loc.id}">Actions</button>
+      <button class="btn-primary" data-show-qr="${loc.id}">Show QR</button>
+    </div>
+
+    ${childLocs.length ? `<div class="section-title">Inside this location</div>${childLocs.map(locRowHtml).join('')}` : ''}
+
+    <div class="section-title">Items here (${childItems.length})</div>
+    <button class="quick-action" style="width:100%;flex-direction:row;justify-content:center;padding:12px;margin-bottom:12px;" data-go="addItem" data-preset-loc="${loc.id}">
+      <span class="qa-icon">${ICONS.plus}</span><span class="qa-label" style="font-size:13px;">Add Item Here</span>
+    </button>
+    ${childItems.length ? childItems.map(itemCardHtml).join('') : emptyState('Nothing stored here yet', 'Add an item or bring a container into this location.')}
+
+    <button class="quick-action" style="width:100%;flex-direction:row;justify-content:center;padding:12px;margin-top:6px;" data-go="inventoryCheck" data-id="${loc.id}">
+      <span class="qa-icon">${ICONS.check}</span><span class="qa-label" style="font-size:13px;">Run Inventory Check</span>
+    </button>
+  `;
+  bindCommon();
+}
+
+/* ================= ITEM DETAIL ================= */
+function renderItemDetail() {
+  const item = state.items.find(i => i.id === state.params.id);
+  if (!item) return go('home');
+  const cat = catMeta(item.category);
+  const isTemp = !!item.tempLocationId;
+  const specs = [];
+  if (item.specModel) specs.push(['Model', item.specModel]);
+  if (item.specDiameter) specs.push(['Diameter', item.specDiameter]);
+  if (item.specSize) specs.push(['Size', item.specSize]);
+  if (item.specShank) specs.push(['Shank', item.specShank]);
+  if (item.specLength) specs.push(['Length', item.specLength]);
+  if (item.purchaseDate) specs.push(['Purchased', item.purchaseDate]);
+  if (item.purchasePrice) specs.push(['Price', `$${item.purchasePrice}`]);
+  if (item.store) specs.push(['Store', item.store]);
+
+  screenEl.innerHTML = `
+    ${topbar({ title: 'Item', back: true, backTo: 'home' })}
+
+    <div class="detail-hero">
+      <div class="detail-name">${esc(item.name)} ${item.missing ? '<span class="badge unknown">MISSING</span>' : ''}</div>
+      <div class="detail-brand">${esc(item.brand || 'No brand set')} · ${esc(cat.label)}</div>
+      <div class="detail-stats">
+        <div class="detail-stat"><div class="ds-label">Quantity</div><div class="ds-val">${item.quantity || 1}</div></div>
+        <div class="detail-stat"><div class="ds-label">Category</div><div class="ds-val">${esc(cat.label)}</div></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="ic-label">LOCATION</div>
+      ${item.missing ? `
+        <div style="font-size:14.5px;">Last known: ${esc(pathLabel(item.locationId))}</div>
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;">Marked missing${item.missingSince ? ' on ' + esc(item.missingSince) : ''}</div>
+      ` : isTemp ? `
+        <div style="font-size:14.5px;">Home: ${esc(pathLabel(item.locationId))}</div>
+        <div style="font-size:14.5px;color:var(--accent-dark);font-weight:600;margin-top:4px;">Currently: ${esc(pathLabel(item.tempLocationId))}</div>
+      ` : `
+        <div style="font-size:14.5px;">${esc(pathLabel(item.locationId))}</div>
+      `}
+    </div>
+
+    ${specs.length ? `
+      <div class="info-card">
+        <div class="ic-label">DETAILS</div>
+        ${specs.map(([k, v]) => `<div class="spec-row"><span class="spec-key">${esc(k)}</span><span class="spec-val">${esc(v)}</span></div>`).join('')}
+      </div>` : ''}
+
+    ${item.notes ? `<div class="info-card"><div class="ic-label">NOTES</div><div style="font-size:14px;">${esc(item.notes)}</div></div>` : ''}
+
+    ${item.category === 'kit' && item.kitContents ? `
+      <div class="info-card">
+        <div class="ic-label">KIT CONTENTS</div>
+        ${item.kitContents.split('\n').filter(Boolean).map(line => `<div class="spec-row"><span class="spec-key">${esc(line)}</span></div>`).join('')}
+      </div>` : ''}
+
+    <div class="action-row">
+      <button class="btn-secondary" data-go="editItem" data-id="${item.id}">Edit</button>
+      <button class="btn-primary" data-open-sheet="itemMove" data-id="${item.id}">Move</button>
+    </div>
+    ${isTemp && !item.missing ? `<button class="btn-secondary" data-action="returnHome" data-id="${item.id}">Return Home</button>` : ''}
+    ${!item.missing ? `<button class="btn-secondary" data-action="toggleMissing" data-id="${item.id}">Mark as Missing</button>` : `<button class="btn-secondary" data-action="toggleMissing" data-id="${item.id}">Mark as Found</button>`}
+    <button class="btn-danger-text" data-action="deleteItem" data-id="${item.id}">Delete Item</button>
+  `;
+  bindCommon();
+}
+
+/* ================= ITEM FORM (Add/Edit) ================= */
+function renderItemForm(isEdit) {
+  const item = isEdit ? state.items.find(i => i.id === state.params.id) : null;
+  const presetLoc = state.params.presetLoc || item?.locationId || null;
+  const category = state.formCategory || item?.category || 'power';
+  state.formCategory = category;
+
+  screenEl.innerHTML = `
+    ${topbar({ title: isEdit ? 'Edit Item' : 'Add Item', back: true, backTo: isEdit ? `itemDetail:${item.id}` : 'home' })}
+
+    <div class="field-group">
+      <label class="field-label">Category</label>
+      <div class="category-picker">
+        ${CATEGORIES.map(c => `<div class="cat-chip ${c.id === category ? 'selected' : ''}" data-set-cat="${c.id}">${c.label}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Item name</label>
+      <input id="f-name" class="field-input" placeholder="e.g. Flush Trim Router Bit" value="${esc(item?.name || '')}" autocomplete="off" />
+    </div>
+
+    <div id="dup-warning"></div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Brand</label>
+        <input id="f-brand" class="field-input" placeholder="e.g. Freud" value="${esc(item?.brand || '')}" autocomplete="off" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Quantity</label>
+        <input id="f-qty" class="field-input" type="number" min="0" value="${item?.quantity ?? 1}" />
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Location</label>
+      <div class="loc-row" style="margin-bottom:0;" data-open-sheet="pickLocation" data-target="f-location">
+        <div class="loc-icon">${ICONS.pin}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="loc-name" id="f-location-label">${presetLoc ? esc(pathLabel(presetLoc)) : 'Unknown location'}</div>
+          <div class="loc-sub">Tap to choose</div>
+        </div>
+        <span class="chev">${ICONS.chev}</span>
+      </div>
+      <input type="hidden" id="f-location" value="${presetLoc || ''}" />
+    </div>
+
+    <details class="optional-fields" ${(item?.specModel || item?.specSize || item?.specDiameter || item?.specShank || item?.notes) ? 'open' : ''}>
+      <summary>+ Optional details (model, size, notes, purchase info)</summary>
+      <div class="field-row">
+        <div class="field-group"><label class="field-label">Model #</label><input id="f-model" class="field-input" value="${esc(item?.specModel || '')}" /></div>
+        <div class="field-group"><label class="field-label">Size / Diameter</label><input id="f-size" class="field-input" placeholder='e.g. 1/2"' value="${esc(item?.specSize || '')}" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label class="field-label">Shank</label><input id="f-shank" class="field-input" placeholder='e.g. 1/4"' value="${esc(item?.specShank || '')}" /></div>
+        <div class="field-group"><label class="field-label">Length</label><input id="f-length" class="field-input" value="${esc(item?.specLength || '')}" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label class="field-label">Purchase date</label><input id="f-pdate" class="field-input" type="date" value="${esc(item?.purchaseDate || '')}" /></div>
+        <div class="field-group"><label class="field-label">Price</label><input id="f-price" class="field-input" type="number" step="0.01" value="${esc(item?.purchasePrice || '')}" /></div>
+      </div>
+      <div class="field-group"><label class="field-label">Store purchased from</label><input id="f-store" class="field-input" value="${esc(item?.store || '')}" /></div>
+      ${category === 'kit' ? `<div class="field-group"><label class="field-label">Kit contents (one per line)</label><textarea id="f-kit" class="field-textarea">${esc(item?.kitContents || '')}</textarea></div>` : ''}
+      <div class="field-group"><label class="field-label">Notes</label><textarea id="f-notes" class="field-textarea">${esc(item?.notes || '')}</textarea></div>
+    </details>
+
+    <button class="btn-primary" id="save-item-btn">${isEdit ? 'Save Changes' : 'Add to Vault'}</button>
+    ${isEdit ? `<button class="btn-danger-text" data-action="deleteItem" data-id="${item.id}">Delete Item</button>` : ''}
+  `;
+
+  document.querySelectorAll('[data-set-cat]').forEach(el => el.addEventListener('click', () => {
+    state.formCategory = el.getAttribute('data-set-cat');
+    render();
+  }));
+
+  const nameInput = document.getElementById('f-name');
+  const brandInput = document.getElementById('f-brand');
+  const dupBox = document.getElementById('dup-warning');
+  function checkDup() {
+    const dupes = findPossibleDuplicates(nameInput.value, brandInput.value, item?.id);
+    if (dupes.length) {
+      dupBox.innerHTML = `<div class="dup-warning">
+        <div class="dup-title">Possible duplicate — you may already own this</div>
+        ${dupes.slice(0, 3).map(d => `<div class="dup-item">${esc(d.name)} ${d.brand ? '(' + esc(d.brand) + ')' : ''} · ×${d.quantity || 1}<div class="dup-loc">${esc(pathLabel(d.effectiveLocationId))}</div></div>`).join('')}
+      </div>`;
+    } else {
+      dupBox.innerHTML = '';
+    }
+  }
+  nameInput.addEventListener('input', checkDup);
+  brandInput.addEventListener('input', checkDup);
+  if (isEdit) checkDup();
+
+  document.getElementById('save-item-btn').addEventListener('click', async () => {
+    const name = nameInput.value.trim();
+    if (!name) { toast('Give it a name first'); return; }
+    const locVal = document.getElementById('f-location').value;
+    const payload = {
+      name,
+      brand: brandInput.value.trim(),
+      category: state.formCategory,
+      quantity: Number(document.getElementById('f-qty').value) || 0,
+      locationId: locVal || null,
+      specModel: document.getElementById('f-model').value.trim(),
+      specSize: document.getElementById('f-size').value.trim(),
+      specShank: document.getElementById('f-shank').value.trim(),
+      specLength: document.getElementById('f-length').value.trim(),
+      purchaseDate: document.getElementById('f-pdate').value,
+      purchasePrice: document.getElementById('f-price').value,
+      store: document.getElementById('f-store').value.trim(),
+      notes: document.getElementById('f-notes').value.trim(),
+    };
+    if (state.formCategory === 'kit') {
+      const kitEl = document.getElementById('f-kit');
+      if (kitEl) payload.kitContents = kitEl.value;
+    }
+    if (isEdit) {
+      await updateItem(item.id, payload);
+      toast('Saved');
+      go('itemDetail', { id: item.id });
+    } else {
+      await addItem({ ...payload, tempLocationId: null });
+      toast('Added to vault');
+      state.formCategory = null;
+      go('home');
+    }
+  });
+
+  bindCommon();
+}
+
+/* ================= LOCATION FORM ================= */
+function renderLocationForm(isEdit) {
+  const loc = isEdit ? locationById(state.params.id) : null;
+  const presetParent = state.params.presetParent || loc?.parentId || null;
+  const kind = state.formKind || loc?.kind || 'place';
+
+  screenEl.innerHTML = `
+    ${topbar({ title: isEdit ? 'Edit Location' : 'New Location', back: true, backTo: isEdit ? `locationDetail:${loc.id}` : 'locations' })}
+
+    <div class="field-group">
+      <label class="field-label">Type</label>
+      <div class="category-picker" style="grid-template-columns:repeat(2,1fr);">
+        <div class="cat-chip ${kind === 'place' ? 'selected' : ''}" data-set-kind="place">Place / Room</div>
+        <div class="cat-chip ${kind === 'container' ? 'selected' : ''}" data-set-kind="container">Container / Bin</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Name</label>
+      <input id="l-name" class="field-input" placeholder="e.g. Router Bit Drawer" value="${esc(loc?.name || '')}" autocomplete="off" />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Inside (parent location)</label>
+      <div class="loc-row" style="margin-bottom:0;" data-open-sheet="pickLocation" data-target="l-parent" data-exclude="${loc?.id || ''}">
+        <div class="loc-icon">${ICONS.pin}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="loc-name" id="l-parent-label">${presetParent ? esc(pathLabel(presetParent)) : 'Top level (no parent)'}</div>
+          <div class="loc-sub">Tap to choose</div>
+        </div>
+        <span class="chev">${ICONS.chev}</span>
+      </div>
+      <input type="hidden" id="l-parent" value="${presetParent || ''}" />
+    </div>
+
+    <button class="btn-primary" id="save-loc-btn">${isEdit ? 'Save Changes' : 'Create Location'}</button>
+    ${isEdit ? `<button class="btn-danger-text" data-action="deleteLocation" data-id="${loc.id}">Delete Location</button>` : ''}
+  `;
+
+  document.querySelectorAll('[data-set-kind]').forEach(el => el.addEventListener('click', () => {
+    state.formKind = el.getAttribute('data-set-kind');
+    render();
+  }));
+
+  document.getElementById('save-loc-btn').addEventListener('click', async () => {
+    const name = document.getElementById('l-name').value.trim();
+    if (!name) { toast('Give it a name first'); return; }
+    const parentId = document.getElementById('l-parent').value || null;
+    const payload = { name, kind: state.formKind || kind, parentId };
+    if (isEdit) {
+      await updateLocation(loc.id, payload);
+      toast('Saved');
+      go('locationDetail', { id: loc.id });
+    } else {
+      const newId = await addLocation(payload);
+      toast('Location created');
+      state.formKind = null;
+      go('locationDetail', { id: newId });
+    }
+  });
+
+  bindCommon();
+}
+
+/* ================= UNKNOWN / MISSING ================= */
+function renderUnknown() {
+  const unknownItems = state.items.filter(i => !i.locationId && !i.missing);
+  screenEl.innerHTML = `
+    ${topbar({ title: 'Unknown Location' })}
+    <p class="tagline">Items you own but haven't assigned a spot to yet. Still useful — it means you know not to buy another.</p>
+    ${unknownItems.length ? unknownItems.map(itemCardHtml).join('') : emptyState('Nothing unresolved', 'Every item has a known location.', ICONS.pin)}
+    <div class="section-title">Marked missing</div>
+    ${renderMissingList()}
+  `;
+  bindCommon();
+}
+
+function renderMissingList() {
+  const missing = state.items.filter(i => i.missing);
+  return missing.length ? missing.map(itemCardHtml).join('') : emptyState('Nothing missing', 'Anything you mark missing will show up here.', ICONS.question);
+}
+
+function renderMissing() { renderUnknown(); }
+
+/* ================= INVENTORY CHECK ================= */
+let inventoryCheckedIds = new Set();
+let inventoryCheckLocId = null;
+
+function renderInventoryCheck() {
+  const loc = locationById(state.params.id);
+  if (!loc) return go('locations');
+  if (inventoryCheckLocId !== loc.id) {
+    inventoryCheckedIds = new Set();
+    inventoryCheckLocId = loc.id;
+  }
+  const expected = itemsInLocation(loc.id);
+  screenEl.innerHTML = `
+    ${topbar({ title: 'Inventory Check', back: true, backTo: `locationDetail:${loc.id}` })}
+    <p class="tagline">Confirm what's physically inside <strong>${esc(loc.name)}</strong>. Tap each item you can see. Anything left unchecked gets marked missing when you finish.</p>
+    ${expected.length ? expected.map(item => `
+      <div class="check-row" data-check-row="${item.id}">
+        <div class="check-circle ${inventoryCheckedIds.has(item.id) ? 'checked' : ''}" data-toggle-check="${item.id}">${ICONS.check}</div>
+        <div class="check-name">${esc(item.name)}${item.brand ? ' — ' + esc(item.brand) : ''}</div>
+      </div>
+    `).join('') : emptyState('Nothing expected here', 'This location has no items on record.')}
+    ${expected.length ? `<button class="btn-primary" id="finish-check-btn" style="margin-top:20px;">Finish Check</button>` : ''}
+    <button class="btn-secondary" data-go="locationDetail" data-id="${loc.id}">Cancel</button>
+  `;
+  document.querySelectorAll('[data-toggle-check]').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.getAttribute('data-toggle-check');
+      if (inventoryCheckedIds.has(id)) inventoryCheckedIds.delete(id);
+      else inventoryCheckedIds.add(id);
+      el.classList.toggle('checked');
+    });
+  });
+  const finishBtn = document.getElementById('finish-check-btn');
+  if (finishBtn) {
+    finishBtn.addEventListener('click', async () => {
+      const missingOnes = expected.filter(i => !inventoryCheckedIds.has(i.id));
+      if (missingOnes.length) {
+        if (!confirm(`${missingOnes.length} item${missingOnes.length === 1 ? '' : 's'} weren't checked off. Mark ${missingOnes.length === 1 ? 'it' : 'them'} as missing?`)) {
+          return;
+        }
+        for (const it of missingOnes) {
+          await updateItem(it.id, {
+            missing: true,
+            missingSince: new Date().toLocaleDateString(),
+            history: arrayUnion({ note: 'Marked missing during inventory check', at: new Date().toISOString() })
+          });
+        }
+        toast(`Marked ${missingOnes.length} item${missingOnes.length === 1 ? '' : 's'} missing`);
+      } else {
+        toast('Everything checked out');
+      }
+      inventoryCheckLocId = null;
+      go('locationDetail', { id: loc.id });
+    });
+  }
+  bindCommon();
+}
+
+/* ================= SCAN ================= */
+let html5Scanner = null;
+function renderScan() {
+  screenEl.innerHTML = `
+    ${topbar({ title: 'Scan QR' })}
+    <p class="tagline">Point your camera at a location or container's QR code to jump straight to it.</p>
+    <div id="qr-reader" style="width:100%;"></div>
+    <div id="scan-status" style="text-align:center;color:var(--text-secondary);font-size:13px;margin-top:12px;"></div>
+  `;
+  try {
+    html5Scanner = new Html5Qrcode("qr-reader");
+    html5Scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 230 },
+      (decodedText) => {
+        const match = decodedText.match(/[?&]loc=([a-zA-Z0-9]+)/);
+        const locId = match ? match[1] : decodedText.trim();
+        if (locationById(locId)) {
+          stopScanner();
+          go('locationDetail', { id: locId });
+        } else {
+          document.getElementById('scan-status').textContent = "That code isn't a recognized Tool Vault location.";
+        }
+      },
+      () => {}
+    ).catch(err => {
+      document.getElementById('scan-status').textContent = 'Camera unavailable — check permissions.';
+    });
+  } catch (e) {
+    document.getElementById('scan-status').textContent = 'Camera unavailable on this device.';
+  }
+}
+
+function stopScanner() {
+  if (html5Scanner) {
+    html5Scanner.stop().catch(() => {});
+    html5Scanner = null;
+  }
+}
+
+/* ================= SHEETS (bottom modals) ================= */
+function openSheet(type, opts = {}) {
+  const overlay = document.createElement('div');
+  overlay.className = 'sheet-overlay';
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+  let html = '';
+  if (type === 'pickLocation') {
+    html = pickLocationSheet(opts);
+  } else if (type === 'itemMove') {
+    html = itemMoveSheet(opts);
+  } else if (type === 'locationActions') {
+    html = locationActionsSheet(opts);
+  } else if (type === 'qr') {
+    html = qrSheet(opts);
+  }
+  overlay.innerHTML = `<div class="sheet">${html}</div>`;
+  document.body.appendChild(overlay);
+  bindSheetEvents(overlay, type, opts);
+}
+
+function pickLocationSheet(opts) {
+  const excludeSet = new Set(opts.excludeIds || (opts.exclude ? [opts.exclude] : []));
+  const options = state.locations.filter(l => !excludeSet.has(l.id));
+  return `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Choose a Location</div>
+    <div class="sheet-option" data-pick-loc="">Unknown location</div>
+    ${options.map(l => `<div class="sheet-option" data-pick-loc="${l.id}">${esc(pathLabel(l.id))}</div>`).join('')}
+    ${!options.length ? `<p style="color:var(--text-secondary);font-size:13.5px;padding:10px 0;">No locations yet — create one first from the Locations tab.</p>` : ''}
+  `;
+}
+
+function itemMoveSheet(opts) {
+  const item = state.items.find(i => i.id === opts.id);
+  return `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Move ${esc(item.name)}</div>
+    <div class="sheet-option" data-move-type="permanent">Move permanently</div>
+    <div class="sheet-option" data-move-type="temp">Move temporarily</div>
+  `;
+}
+
+function locationActionsSheet(opts) {
+  const loc = locationById(opts.id);
+  return `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">${esc(loc.name)}</div>
+    <div class="sheet-option" data-loc-action="addSub">Add container/location inside</div>
+    <div class="sheet-option" data-loc-action="edit">Edit name / type</div>
+    <div class="sheet-option" data-loc-action="move">Move this location</div>
+    <div class="sheet-option" data-loc-action="delete" style="color:var(--danger);">Delete location</div>
+  `;
+}
+
+function qrSheet(opts) {
+  const loc = locationById(opts.id);
+  return `
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">${esc(loc.name)}</div>
+    <div class="qr-box">
+      <div id="qr-canvas"></div>
+      <p style="font-size:12.5px;color:var(--text-secondary);text-align:center;margin-top:12px;">Print this and stick it on the container. Scanning it opens this location directly.</p>
+    </div>
+    <button class="btn-secondary" data-print-qr="1">Print</button>
+  `;
+}
+
+function bindSheetEvents(overlay, type, opts) {
+  if (type === 'pickLocation' && !opts.moveType && !opts.locMove) {
+    overlay.querySelectorAll('[data-pick-loc]').forEach(el => {
+      el.addEventListener('click', () => {
+        const val = el.getAttribute('data-pick-loc');
+        const target = document.getElementById(opts.target);
+        const label = document.getElementById(opts.target + '-label');
+        if (target) target.value = val;
+        if (label) label.textContent = val ? pathLabel(val) : (opts.target === 'l-parent' ? 'Top level (no parent)' : 'Unknown location');
+        overlay.remove();
+      });
+    });
+  }
+
+  overlay.querySelectorAll('[data-move-type]').forEach(el => {
+    el.addEventListener('click', () => {
+      const item = state.items.find(i => i.id === opts.id);
+      overlay.remove();
+      openSheet('pickLocation', { target: '__move__', moveType: el.getAttribute('data-move-type'), item });
+    });
+  });
+
+  if (opts.moveType) {
+    overlay.querySelectorAll('[data-pick-loc]').forEach(el => {
+      el.addEventListener('click', async () => {
+        const val = el.getAttribute('data-pick-loc') || null;
+        if (opts.moveType === 'permanent') await moveItemPermanent(opts.item, val);
+        else await moveItemTemp(opts.item, val);
+        overlay.remove();
+        go('itemDetail', { id: opts.item.id });
+      });
+    });
+  }
+
+  overlay.querySelectorAll('[data-loc-action]').forEach(el => {
+    el.addEventListener('click', () => {
+      const action = el.getAttribute('data-loc-action');
+      const loc = locationById(opts.id);
+      overlay.remove();
+      if (action === 'addSub') { state.formKind = null; go('addLocation', { presetParent: loc.id }); }
+      else if (action === 'edit') { state.formKind = loc.kind || null; go('editLocation', { id: loc.id }); }
+      else if (action === 'move') openSheet('pickLocation', { target: '__movLoc__', locMove: loc, excludeIds: descendantIds(loc.id) });
+      else if (action === 'delete') {
+        const blocked = directChildren(loc.id).length || locationHasAnyItemRef(loc.id);
+        if (blocked) {
+          toast("Move or remove what's inside first");
+        } else if (confirm(`Delete "${loc.name}"?`)) {
+          deleteLocation(loc.id);
+          go('locations');
+        }
+      }
+    });
+  });
+
+  if (opts.locMove) {
+    overlay.querySelectorAll('[data-pick-loc]').forEach(el => {
+      el.addEventListener('click', async () => {
+        const val = el.getAttribute('data-pick-loc') || null;
+        if (val && descendantIds(opts.locMove.id).includes(val)) { toast("Can't move a location inside itself or something stored inside it"); overlay.remove(); return; }
+        await moveLocation(opts.locMove.id, val);
+        overlay.remove();
+        go('locationDetail', { id: opts.locMove.id });
+      });
+    });
+  }
+
+  if (type === 'qr') {
+    setTimeout(() => {
+      const holder = document.getElementById('qr-canvas');
+      if (holder && window.QRCode) {
+        const url = `${window.location.origin}${window.location.pathname}?loc=${opts.id}`;
+        new QRCode(holder, { text: url, width: 180, height: 180, colorDark: '#201D19', colorLight: '#ffffff' });
+      }
+    }, 0);
+    overlay.querySelectorAll('[data-print-qr]').forEach(el => {
+      el.addEventListener('click', () => window.print());
+    });
+  }
+}
+
+/* ================= COMMON BINDINGS ================= */
+function bindCommon() {
+  document.querySelectorAll('[data-go]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const screen = el.getAttribute('data-go');
+      const id = el.getAttribute('data-id');
+      const presetLoc = el.getAttribute('data-preset-loc');
+      const presetParent = el.getAttribute('data-preset-parent');
+      const params = {};
+      if (id) params.id = id;
+      if (presetLoc) params.presetLoc = presetLoc;
+      if (presetParent) params.presetParent = presetParent;
+      if (screen === 'addItem') state.formCategory = null;
+      if (screen === 'editItem') {
+        const editingItem = state.items.find(i => i.id === id);
+        state.formCategory = editingItem ? editingItem.category : null;
+      }
+      if (screen === 'addLocation') state.formKind = null;
+      if (screen === 'editLocation') {
+        const editingLoc = locationById(id);
+        state.formKind = editingLoc ? editingLoc.kind : null;
+      }
+      go(screen, params);
+    });
+  });
+
+  document.querySelectorAll('[data-back]').forEach(el => {
+    el.addEventListener('click', () => {
+      const backTo = el.getAttribute('data-back');
+      if (backTo && backTo.includes(':')) {
+        const [screen, id] = backTo.split(':');
+        go(screen, { id });
+      } else if (backTo) {
+        go(backTo);
+      } else {
+        go('home');
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-open-sheet]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const type = el.getAttribute('data-open-sheet');
+      const opts = {
+        id: el.getAttribute('data-id'),
+        target: el.getAttribute('data-target'),
+        exclude: el.getAttribute('data-exclude') || undefined
+      };
+      openSheet(type, opts);
+    });
+  });
+
+  document.querySelectorAll('[data-show-qr]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSheet('qr', { id: el.getAttribute('data-show-qr') });
+    });
+  });
+
+  document.querySelectorAll('[data-action]').forEach(el => {
+    el.addEventListener('click', async (e) => {
+      const action = el.getAttribute('data-action');
+      const id = el.getAttribute('data-id');
+      if (action === 'deleteItem') {
+        if (confirm('Delete this item permanently?')) {
+          await deleteItem(id);
+          toast('Item deleted');
+          go('home');
+        }
+      } else if (action === 'toggleMissing') {
+        const item = state.items.find(i => i.id === id);
+        if (!item.missing) {
+          await updateItem(id, { missing: true, missingSince: new Date().toLocaleDateString(), history: arrayUnion({ note: 'Marked missing', at: new Date().toISOString() }) });
+          toast('Marked as missing');
+        } else {
+          await updateItem(id, { missing: false, missingSince: null, history: arrayUnion({ note: 'Marked found', at: new Date().toISOString() }) });
+          toast('Marked as found');
+        }
+        go('itemDetail', { id });
+      } else if (action === 'returnHome') {
+        const item = state.items.find(i => i.id === id);
+        await returnItemHome(item);
+        go('itemDetail', { id });
+      } else if (action === 'deleteLocation') {
+        const loc = locationById(id);
+        const blocked = directChildren(loc.id).length || locationHasAnyItemRef(loc.id);
+        if (blocked) { toast("Move or remove what's inside first"); return; }
+        if (confirm(`Delete "${loc.name}"?`)) {
+          await deleteLocation(id);
+          go('locations');
+        }
+      }
+    });
+  });
+}
+
+/* ================= NAV BAR ================= */
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    stopScanner();
+    const nav = btn.getAttribute('data-nav');
+    if (nav === 'add') go('addItem');
+    else if (nav === 'unknown') go('unknown');
+    else go(nav);
+  });
+});
+
+/* ================= DEEP LINK (QR → URL) ================= */
+function checkDeepLink() {
+  const params = new URLSearchParams(window.location.search);
+  const loc = params.get('loc');
+  if (loc) {
+    state.screen = 'locationDetail';
+    state.params = { id: loc };
+  }
+}
+checkDeepLink();
+render();
+
+</script>
+</body>
+</html>
