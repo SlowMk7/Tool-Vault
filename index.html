@@ -1,1871 +1,762 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-<title>Tool Vault</title>
-<meta name="theme-color" content="#F3F1EC" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>GroundUp Vault</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-web-app-title" content="GroundUp Vault" />
+<meta name="theme-color" content="#F2ECDD" />
+<link rel="apple-touch-icon" href="data:image/png;base64,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" />
+<link rel="icon" href="data:image/png;base64,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" />
+
 <style>
-:root {
-  --bg: #F3F1EC;
-  --surface: #FFFFFF;
-  --surface-sunken: #EBE8E2;
-  --text: #201D19;
-  --text-secondary: #77726A;
-  --text-faint: #A39D93;
-  --accent: #D9560A;
-  --accent-dark: #B8460A;
-  --accent-wash: #FBE7D9;
-  --border: #E1DDD4;
-  --success: #2F7D4F;
-  --success-wash: #E3F1E8;
-  --danger: #C23B2C;
-  --danger-wash: #FAE5E1;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --shadow: 0 1px 2px rgba(32,29,25,0.06), 0 4px 16px rgba(32,29,25,0.05);
-  --font-display: 'Archivo', sans-serif;
-  --font-body: 'Inter', sans-serif;
-}
-
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-  overscroll-behavior-y: none;
-}
-
-body {
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
-button {
-  font-family: inherit;
-}
-
-a { color: inherit; }
-
-.app-shell {
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: var(--bg);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ---------- Top bar ---------- */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: var(--bg);
-  padding: 18px 20px 8px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.topbar .back-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  color: var(--text);
-}
-
-.topbar h1 {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 22px;
-  letter-spacing: -0.01em;
-  margin: 0;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.wordmark {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 26px;
-  letter-spacing: -0.02em;
-  margin: 4px 0 2px;
-}
-.wordmark span { color: var(--accent); }
-
-.tagline {
-  color: var(--text-secondary);
-  font-size: 14px;
-  margin: 0 0 18px;
-}
-
-/* ---------- Main content ---------- */
-.content {
-  flex: 1;
-  padding: 0 20px 100px;
-  overflow-y: auto;
-}
-
-/* ---------- Search ---------- */
-.search-wrap {
-  position: relative;
-  margin-bottom: 18px;
-}
-
-.search-input {
-  width: 100%;
-  border: 1.5px solid var(--border);
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 16px 16px 16px 46px;
-  font-size: 16px;
-  font-family: var(--font-body);
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-.search-input:focus { border-color: var(--accent); }
-.search-input::placeholder { color: var(--text-faint); }
-
-.search-icon {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-faint);
-  pointer-events: none;
-}
-
-/* ---------- Stats row ---------- */
-.stats-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.stat-pill {
-  flex: 1;
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  padding: 12px 14px;
-  box-shadow: var(--shadow);
-}
-.stat-pill .num {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 20px;
-  line-height: 1;
-  color: var(--text);
-}
-.stat-pill .num.warn { color: var(--accent); }
-.stat-pill .label {
-  font-size: 11.5px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
-
-/* ---------- Quick actions ---------- */
-.quick-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 24px;
-}
-.quick-action {
-  background: var(--surface);
-  border: none;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
-  padding: 14px 6px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  color: var(--text);
-}
-.quick-action .qa-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: var(--accent-wash);
-  color: var(--accent-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.quick-action span.qa-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-  line-height: 1.2;
-}
-
-/* ---------- Section headers ---------- */
-.section-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--text);
-  margin: 22px 0 10px;
-}
-
-/* ---------- Item cards ---------- */
-.item-card {
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-}
-.item-card .cat-dot {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent-wash);
-  color: var(--accent-dark);
-}
-.item-card .item-info { flex: 1; min-width: 0; }
-.item-card .item-name {
-  font-weight: 600;
-  font-size: 15px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.item-card .item-meta {
-  font-size: 13px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
-}
-.item-card .item-qty {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 15px;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-}
-.item-card.missing { opacity: 0.6; }
-.badge {
-  display: inline-block;
-  font-size: 10.5px;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 6px;
-  margin-left: 6px;
-  vertical-align: middle;
-}
-.badge.unknown { background: var(--danger-wash); color: var(--danger); }
-.badge.temp { background: var(--accent-wash); color: var(--accent-dark); }
-
-/* ---------- Location rows ---------- */
-.loc-row {
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-}
-.loc-row .loc-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: var(--surface-sunken);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.loc-row .loc-name { font-weight: 600; font-size: 15px; }
-.loc-row .loc-sub { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; }
-.loc-row .chev { color: var(--text-faint); flex-shrink: 0; }
-
-.breadcrumb {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 14px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-}
-.breadcrumb .crumb {
-  cursor: pointer;
-  color: var(--text-secondary);
-}
-.breadcrumb .crumb:hover { color: var(--accent-dark); }
-.breadcrumb .crumb.current { color: var(--text); font-weight: 600; }
-.breadcrumb .sep { color: var(--text-faint); }
-
-/* ---------- Empty state ---------- */
-.empty-state {
-  text-align: center;
-  padding: 50px 20px;
-  color: var(--text-secondary);
-}
-.empty-state .empty-icon {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 14px;
-  border-radius: 16px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-faint);
-}
-.empty-state h3 {
-  font-family: var(--font-display);
-  font-size: 16px;
-  margin: 0 0 4px;
-  color: var(--text);
-}
-.empty-state p { font-size: 13.5px; margin: 0; }
-
-/* ---------- Bottom nav ---------- */
-.bottom-nav {
-  position: sticky;
-  bottom: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  display: flex;
-  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
-  z-index: 30;
-}
-.nav-btn {
-  flex: 1;
-  background: none;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 6px 0;
-  color: var(--text-faint);
-  cursor: pointer;
-}
-.nav-btn.active { color: var(--accent-dark); }
-.nav-btn .nav-label { font-size: 10.5px; font-weight: 600; }
-.nav-btn.fab {
-  position: relative;
-  top: -18px;
-}
-.nav-btn.fab .fab-circle {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 14px rgba(217,86,10,0.4);
-}
-.nav-btn.fab .nav-label { color: var(--text-secondary); }
-
-/* ---------- Forms ---------- */
-.field-group { margin-bottom: 16px; }
-.field-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-  display: block;
-}
-.field-input, .field-select, .field-textarea {
-  width: 100%;
-  border: 1.5px solid var(--border);
-  background: var(--surface);
-  border-radius: var(--radius-sm);
-  padding: 13px 14px;
-  font-size: 15px;
-  font-family: var(--font-body);
-  color: var(--text);
-  outline: none;
-}
-.field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--accent); }
-.field-textarea { resize: vertical; min-height: 70px; }
-.field-row { display: flex; gap: 10px; }
-.field-row .field-group { flex: 1; }
-
-.category-picker {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-.cat-chip {
-  border: 1.5px solid var(--border);
-  background: var(--surface);
-  border-radius: var(--radius-sm);
-  padding: 12px 4px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  color: var(--text-secondary);
-}
-.cat-chip.selected {
-  border-color: var(--accent);
-  background: var(--accent-wash);
-  color: var(--accent-dark);
-}
-
-.toggle-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--surface);
-  border-radius: var(--radius-sm);
-  padding: 13px 14px;
-  margin-bottom: 16px;
-}
-.toggle-row .toggle-label { font-size: 14px; font-weight: 600; }
-.toggle-row .toggle-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-.switch {
-  width: 44px;
-  height: 26px;
-  border-radius: 14px;
-  background: var(--surface-sunken);
-  position: relative;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.15s ease;
-}
-.switch.on { background: var(--accent); }
-.switch::after {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  top: 3px;
-  left: 3px;
-  transition: left 0.15s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.switch.on::after { left: 21px; }
-
-details.optional-fields {
-  margin-bottom: 16px;
-}
-details.optional-fields summary {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--accent-dark);
-  cursor: pointer;
-  padding: 6px 0;
-  list-style: none;
-}
-details.optional-fields summary::-webkit-details-marker { display: none; }
-details.optional-fields[open] summary { margin-bottom: 6px; }
-
-.btn-primary {
-  width: 100%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 15px;
-  font-size: 15.5px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: var(--font-body);
-}
-.btn-primary:active { background: var(--accent-dark); }
-.btn-secondary {
-  width: 100%;
-  background: var(--surface);
-  color: var(--text);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 15px;
-  font-size: 15.5px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: var(--font-body);
-  margin-top: 10px;
-}
-.btn-danger-text {
-  width: 100%;
-  background: none;
-  color: var(--danger);
-  border: none;
-  padding: 14px;
-  font-size: 14.5px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font-body);
-  margin-top: 6px;
-}
-
-/* ---------- Duplicate warning ---------- */
-.dup-warning {
-  background: var(--accent-wash);
-  border: 1.5px solid var(--accent);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  margin-bottom: 16px;
-}
-.dup-warning .dup-title {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--accent-dark);
-  margin-bottom: 8px;
-}
-.dup-item {
-  font-size: 13.5px;
-  color: var(--text);
-  padding: 6px 0;
-  border-top: 1px solid rgba(217,86,10,0.15);
-}
-.dup-item:first-child { border-top: none; }
-.dup-item .dup-loc { color: var(--text-secondary); font-size: 12px; }
-
-/* ---------- Item detail ---------- */
-.detail-hero {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  padding: 20px;
-  margin-bottom: 16px;
-}
-.detail-hero .detail-name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 20px;
-  margin-bottom: 4px;
-}
-.detail-hero .detail-brand { color: var(--text-secondary); font-size: 14px; margin-bottom: 14px; }
-.detail-stats { display: flex; gap: 10px; margin-bottom: 4px; }
-.detail-stat {
-  flex: 1;
-  background: var(--surface-sunken);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-}
-.detail-stat .ds-label { font-size: 11px; color: var(--text-secondary); }
-.detail-stat .ds-val { font-weight: 700; font-size: 15px; margin-top: 2px; }
-
-.info-card {
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  margin-bottom: 12px;
-}
-.info-card .ic-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-}
-.spec-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 14px;
-  border-top: 1px solid var(--border);
-}
-.spec-row:first-child { border-top: none; }
-.spec-row .spec-key { color: var(--text-secondary); }
-.spec-row .spec-val { font-weight: 600; }
-
-.action-row { display: flex; gap: 10px; margin-top: 4px; }
-.action-row .btn-primary, .action-row .btn-secondary { margin-top: 0; }
-
-/* ---------- Modal / sheet ---------- */
-.sheet-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(32,29,25,0.45);
-  z-index: 50;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-.sheet {
-  background: var(--bg);
-  width: 100%;
-  max-width: 480px;
-  border-radius: 22px 22px 0 0;
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 10px 20px 28px;
-  animation: sheet-up 0.2s ease;
-}
-@keyframes sheet-up {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-.sheet-handle {
-  width: 36px;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 8px auto 16px;
-}
-.sheet-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 18px;
-  margin-bottom: 14px;
-}
-.sheet-option {
-  padding: 14px 4px;
-  border-top: 1px solid var(--border);
-  font-size: 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.sheet-option:first-child { border-top: none; }
-
-/* ---------- Toast ---------- */
-.toast {
-  position: fixed;
-  bottom: 90px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--text);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 30px;
-  font-size: 13.5px;
-  font-weight: 600;
-  z-index: 100;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  max-width: 90%;
-  text-align: center;
-  animation: toast-in 0.2s ease;
-}
-@keyframes toast-in {
-  from { opacity: 0; transform: translate(-50%, 8px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-/* ---------- QR ---------- */
-.qr-box {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 16px;
-}
-#qr-reader {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.loading-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-faint);
-  font-size: 14px;
-}
-
-.check-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-top: 1px solid var(--border);
-}
-.check-row:first-child { border-top: none; }
-.check-circle {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-.check-circle.checked {
-  background: var(--success);
-  border-color: var(--success);
-  color: #fff;
-}
-.check-row .check-name { flex: 1; font-size: 14.5px; }
-.check-row.missing .check-name { color: var(--danger); text-decoration: line-through; }
-
+  html, body { margin: 0; padding: 0; background: #F2ECDD; min-height: 100dvh; }
+  #root { min-height: 100dvh; }
+  #boot-error {
+    display: none; font-family: -apple-system, sans-serif; padding: 24px;
+    color: #b23; white-space: pre-wrap; font-size: 14px; line-height: 1.5;
+  }
 </style>
+
+<script>
+  window.addEventListener('error', function (e) {
+    var el = document.getElementById('boot-error');
+    if (el) {
+      el.style.display = 'block';
+      el.textContent = 'Failed to load: ' + (e.message || (e.error && e.error.message) || 'unknown error') +
+        (e.filename ? ('\n\nFile: ' + e.filename) : '');
+    }
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) {
+    var el = document.getElementById('boot-error');
+    if (el) {
+      el.style.display = 'block';
+      el.textContent = 'Failed to load: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason));
+    }
+  });
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?deps=react@18.3.1"
+  }
+}
+</script>
 </head>
 <body>
-  <div id="app" class="app-shell">
-    <div id="screen" class="content" style="padding-top:0;"></div>
-    <nav class="bottom-nav">
-      <button class="nav-btn" data-nav="home">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
-        <span class="nav-label">Home</span>
-      </button>
-      <button class="nav-btn" data-nav="locations">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.1 7-12a7 7 0 0 0-14 0c0 4.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
-        <span class="nav-label">Locations</span>
-      </button>
-      <button class="nav-btn fab" data-nav="add">
-        <span class="fab-circle">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        </span>
-      </button>
-      <button class="nav-btn" data-nav="scan">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
-        <span class="nav-label">Scan</span>
-      </button>
-      <button class="nav-btn" data-nav="unknown">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.7-2 3.5" /><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/></svg>
-        <span class="nav-label">Missing</span>
-      </button>
-    </nav>
-  </div>
+<div id="root"></div>
+<div id="boot-error"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/davidshimjs-qrcodejs/0.0.2/qrcode.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-  
 <script type="module">
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { useState, useEffect, useMemo, useRef } from "react";
 const firebaseConfig = {
-  apiKey: "AIzaSyAPlz-NgGlnPCGs23qLAtATtS8nBtQtsZk",
-  authDomain: "tool-vault-886aa.firebaseapp.com",
-  projectId: "tool-vault-886aa",
-  storageBucket: "tool-vault-886aa.firebasestorage.app",
-  messagingSenderId: "1072804091036",
-  appId: "1:1072804091036:web:4e687fd4fd4b1addc70959",
-  measurementId: "G-KK29XZ4WHH"
+    apiKey: "AIzaSyAPlz-NgGlnPCGs23qLAtATtS8nBtQtsZk",
+    authDomain: "tool-vault-886aa.firebaseapp.com",
+    projectId: "tool-vault-886aa",
+    storageBucket: "tool-vault-886aa.firebasestorage.app",
+    messagingSenderId: "1072804091036",
+    appId: "1:1072804091036:web:4e687fd4fd4b1addc70959",
+    measurementId: "G-KK29XZ4WHH",
 };
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import {
-  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc,
-  onSnapshot, serverTimestamp, arrayUnion
-} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const itemsCol = collection(db, 'items');
-const locationsCol = collection(db, 'locations');
-
-/* ---------------- State ---------------- */
-const state = {
-  items: [],
-  locations: [],
-  loaded: { items: false, locations: false },
-  screen: 'home',
-  params: {},
-  searchQuery: ''
-};
-
-const screenEl = document.getElementById('screen');
-
-/* ---------------- Icons ---------------- */
-const ICONS = {
-  search: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`,
-  chev: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
-  back: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>`,
-  powerTool: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5 21 9l-3 3-6.5-6.5 3-3ZM11 6 3 14l3 7 8-8"/></svg>`,
-  handTool: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 2 14l3 3L17 5Z"/><path d="m14 6 4 4"/></svg>`,
-  bit: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h13l5 5-2 2-5-5"/><path d="m16 12 5-5-2-2-5 5"/></svg>`,
-  consumable: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="14" rx="1.5"/><path d="M9 7V4h6v3"/></svg>`,
-  kit: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="11" rx="1.5"/><path d="M8 9V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/></svg>`,
-  pin: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.1 7-12a7 7 0 0 0-14 0c0 4.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>`,
-  box: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>`,
-  qr: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM19 14h2v2h-2zM14 19h2v2h-2zM19 19h2v2h-2z"/></svg>`,
-  plus: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`,
-  move: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9V5h4M19 9V5h-4M5 15v4h4M19 15v4h-4"/></svg>`,
-  edit: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
-  check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,
-  question: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.7-2 3.5" /><circle cx="12" cy="16.5" r="0.6" fill="currentColor"/></svg>`
-};
-
+// Firebase loaded as classic global scripts (window.firebase), not ES module
+// imports — the older "compat" SDK style. This is the far more battle-tested
+// loading path, with no import-map or module resolution involved.
+const app = window.firebase.initializeApp(firebaseConfig);
+const db = window.firebase.firestore();
+// Local offline caching: reads come from the on-device cache when there's no
+// signal, and writes queue up locally and sync automatically once back
+// online. If this fails to enable (e.g. the app is open in two tabs at
+// once, which Firestore's offline cache doesn't support), the app still
+// works — it just won't have the offline cache, same as before.
+db.enablePersistence().catch(() => { });
+const docRef = db.collection("groundup-vault").doc("data");
 const CATEGORIES = [
-  { id: 'power', label: 'Power Tool', icon: 'powerTool' },
-  { id: 'hand', label: 'Hand Tool', icon: 'handTool' },
-  { id: 'bit', label: 'Bit / Accessory', icon: 'bit' },
-  { id: 'consumable', label: 'Consumable', icon: 'consumable' },
-  { id: 'kit', label: 'Kit / Set', icon: 'kit' },
+    { id: "power_tool", label: "Power tools" },
+    { id: "tool", label: "Tools" },
+    { id: "bit", label: "Bits" },
+    { id: "blade", label: "Blades" },
+    { id: "sandpaper", label: "Sandpaper" },
+    { id: "battery", label: "Batteries" },
+    { id: "hardware", label: "Hardware" },
+    { id: "material", label: "Materials" },
 ];
-
-function catMeta(catId) {
-  return CATEGORIES.find(c => c.id === catId) || CATEGORIES[0];
+// Items Brandon has listed in chat, baked into the app itself. On load, the
+// app adds whichever of these aren't already in the database (matched by
+// name + building + area) and leaves everything else alone — so re-opening
+// this same file twice, or after more items were added by hand, never
+// creates duplicates.
+const SEED_ITEMS = [
+// { name: "Makita Impact Driver", category: "power_tool", building: "Parents' house", area: "Garage", quantity: 1 },
+];
+function seedKey(it) {
+    return [it.name, it.building, it.area].map((s) => (s || "").trim().toLowerCase()).join("|");
 }
-
-/* ---------------- Utilities ---------------- */
-function esc(str) {
-  if (str === undefined || str === null) return '';
-  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function uid() {
+    return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 }
-
-function toast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2200);
-}
-
-function go(screen, params = {}) {
-  state.screen = screen;
-  state.params = params;
-  window.scrollTo(0, 0);
-  render();
-}
-
-function locationById(id) {
-  return state.locations.find(l => l.id === id);
-}
-
-// Full breadcrumb path array from root to this location (inclusive)
-function pathTo(locId) {
-  const path = [];
-  let current = locationById(locId);
-  let guard = 0;
-  while (current && guard < 20) {
-    path.unshift(current);
-    current = current.parentId ? locationById(current.parentId) : null;
-    guard++;
-  }
-  return path;
-}
-
-function pathLabel(locId, sep = ' → ') {
-  if (!locId) return 'Unknown location';
-  const path = pathTo(locId);
-  if (!path.length) return 'Unknown location';
-  return path.map(l => l.name).join(sep);
-}
-
-function directChildren(locId) {
-  return state.locations.filter(l => (l.parentId || null) === (locId || null));
-}
-
-function itemsInLocation(locId) {
-  return state.items.filter(i => i.effectiveLocationId === locId && !i.missing);
-}
-
-// Recursively gather all descendant location ids (including self)
-// Guarded against cycles (shouldn't exist, but a corrupted move could create one)
-function descendantIds(locId, guard) {
-  guard = guard || 0;
-  if (guard > 40) return [locId];
-  const out = [locId];
-  const children = state.locations.filter(l => l.parentId === locId);
-  children.forEach(c => out.push(...descendantIds(c.id, guard + 1)));
-  return out;
-}
-
-// True if any item — home OR temporary — currently references this location
-function locationHasAnyItemRef(locId) {
-  return state.items.some(i => i.locationId === locId || i.tempLocationId === locId);
-}
-
-function fmtSpecs(item) {
-  const parts = [];
-  if (item.specSize) parts.push(item.specSize);
-  if (item.specShank) parts.push(`${item.specShank} shank`);
-  return parts.join(' · ');
-}
-
-function fuzzyMatch(text, query) {
-  if (!text) return false;
-  const t = text.toLowerCase();
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
-  return words.every(w => t.includes(w));
-}
-
-function searchItems(query) {
-  if (!query.trim()) return [];
-  const q = query.trim();
-  return state.items.filter(i => {
-    const hay = [i.name, i.brand, catMeta(i.category).label, i.specSize, i.specModel, i.specDiameter, i.specShank, i.notes].filter(Boolean).join(' ');
-    return fuzzyMatch(hay, q) || q.toLowerCase().split(/\s+/).some(w => hay.toLowerCase().includes(w));
-  }).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-}
-
-function findPossibleDuplicates(name, brand, excludeId) {
-  if (!name || name.trim().length < 3) return [];
-  const nameWords = name.toLowerCase().split(/\s+/).filter(w => w.length > 1);
-  return state.items.filter(i => {
-    if (i.id === excludeId) return false;
-    const iName = (i.name || '').toLowerCase();
-    const overlap = nameWords.filter(w => iName.includes(w)).length;
-    const brandMatch = brand && i.brand && i.brand.toLowerCase() === brand.toLowerCase();
-    return overlap >= Math.max(1, Math.ceil(nameWords.length * 0.6)) || (brandMatch && overlap >= 1);
-  });
-}
-
-/* ---------------- Data sync ---------------- */
-function computeEffectiveLocations() {
-  state.items.forEach(i => {
-    i.effectiveLocationId = i.tempLocationId || i.locationId || null;
-  });
-}
-
-onSnapshot(itemsCol, snap => {
-  state.items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  computeEffectiveLocations();
-  state.loaded.items = true;
-  render();
-}, err => console.error('items snapshot error', err));
-
-onSnapshot(locationsCol, snap => {
-  state.locations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  computeEffectiveLocations();
-  state.loaded.locations = true;
-  render();
-}, err => console.error('locations snapshot error', err));
-
-/* ---------------- Firestore actions ---------------- */
-async function addItem(data) {
-  await addDoc(itemsCol, {
-    ...data,
-    missing: false,
-    history: [{ note: 'Added', at: new Date().toISOString() }],
-    createdAt: serverTimestamp()
-  });
-}
-
-async function updateItem(id, data) {
-  await updateDoc(doc(db, 'items', id), data);
-}
-
-async function deleteItem(id) {
-  await deleteDoc(doc(db, 'items', id));
-}
-
-async function addLocation(data) {
-  const ref = await addDoc(locationsCol, { ...data, createdAt: serverTimestamp() });
-  return ref.id;
-}
-
-async function updateLocation(id, data) {
-  await updateDoc(doc(db, 'locations', id), data);
-}
-
-async function deleteLocation(id) {
-  await deleteDoc(doc(db, 'locations', id));
-}
-
-async function moveItemPermanent(item, newLocId) {
-  await updateItem(item.id, {
-    locationId: newLocId,
-    tempLocationId: null,
-    history: arrayUnion({ note: `Moved to ${pathLabel(newLocId)}`, at: new Date().toISOString() })
-  });
-  toast('Moved');
-}
-
-async function moveItemTemp(item, newLocId) {
-  await updateItem(item.id, {
-    tempLocationId: newLocId,
-    history: arrayUnion({ note: `Temporarily moved to ${pathLabel(newLocId)}`, at: new Date().toISOString() })
-  });
-  toast('Marked as temporarily moved');
-}
-
-async function returnItemHome(item) {
-  await updateItem(item.id, {
-    tempLocationId: null,
-    history: arrayUnion({ note: `Returned home to ${pathLabel(item.locationId)}`, at: new Date().toISOString() })
-  });
-  toast('Returned home');
-}
-
-async function moveLocation(locId, newParentId) {
-  await updateLocation(locId, { parentId: newParentId || null });
-  toast('Location moved — everything inside moved with it');
-}
-
-/* ================= RENDER ROOT ================= */
-function render() {
-  if (!state.loaded.items || !state.loaded.locations) {
-    screenEl.innerHTML = `<div class="loading-state">Loading your inventory…</div>`;
-    return;
-  }
-  updateNav();
-  const s = state.screen;
-  if (s === 'home') return renderHome();
-  if (s === 'search') return renderSearch();
-  if (s === 'locations') return renderLocations();
-  if (s === 'locationDetail') return renderLocationDetail();
-  if (s === 'itemDetail') return renderItemDetail();
-  if (s === 'addItem') return renderItemForm();
-  if (s === 'editItem') return renderItemForm(true);
-  if (s === 'addLocation') return renderLocationForm();
-  if (s === 'editLocation') return renderLocationForm(true);
-  if (s === 'scan') return renderScan();
-  if (s === 'unknown') return renderUnknown();
-  if (s === 'missing') return renderMissing();
-  if (s === 'inventoryCheck') return renderInventoryCheck();
-  renderHome();
-}
-
-function updateNav() {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const map = { home: 'home', search: 'home', locations: 'locations', locationDetail: 'locations', addItem: 'add', addLocation: 'add', scan: 'scan', unknown: 'unknown' };
-  const active = map[state.screen];
-  if (active) {
-    const btn = document.querySelector(`.nav-btn[data-nav="${active}"]`);
-    if (btn) btn.classList.add('active');
-  }
-}
-
-function topbar({ title, back, backTo }) {
-  return `<div class="topbar">
-    ${back ? `<button class="back-btn" data-back="${backTo || ''}">${ICONS.back}</button>` : ''}
-    <h1>${esc(title)}</h1>
-  </div>`;
-}
-
-/* ================= HOME ================= */
-function renderHome() {
-  const totalItems = state.items.filter(i => !i.missing).length;
-  const totalLocations = state.locations.length;
-  const unknownCount = state.items.filter(i => !i.locationId && !i.missing).length;
-  const recent = [...state.items].filter(i => !i.missing).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)).slice(0, 6);
-
-  screenEl.innerHTML = `
-    <div style="padding-top:20px;">
-      <div class="wordmark">Tool<span>Vault</span></div>
-      <p class="tagline">Know what you own. Know where it is.</p>
-
-      <div class="search-wrap">
-        <span class="search-icon">${ICONS.search}</span>
-        <input id="home-search" class="search-input" placeholder="Search tools, bits, blades, accessories…" autocomplete="off" value="${esc(state.searchQuery)}" />
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-pill"><div class="num">${totalItems}</div><div class="label">Items</div></div>
-        <div class="stat-pill"><div class="num">${totalLocations}</div><div class="label">Locations</div></div>
-        <div class="stat-pill"><div class="num ${unknownCount ? 'warn' : ''}">${unknownCount}</div><div class="label">Unknown spot</div></div>
-      </div>
-
-      <div class="quick-actions">
-        <button class="quick-action" data-go="addItem"><span class="qa-icon">${ICONS.plus}</span><span class="qa-label">Add Item</span></button>
-        <button class="quick-action" data-go="scan"><span class="qa-icon">${ICONS.qr}</span><span class="qa-label">Scan QR</span></button>
-        <button class="quick-action" data-go="locations"><span class="qa-icon">${ICONS.pin}</span><span class="qa-label">Locations</span></button>
-        <button class="quick-action" data-go="addLocation"><span class="qa-icon">${ICONS.box}</span><span class="qa-label">New Container</span></button>
-      </div>
-
-      <div class="section-title">Recently added</div>
-      ${recent.length ? recent.map(itemCardHtml).join('') : emptyState('No items yet', 'Add your first tool to get started.')}
-    </div>
-  `;
-
-  document.getElementById('home-search').addEventListener('input', (e) => {
-    state.searchQuery = e.target.value;
-    if (state.searchQuery.trim()) go('search');
-  });
-  document.getElementById('home-search').addEventListener('focus', () => {
-    if (state.searchQuery.trim()) go('search');
-  });
-  bindCommon();
-}
-
-function itemCardHtml(item) {
-  const cat = catMeta(item.category);
-  const locLabel = item.missing ? `Last seen: ${pathLabel(item.locationId)}` : (item.effectiveLocationId ? pathLabel(item.effectiveLocationId) : 'Unknown location');
-  const tempBadge = (!item.missing && item.tempLocationId) ? `<span class="badge temp">TEMP</span>` : '';
-  const unknownBadge = (!item.missing && !item.locationId) ? `<span class="badge unknown">UNKNOWN</span>` : '';
-  return `
-    <div class="item-card ${item.missing ? 'missing' : ''}" data-go="itemDetail" data-id="${item.id}">
-      <div class="cat-dot">${ICONS[cat.icon]}</div>
-      <div class="item-info">
-        <div class="item-name">${esc(item.name)}${tempBadge}${unknownBadge}</div>
-        <div class="item-meta">${esc(item.brand || cat.label)} · ${esc(locLabel)}</div>
-      </div>
-      <div class="item-qty">×${item.quantity || 1}</div>
-    </div>`;
-}
-
-function emptyState(title, sub, iconSvg) {
-  return `<div class="empty-state">
-    <div class="empty-icon">${iconSvg || ICONS.box}</div>
-    <h3>${esc(title)}</h3>
-    <p>${esc(sub)}</p>
-  </div>`;
-}
-
-/* ================= SEARCH ================= */
-function renderSearch() {
-  const results = searchItems(state.searchQuery);
-  screenEl.innerHTML = `
-    ${topbar({ title: 'Search', back: true, backTo: 'home' })}
-    <div class="search-wrap">
-      <span class="search-icon">${ICONS.search}</span>
-      <input id="search-input" class="search-input" placeholder="Search tools, bits, blades, accessories…" autocomplete="off" value="${esc(state.searchQuery)}" />
-    </div>
-    ${state.searchQuery.trim() ? `
-      <div class="section-title">${results.length} result${results.length === 1 ? '' : 's'}</div>
-      ${results.length ? results.map(itemCardHtml).join('') : emptyState('Nothing found', 'Try different words, or add it as a new item.', ICONS.search)}
-    ` : ''}
-  `;
-  const input = document.getElementById('search-input');
-  input.focus();
-  input.setSelectionRange(input.value.length, input.value.length);
-  input.addEventListener('input', (e) => {
-    state.searchQuery = e.target.value;
-    render();
-    document.getElementById('search-input').focus();
-  });
-  bindCommon();
-}
-
-/* ================= LOCATIONS ================= */
-function renderLocations() {
-  const roots = directChildren(null);
-  screenEl.innerHTML = `
-    ${topbar({ title: 'Locations' })}
-    <button class="quick-action" style="width:100%;flex-direction:row;justify-content:center;padding:14px;margin-bottom:18px;" data-go="addLocation">
-      <span class="qa-icon">${ICONS.plus}</span><span class="qa-label" style="font-size:13px;">Add Top-Level Location</span>
-    </button>
-    ${roots.length ? roots.map(locRowHtml).join('') : emptyState('No locations yet', 'Add a place like "Parents\' House" or "Condo" to start organizing.', ICONS.pin)}
-  `;
-  bindCommon();
-}
-
-function locRowHtml(loc) {
-  const childLocs = directChildren(loc.id);
-  const childItems = itemsInLocation(loc.id);
-  const subParts = [];
-  if (childLocs.length) subParts.push(`${childLocs.length} inside`);
-  if (childItems.length) subParts.push(`${childItems.length} item${childItems.length === 1 ? '' : 's'}`);
-  return `
-    <div class="loc-row" data-go="locationDetail" data-id="${loc.id}">
-      <div class="loc-icon">${ICONS[loc.kind === 'container' ? 'box' : 'pin']}</div>
-      <div style="flex:1;min-width:0;">
-        <div class="loc-name">${esc(loc.name)}</div>
-        <div class="loc-sub">${subParts.length ? esc(subParts.join(' · ')) : 'Empty'}</div>
-      </div>
-      <span class="chev">${ICONS.chev}</span>
-    </div>`;
-}
-
-function renderLocationDetail() {
-  const loc = locationById(state.params.id);
-  if (!loc) return go('locations');
-  const path = pathTo(loc.id);
-  const childLocs = directChildren(loc.id);
-  const childItems = itemsInLocation(loc.id);
-
-  screenEl.innerHTML = `
-    ${topbar({ title: loc.name, back: true, backTo: loc.parentId ? `locationDetail:${loc.parentId}` : 'locations' })}
-    <div class="breadcrumb">
-      ${path.map((p, idx) => `
-        ${idx > 0 ? `<span class="sep">→</span>` : ''}
-        <span class="crumb ${idx === path.length - 1 ? 'current' : ''}" data-go="locationDetail" data-id="${p.id}">${esc(p.name)}</span>
-      `).join('')}
-    </div>
-
-    <div class="action-row" style="margin-bottom:18px;">
-      <button class="btn-secondary" data-open-sheet="locationActions" data-id="${loc.id}">Actions</button>
-      <button class="btn-primary" data-show-qr="${loc.id}">Show QR</button>
-    </div>
-
-    ${childLocs.length ? `<div class="section-title">Inside this location</div>${childLocs.map(locRowHtml).join('')}` : ''}
-
-    <div class="section-title">Items here (${childItems.length})</div>
-    <button class="quick-action" style="width:100%;flex-direction:row;justify-content:center;padding:12px;margin-bottom:12px;" data-go="addItem" data-preset-loc="${loc.id}">
-      <span class="qa-icon">${ICONS.plus}</span><span class="qa-label" style="font-size:13px;">Add Item Here</span>
-    </button>
-    ${childItems.length ? childItems.map(itemCardHtml).join('') : emptyState('Nothing stored here yet', 'Add an item or bring a container into this location.')}
-
-    <button class="quick-action" style="width:100%;flex-direction:row;justify-content:center;padding:12px;margin-top:6px;" data-go="inventoryCheck" data-id="${loc.id}">
-      <span class="qa-icon">${ICONS.check}</span><span class="qa-label" style="font-size:13px;">Run Inventory Check</span>
-    </button>
-  `;
-  bindCommon();
-}
-
-/* ================= ITEM DETAIL ================= */
-function renderItemDetail() {
-  const item = state.items.find(i => i.id === state.params.id);
-  if (!item) return go('home');
-  const cat = catMeta(item.category);
-  const isTemp = !!item.tempLocationId;
-  const specs = [];
-  if (item.specModel) specs.push(['Model', item.specModel]);
-  if (item.specDiameter) specs.push(['Diameter', item.specDiameter]);
-  if (item.specSize) specs.push(['Size', item.specSize]);
-  if (item.specShank) specs.push(['Shank', item.specShank]);
-  if (item.specLength) specs.push(['Length', item.specLength]);
-  if (item.purchaseDate) specs.push(['Purchased', item.purchaseDate]);
-  if (item.purchasePrice) specs.push(['Price', `$${item.purchasePrice}`]);
-  if (item.store) specs.push(['Store', item.store]);
-
-  screenEl.innerHTML = `
-    ${topbar({ title: 'Item', back: true, backTo: 'home' })}
-
-    <div class="detail-hero">
-      <div class="detail-name">${esc(item.name)} ${item.missing ? '<span class="badge unknown">MISSING</span>' : ''}</div>
-      <div class="detail-brand">${esc(item.brand || 'No brand set')} · ${esc(cat.label)}</div>
-      <div class="detail-stats">
-        <div class="detail-stat"><div class="ds-label">Quantity</div><div class="ds-val">${item.quantity || 1}</div></div>
-        <div class="detail-stat"><div class="ds-label">Category</div><div class="ds-val">${esc(cat.label)}</div></div>
-      </div>
-    </div>
-
-    <div class="info-card">
-      <div class="ic-label">LOCATION</div>
-      ${item.missing ? `
-        <div style="font-size:14.5px;">Last known: ${esc(pathLabel(item.locationId))}</div>
-        <div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;">Marked missing${item.missingSince ? ' on ' + esc(item.missingSince) : ''}</div>
-      ` : isTemp ? `
-        <div style="font-size:14.5px;">Home: ${esc(pathLabel(item.locationId))}</div>
-        <div style="font-size:14.5px;color:var(--accent-dark);font-weight:600;margin-top:4px;">Currently: ${esc(pathLabel(item.tempLocationId))}</div>
-      ` : `
-        <div style="font-size:14.5px;">${esc(pathLabel(item.locationId))}</div>
-      `}
-    </div>
-
-    ${specs.length ? `
-      <div class="info-card">
-        <div class="ic-label">DETAILS</div>
-        ${specs.map(([k, v]) => `<div class="spec-row"><span class="spec-key">${esc(k)}</span><span class="spec-val">${esc(v)}</span></div>`).join('')}
-      </div>` : ''}
-
-    ${item.notes ? `<div class="info-card"><div class="ic-label">NOTES</div><div style="font-size:14px;">${esc(item.notes)}</div></div>` : ''}
-
-    ${item.category === 'kit' && item.kitContents ? `
-      <div class="info-card">
-        <div class="ic-label">KIT CONTENTS</div>
-        ${item.kitContents.split('\n').filter(Boolean).map(line => `<div class="spec-row"><span class="spec-key">${esc(line)}</span></div>`).join('')}
-      </div>` : ''}
-
-    <div class="action-row">
-      <button class="btn-secondary" data-go="editItem" data-id="${item.id}">Edit</button>
-      <button class="btn-primary" data-open-sheet="itemMove" data-id="${item.id}">Move</button>
-    </div>
-    ${isTemp && !item.missing ? `<button class="btn-secondary" data-action="returnHome" data-id="${item.id}">Return Home</button>` : ''}
-    ${!item.missing ? `<button class="btn-secondary" data-action="toggleMissing" data-id="${item.id}">Mark as Missing</button>` : `<button class="btn-secondary" data-action="toggleMissing" data-id="${item.id}">Mark as Found</button>`}
-    <button class="btn-danger-text" data-action="deleteItem" data-id="${item.id}">Delete Item</button>
-  `;
-  bindCommon();
-}
-
-/* ================= ITEM FORM (Add/Edit) ================= */
-function renderItemForm(isEdit) {
-  const item = isEdit ? state.items.find(i => i.id === state.params.id) : null;
-  const presetLoc = state.params.presetLoc || item?.locationId || null;
-  const category = state.formCategory || item?.category || 'power';
-  state.formCategory = category;
-
-  screenEl.innerHTML = `
-    ${topbar({ title: isEdit ? 'Edit Item' : 'Add Item', back: true, backTo: isEdit ? `itemDetail:${item.id}` : 'home' })}
-
-    <div class="field-group">
-      <label class="field-label">Category</label>
-      <div class="category-picker">
-        ${CATEGORIES.map(c => `<div class="cat-chip ${c.id === category ? 'selected' : ''}" data-set-cat="${c.id}">${c.label}</div>`).join('')}
-      </div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Item name</label>
-      <input id="f-name" class="field-input" placeholder="e.g. Flush Trim Router Bit" value="${esc(item?.name || '')}" autocomplete="off" />
-    </div>
-
-    <div id="dup-warning"></div>
-
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">Brand</label>
-        <input id="f-brand" class="field-input" placeholder="e.g. Freud" value="${esc(item?.brand || '')}" autocomplete="off" />
-      </div>
-      <div class="field-group">
-        <label class="field-label">Quantity</label>
-        <input id="f-qty" class="field-input" type="number" min="0" value="${item?.quantity ?? 1}" />
-      </div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Location</label>
-      <div class="loc-row" style="margin-bottom:0;" data-open-sheet="pickLocation" data-target="f-location">
-        <div class="loc-icon">${ICONS.pin}</div>
-        <div style="flex:1;min-width:0;">
-          <div class="loc-name" id="f-location-label">${presetLoc ? esc(pathLabel(presetLoc)) : 'Unknown location'}</div>
-          <div class="loc-sub">Tap to choose</div>
-        </div>
-        <span class="chev">${ICONS.chev}</span>
-      </div>
-      <input type="hidden" id="f-location" value="${presetLoc || ''}" />
-    </div>
-
-    <details class="optional-fields" ${(item?.specModel || item?.specSize || item?.specDiameter || item?.specShank || item?.notes) ? 'open' : ''}>
-      <summary>+ Optional details (model, size, notes, purchase info)</summary>
-      <div class="field-row">
-        <div class="field-group"><label class="field-label">Model #</label><input id="f-model" class="field-input" value="${esc(item?.specModel || '')}" /></div>
-        <div class="field-group"><label class="field-label">Size / Diameter</label><input id="f-size" class="field-input" placeholder='e.g. 1/2"' value="${esc(item?.specSize || '')}" /></div>
-      </div>
-      <div class="field-row">
-        <div class="field-group"><label class="field-label">Shank</label><input id="f-shank" class="field-input" placeholder='e.g. 1/4"' value="${esc(item?.specShank || '')}" /></div>
-        <div class="field-group"><label class="field-label">Length</label><input id="f-length" class="field-input" value="${esc(item?.specLength || '')}" /></div>
-      </div>
-      <div class="field-row">
-        <div class="field-group"><label class="field-label">Purchase date</label><input id="f-pdate" class="field-input" type="date" value="${esc(item?.purchaseDate || '')}" /></div>
-        <div class="field-group"><label class="field-label">Price</label><input id="f-price" class="field-input" type="number" step="0.01" value="${esc(item?.purchasePrice || '')}" /></div>
-      </div>
-      <div class="field-group"><label class="field-label">Store purchased from</label><input id="f-store" class="field-input" value="${esc(item?.store || '')}" /></div>
-      ${category === 'kit' ? `<div class="field-group"><label class="field-label">Kit contents (one per line)</label><textarea id="f-kit" class="field-textarea">${esc(item?.kitContents || '')}</textarea></div>` : ''}
-      <div class="field-group"><label class="field-label">Notes</label><textarea id="f-notes" class="field-textarea">${esc(item?.notes || '')}</textarea></div>
-    </details>
-
-    <button class="btn-primary" id="save-item-btn">${isEdit ? 'Save Changes' : 'Add to Vault'}</button>
-    ${isEdit ? `<button class="btn-danger-text" data-action="deleteItem" data-id="${item.id}">Delete Item</button>` : ''}
-  `;
-
-  document.querySelectorAll('[data-set-cat]').forEach(el => el.addEventListener('click', () => {
-    state.formCategory = el.getAttribute('data-set-cat');
-    render();
-  }));
-
-  const nameInput = document.getElementById('f-name');
-  const brandInput = document.getElementById('f-brand');
-  const dupBox = document.getElementById('dup-warning');
-  function checkDup() {
-    const dupes = findPossibleDuplicates(nameInput.value, brandInput.value, item?.id);
-    if (dupes.length) {
-      dupBox.innerHTML = `<div class="dup-warning">
-        <div class="dup-title">Possible duplicate — you may already own this</div>
-        ${dupes.slice(0, 3).map(d => `<div class="dup-item">${esc(d.name)} ${d.brand ? '(' + esc(d.brand) + ')' : ''} · ×${d.quantity || 1}<div class="dup-loc">${esc(pathLabel(d.effectiveLocationId))}</div></div>`).join('')}
-      </div>`;
-    } else {
-      dupBox.innerHTML = '';
+const emptyData = () => ({ items: [], containers: [] });
+// A container is the source of truth for its own location. An item stored
+// inside one does NOT keep its own building/area — it's derived from the
+// container every time, so moving the container (editing its building/area)
+// automatically moves everything inside it. Nothing has to cascade-write.
+function effectiveLocation(item, containers) {
+    if (item.containerId) {
+        const c = containers.find((c) => c.id === item.containerId);
+        if (c)
+            return { building: c.building, area: c.area, containerName: c.name };
     }
-  }
-  nameInput.addEventListener('input', checkDup);
-  brandInput.addEventListener('input', checkDup);
-  if (isEdit) checkDup();
-
-  document.getElementById('save-item-btn').addEventListener('click', async () => {
-    const name = nameInput.value.trim();
-    if (!name) { toast('Give it a name first'); return; }
-    const locVal = document.getElementById('f-location').value;
-    const payload = {
-      name,
-      brand: brandInput.value.trim(),
-      category: state.formCategory,
-      quantity: Number(document.getElementById('f-qty').value) || 0,
-      locationId: locVal || null,
-      specModel: document.getElementById('f-model').value.trim(),
-      specSize: document.getElementById('f-size').value.trim(),
-      specShank: document.getElementById('f-shank').value.trim(),
-      specLength: document.getElementById('f-length').value.trim(),
-      purchaseDate: document.getElementById('f-pdate').value,
-      purchasePrice: document.getElementById('f-price').value,
-      store: document.getElementById('f-store').value.trim(),
-      notes: document.getElementById('f-notes').value.trim(),
+    return { building: item.building, area: item.area, containerName: null };
+}
+function locationLabel(loc) {
+    const parts = [loc.building, loc.area, loc.containerName].filter(Boolean);
+    return parts.join(" → ");
+}
+// ---- fuzzy search ----
+// Plain substring matching stays the fast path (and is what keeps something
+// like "1/4" precise — short/numeric tokens never get fuzzy leeway, or
+// "1/4" would start matching all kinds of unrelated things). Longer,
+// alphabetic-ish tokens additionally get a typo tolerance scaled to word
+// length, so a rushed misspelling still finds the right item.
+function levenshtein(a, b) {
+    const m = a.length, n = b.length;
+    if (m === 0)
+        return n;
+    if (n === 0)
+        return m;
+    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = 0; i <= m; i++)
+        dp[i][0] = i;
+    for (let j = 0; j <= n; j++)
+        dp[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+            dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+            // Two swapped neighbours ("drvier") count as one typo, not two.
+            if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1])
+                dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + 1);
+        }
+    }
+    return dp[m][n];
+}
+function fuzzyTolerance(len) {
+    if (len <= 3)
+        return 0;
+    if (len <= 6)
+        return 1;
+    return 2;
+}
+function tokenMatches(token, hayWords, hayStr) {
+    if (hayStr.includes(token))
+        return true;
+    const tol = fuzzyTolerance(token.length);
+    if (tol === 0)
+        return false;
+    for (const w of hayWords) {
+        if (Math.abs(w.length - token.length) > tol)
+            continue;
+        if (levenshtein(token, w) <= tol)
+            return true;
+    }
+    return false;
+}
+// ---- design tokens ----
+const C = {
+    cream: "#F2ECDD",
+    paper: "#FAF7EF",
+    ink: "#2B2A25",
+    inkSoft: "#5C564A",
+    muted: "#98907E",
+    sage: "#5B6A52",
+    sageDeep: "#414D3B",
+    sageTint: "#E6E9DD",
+    border: "#E1D8C4",
+    warn: "#AE4A30",
+    warnTint: "#F7EAE2",
+    gold: "#B08A4E",
+};
+const SERIF = "'Cormorant Garamond', Georgia, serif";
+const SANS = "'Jost', -apple-system, BlinkMacSystemFont, sans-serif";
+// ---- small hand-drawn icons, no external icon library ----
+function Icon({ children, size = 16, color = "currentColor", style }) {
+    return (_jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth: "1.6", strokeLinecap: "round", strokeLinejoin: "round", style: style, children: children }));
+}
+const IconSquareTool = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M4 4v16h9" }), _jsx("path", { d: "M4 13h6" })] });
+const IconWrench = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2 2.6-2.6z" }) });
+const IconZap = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M13 3L5 13h6l-1 8 8-11h-6l1-7z" }) });
+const IconBit = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M12 2v12" }), _jsx("path", { d: "M9 5l3-1 3 1" }), _jsx("path", { d: "M9 8l3-1 3 1" }), _jsx("path", { d: "M9 11l3-1 3 1" }), _jsx("path", { d: "M8 15l4 7 4-7" })] });
+const IconBlade = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "12", cy: "12", r: "8" }), _jsx("circle", { cx: "12", cy: "12", r: "2" }), _jsx("path", { d: "M12 4v2.2M12 17.8V20M4 12h2.2M17.8 12H20M6.3 6.3l1.5 1.5M16.2 16.2l1.5 1.5M6.3 17.7l1.5-1.5M16.2 7.8l1.5-1.5" })] });
+const IconSandpaper = (p) => _jsxs(Icon, { ...p, children: [_jsx("rect", { x: "3", y: "4", width: "18", height: "16", rx: "1.5" }), _jsx("circle", { cx: "7", cy: "9", r: "0.8", fill: "currentColor", stroke: "none" }), _jsx("circle", { cx: "12", cy: "7.5", r: "0.8", fill: "currentColor", stroke: "none" }), _jsx("circle", { cx: "16.5", cy: "10", r: "0.8", fill: "currentColor", stroke: "none" }), _jsx("circle", { cx: "9", cy: "13", r: "0.8", fill: "currentColor", stroke: "none" }), _jsx("circle", { cx: "14.5", cy: "14", r: "0.8", fill: "currentColor", stroke: "none" }), _jsx("circle", { cx: "6.5", cy: "16.5", r: "0.8", fill: "currentColor", stroke: "none" }), _jsx("circle", { cx: "17", cy: "17", r: "0.8", fill: "currentColor", stroke: "none" }), _jsx("circle", { cx: "11.5", cy: "17.5", r: "0.8", fill: "currentColor", stroke: "none" })] });
+const IconBattery = (p) => _jsxs(Icon, { ...p, children: [_jsx("rect", { x: "2.5", y: "8", width: "16", height: "8", rx: "1.5" }), _jsx("path", { d: "M20.5 10.5v3" }), _jsx("path", { d: "M6 11v2M9 11v2" })] });
+const IconBolt = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "12", cy: "12", r: "7" }), _jsx("circle", { cx: "12", cy: "12", r: "2" }), _jsx("path", { d: "M12 5v2M12 17v2M5 12h2M17 12h2" })] });
+const IconPlank = (p) => _jsxs(Icon, { ...p, children: [_jsx("rect", { x: "3", y: "8", width: "18", height: "8", rx: "1" }), _jsx("path", { d: "M7 8v8M12 8v8M17 8v8" })] });
+const IconPin = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.2-6.5 11-6.5 11z" }), _jsx("circle", { cx: "12", cy: "10", r: "2.2" })] });
+const IconBox = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M3 8l9-4 9 4-9 4-9-4z" }), _jsx("path", { d: "M3 8v9l9 4 9-4V8" }), _jsx("path", { d: "M12 12v9" })] });
+const IconChevron = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M9 6l6 6-6 6" }) });
+const IconChevronDown = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M6 9l6 6 6-6" }) });
+const IconPlus = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M12 5v14M5 12h14" }) });
+const IconSearch = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "11", cy: "11", r: "7" }), _jsx("path", { d: "M21 21l-4.3-4.3" })] });
+const IconX = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M6 6l12 12M18 6L6 18" }) });
+const IconTrash = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M4 7h16" }), _jsx("path", { d: "M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" }), _jsx("path", { d: "M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" })] });
+const IconAlert = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M12 3l10 18H2L12 3z" }), _jsx("path", { d: "M12 10v4M12 17.5v.1" })] });
+function categoryIcon(cat, props) {
+    if (cat === "power_tool")
+        return _jsx(IconZap, { ...props });
+    if (cat === "tool")
+        return _jsx(IconWrench, { ...props });
+    if (cat === "bit")
+        return _jsx(IconBit, { ...props });
+    if (cat === "blade")
+        return _jsx(IconBlade, { ...props });
+    if (cat === "sandpaper")
+        return _jsx(IconSandpaper, { ...props });
+    if (cat === "battery")
+        return _jsx(IconBattery, { ...props });
+    if (cat === "hardware")
+        return _jsx(IconBolt, { ...props });
+    return _jsx(IconPlank, { ...props });
+}
+export default function GroundUpVault() {
+    const [data, setData] = useState(null);
+    const [loaded, setLoaded] = useState(false);
+    const [waitingForSignal, setWaitingForSignal] = useState(false);
+    const [saveState, setSaveState] = useState("idle");
+    const [isOnline, setIsOnline] = useState(typeof navigator !== "undefined" ? navigator.onLine : true);
+    useEffect(() => {
+        const goOnline = () => setIsOnline(true);
+        const goOffline = () => setIsOnline(false);
+        window.addEventListener("online", goOnline);
+        window.addEventListener("offline", goOffline);
+        return () => {
+            window.removeEventListener("online", goOnline);
+            window.removeEventListener("offline", goOffline);
+        };
+    }, []);
+    const [query, setQuery] = useState("");
+    const [filter, setFilter] = useState("all");
+    const [addOpen, setAddOpen] = useState(false);
+    const [addContainerOpen, setAddContainerOpen] = useState(false);
+    const [bulkOpen, setBulkOpen] = useState(false);
+    const [expandedId, setExpandedId] = useState(null);
+    const [expandedContainerId, setExpandedContainerId] = useState(null);
+    const [containersSectionOpen, setContainersSectionOpen] = useState(false);
+    useEffect(() => {
+        const unsub = docRef.onSnapshot((snap) => {
+            if (snap.exists && snap.data() && snap.data().payload) {
+                try {
+                    const parsed = JSON.parse(snap.data().payload);
+                    setData({ items: parsed.items || [], containers: parsed.containers || [] });
+                }
+                catch (e) {
+                    setData(emptyData());
+                }
+            }
+            else if (snap.metadata && snap.metadata.fromCache) {
+                // "No data" from the on-device cache only means this device
+                // has never synced (e.g. first open at a new address with no
+                // signal). Treating it as an empty vault would let the next
+                // edit overwrite everything in the database, so keep waiting
+                // for the server's answer instead.
+                setWaitingForSignal(true);
+                return;
+            }
+            else {
+                setData(emptyData());
+            }
+            setWaitingForSignal(false);
+            setLoaded(true);
+        }, (err) => {
+            setSaveState("error");
+            setLoaded(true);
+        });
+        return () => unsub();
+    }, []);
+    // One-time seed merge: runs once after the first real load, adds whichever
+    // SEED_ITEMS aren't already present (by name+building+area), and never
+    // runs again this session — guarded by seededRef, not by watching `data`,
+    // so a user's own later edits never re-trigger it.
+    const seededRef = useRef(false);
+    useEffect(() => {
+        if (!loaded || !data || seededRef.current)
+            return;
+        seededRef.current = true;
+        if (SEED_ITEMS.length === 0)
+            return;
+        const existingKeys = new Set(data.items.map(seedKey));
+        const toAdd = SEED_ITEMS.filter((it) => !existingKeys.has(seedKey(it)))
+            .map((it) => ({ id: uid(), createdAt: Date.now(), quantity: 1, unit: "", notes: "", containerId: null, ...it }));
+        if (toAdd.length === 0)
+            return;
+        setData((d) => {
+            const newData = { ...d, items: [...toAdd, ...d.items] };
+            persist(newData);
+            return newData;
+        });
+    }, [loaded, data]);
+    // Writes happen ONLY from explicit mutation calls, never reactively off
+    // `data` changing — that would create a write loop with the onSnapshot
+    // listener above, since every write echoes back as a snapshot event.
+    async function persist(newData) {
+        setSaveState("saving");
+        try {
+            await docRef.set({ payload: JSON.stringify(newData), updatedAt: Date.now() });
+            setSaveState("idle");
+        }
+        catch (e) {
+            setSaveState("error");
+        }
+    }
+    const items = data?.items || [];
+    const containers = data?.containers || [];
+    const buildings = useMemo(() => [...new Set([...items.map((i) => i.building), ...containers.map((c) => c.building)].filter(Boolean))].sort(), [items, containers]);
+    const areasFor = (building) => [...new Set([
+            ...items.filter((i) => i.building === building).map((i) => i.area),
+            ...containers.filter((c) => c.building === building).map((c) => c.area),
+        ].filter(Boolean))].sort();
+    function addItem(item) {
+        setData((d) => {
+            const newData = { ...d, items: [{ id: uid(), createdAt: Date.now(), ...item }, ...d.items] };
+            persist(newData);
+            return newData;
+        });
+    }
+    function updateItem(id, patch) {
+        setData((d) => {
+            const newData = { ...d, items: d.items.map((i) => (i.id === id ? { ...i, ...patch } : i)) };
+            persist(newData);
+            return newData;
+        });
+    }
+    function deleteItem(id) {
+        setData((d) => {
+            const newData = { ...d, items: d.items.filter((i) => i.id !== id) };
+            persist(newData);
+            return newData;
+        });
+        setExpandedId(null);
+    }
+    function addItemsBulk(newItems) {
+        setData((d) => {
+            const additions = newItems.map((it) => ({ id: uid(), createdAt: Date.now(), ...it }));
+            const newData = { ...d, items: [...additions, ...d.items] };
+            persist(newData);
+            return newData;
+        });
+    }
+    function addContainer(container) {
+        let newId = null;
+        setData((d) => {
+            newId = uid();
+            const newData = { ...d, containers: [{ id: newId, createdAt: Date.now(), ...container }, ...d.containers] };
+            persist(newData);
+            return newData;
+        });
+        return newId;
+    }
+    function updateContainer(id, patch) {
+        setData((d) => {
+            const newData = { ...d, containers: d.containers.map((c) => (c.id === id ? { ...c, ...patch } : c)) };
+            persist(newData);
+            return newData;
+        });
+    }
+    function deleteContainer(id) {
+        setData((d) => {
+            const newData = { ...d, containers: d.containers.filter((c) => c.id !== id) };
+            persist(newData);
+            return newData;
+        });
+        setExpandedContainerId(null);
+    }
+    function itemCountIn(containerId) {
+        return items.filter((i) => i.containerId === containerId).length;
+    }
+    function findDuplicates(name) {
+        const n = name.trim().toLowerCase();
+        if (n.length < 3)
+            return [];
+        return items.filter((i) => i.name.trim().toLowerCase() === n);
+    }
+    const filtered = useMemo(() => {
+        let list = items;
+        if (filter !== "all")
+            list = list.filter((i) => i.category === filter);
+        const q = query.trim().toLowerCase();
+        if (q) {
+            const tokens = q.split(/\s+/).filter(Boolean);
+            list = list.filter((i) => {
+                const loc = effectiveLocation(i, containers);
+                const hay = [i.name, loc.building, loc.area, loc.containerName, i.notes].filter(Boolean).join(" ").toLowerCase();
+                const hayWords = hay.split(/[^a-z0-9/.]+/).filter(Boolean);
+                return tokens.every((t) => tokenMatches(t, hayWords, hay));
+            });
+        }
+        return [...list].sort((a, b) => b.createdAt - a.createdAt);
+    }, [items, containers, filter, query]);
+    const sortedContainers = useMemo(() => [...containers].sort((a, b) => a.name.localeCompare(b.name)), [containers]);
+    const missingCount = useMemo(() => items.filter((i) => i.missing).length, [items]);
+    function exportBackup() {
+        const blob = new Blob([JSON.stringify({ items, containers }, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `groundup-vault-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    useEffect(() => {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap";
+        document.head.appendChild(link);
+    }, []);
+    if (!loaded) {
+        return (_jsx("div", { style: { fontFamily: SANS, padding: 40, textAlign: "center", color: C.muted, background: C.cream, minHeight: "100dvh" }, children: waitingForSignal
+                ? "No signal yet \u2014 your vault will load as soon as this phone is back online."
+                : "Loading\u2026" }));
+    }
+    return (_jsx("div", { style: { fontFamily: SANS, background: C.cream, minHeight: "100dvh" }, children: _jsxs("div", { style: { maxWidth: 480, margin: "0 auto", padding: "28px 18px 60px" }, children: [_jsxs("div", { style: { display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 4 }, children: [_jsx("div", { style: { width: 30, height: 30, borderRadius: 8, background: C.sageTint, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 4 }, children: _jsx(IconSquareTool, { size: 16, color: C.sageDeep }) }), _jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [_jsxs("div", { style: { display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8 }, children: [_jsx("h1", { style: { fontFamily: SERIF, fontSize: 28, fontWeight: 600, margin: 0, color: C.ink, letterSpacing: "0.2px" }, children: "GroundUp Vault" }), _jsx("span", { style: { fontSize: 10, color: !isOnline ? C.gold : saveState === "error" ? C.warn : C.muted, whiteSpace: "nowrap" }, children: !isOnline ? "offline — will sync" : saveState === "saving" ? "saving…" : saveState === "error" ? "save failed" : "" })] }), _jsxs("div", { style: { fontSize: 13, color: C.inkSoft, marginTop: 2, display: "flex", alignItems: "center", gap: 8 }, children: [_jsxs("span", { children: [items.length, " item", items.length !== 1 ? "s" : "", " \u00B7 ", containers.length, " container", containers.length !== 1 ? "s" : ""] }), _jsx("button", { onClick: exportBackup, style: { background: "none", border: "none", padding: 0, fontSize: 11.5, color: C.muted, textDecoration: "underline", cursor: "pointer", fontFamily: SANS }, children: "Export backup" })] })] })] }), missingCount > 0 && (_jsxs("div", { style: { marginTop: 12, padding: "9px 12px", borderRadius: 10, background: C.warnTint, border: "1px solid #E6C4AE", fontSize: 12.5, color: "#7C3F26", display: "flex", alignItems: "center", gap: 7 }, children: [_jsx(IconAlert, { size: 13, style: { flexShrink: 0 } }), missingCount, " item", missingCount !== 1 ? "s" : "", " you can't find right now \u2014 check here before buying another."] })), _jsxs("div", { style: { position: "relative", marginTop: 18 }, children: [_jsx("div", { style: { position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: C.muted }, children: _jsx(IconSearch, { size: 15 }) }), _jsx("input", { value: query, onChange: (e) => setQuery(e.target.value), placeholder: "Search tools, hardware, materials\u2026", style: inputStyle(true) })] }), _jsx("div", { style: { display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" }, children: ["all", ...CATEGORIES.map((c) => c.id)].map((id) => {
+                        const label = id === "all" ? "All" : CATEGORIES.find((c) => c.id === id).label;
+                        const active = filter === id;
+                        return (_jsx("button", { onClick: () => setFilter(id), style: chipStyle(active), children: label }, id));
+                    }) }), _jsxs("div", { style: { display: "flex", gap: 8, marginTop: 16 }, children: [_jsxs("button", { onClick: () => setAddOpen((o) => !o), style: primaryButtonStyle(addOpen), children: [addOpen ? _jsx(IconX, { size: 14 }) : _jsx(IconPlus, { size: 14 }), addOpen ? "Cancel" : "Add item"] }), _jsxs("button", { onClick: () => setAddContainerOpen((o) => !o), style: secondaryButtonStyle(addContainerOpen), children: [addContainerOpen ? _jsx(IconX, { size: 14 }) : _jsx(IconBox, { size: 14 }), addContainerOpen ? "Cancel" : "Container"] })] }), _jsx("button", { onClick: () => setBulkOpen((o) => !o), style: { background: "none", border: "none", padding: 0, marginTop: 10, fontSize: 12, color: C.muted, textDecoration: "underline", cursor: "pointer", fontFamily: SANS }, children: bulkOpen ? "Cancel bulk add" : "Have a list? Bulk add multiple at once" }), bulkOpen && (_jsx(BulkAddForm, { buildings: buildings, onImport: (items) => { addItemsBulk(items); setBulkOpen(false); } })), addContainerOpen && (_jsx(AddContainerForm, { buildings: buildings, areasFor: areasFor, onCreate: (c) => { addContainer(c); setAddContainerOpen(false); } })), addOpen && (_jsx(AddForm, { buildings: buildings, areasFor: areasFor, containers: sortedContainers, findDuplicates: findDuplicates, onCreate: (item) => { addItem(item); setAddOpen(false); }, onCreateContainer: (c) => addContainer(c) })), containers.length > 0 && (_jsxs("div", { style: { marginTop: 22 }, children: [_jsxs("button", { onClick: () => setContainersSectionOpen((o) => !o), style: { background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontSize: 13, color: C.inkSoft, fontWeight: 500, fontFamily: SANS }, children: [_jsx(IconChevron, { size: 11, style: { transform: containersSectionOpen ? "rotate(90deg)" : "none", transition: "transform .15s" } }), "Containers (", containers.length, ")"] }), containersSectionOpen && (_jsx("div", { style: { marginTop: 8 }, children: sortedContainers.map((c) => (_jsx(ContainerRow, { container: c, itemCount: itemCountIn(c.id), expanded: expandedContainerId === c.id, onToggle: () => setExpandedContainerId(expandedContainerId === c.id ? null : c.id), onUpdate: (patch) => updateContainer(c.id, patch), onDelete: () => deleteContainer(c.id), buildings: buildings, areasFor: areasFor }, c.id))) }))] })), _jsxs("div", { style: { marginTop: 22 }, children: [filtered.length === 0 && (_jsx("div", { style: { textAlign: "center", color: C.muted, fontSize: 14, padding: "36px 0", fontFamily: SERIF, fontSize: 18 }, children: items.length === 0 ? "Nothing in the vault yet." : "Nothing matches." })), filtered.map((item) => (_jsx(ItemRow, { item: item, containers: sortedContainers, expanded: expandedId === item.id, onToggle: () => setExpandedId(expandedId === item.id ? null : item.id), onUpdate: (patch) => updateItem(item.id, patch), onDelete: () => deleteItem(item.id), buildings: buildings, areasFor: areasFor, onCreateContainer: (c) => addContainer(c) }, item.id)))] })] }) }));
+}
+function inputStyle(withIcon) {
+    return {
+        width: "100%", boxSizing: "border-box", padding: withIcon ? "12px 14px 12px 36px" : "11px 13px",
+        fontSize: 15, fontFamily: SANS, border: `1px solid ${C.border}`, borderRadius: 10,
+        outline: "none", color: C.ink, background: C.paper,
     };
-    if (state.formCategory === 'kit') {
-      const kitEl = document.getElementById('f-kit');
-      if (kitEl) payload.kitContents = kitEl.value;
+}
+function labelStyle() {
+    return { fontSize: 11.5, color: C.muted, marginBottom: 4, display: "block", fontFamily: SANS, letterSpacing: "0.2px" };
+}
+function chipStyle(active) {
+    return {
+        padding: "6px 13px", borderRadius: 20, fontSize: 13, fontFamily: SANS, cursor: "pointer",
+        border: active ? `1px solid ${C.sageDeep}` : `1px solid ${C.border}`,
+        background: active ? C.sageDeep : C.paper,
+        color: active ? "#fff" : C.inkSoft,
+    };
+}
+function primaryButtonStyle(inverted) {
+    return {
+        flex: 1, padding: "12px", borderRadius: 10, fontSize: 14, fontFamily: SANS, fontWeight: 500, cursor: "pointer",
+        border: `1px solid ${C.sageDeep}`, background: inverted ? C.paper : C.sageDeep,
+        color: inverted ? C.sageDeep : "#fff",
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+    };
+}
+function secondaryButtonStyle(active) {
+    return {
+        padding: "12px 15px", borderRadius: 10, fontSize: 13.5, fontFamily: SANS, fontWeight: 500, cursor: "pointer",
+        border: `1px solid ${C.border}`, background: active ? C.sageTint : C.paper, color: C.inkSoft,
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 6, whiteSpace: "nowrap",
+    };
+}
+function panelStyle() {
+    return { marginTop: 12, padding: 16, border: `1px solid ${C.border}`, borderRadius: 16, background: C.paper };
+}
+function saveButtonStyle(disabled) {
+    return {
+        width: "100%", marginTop: 16, padding: "12px", borderRadius: 10, border: "none",
+        background: disabled ? "#D9D2C0" : C.sageDeep, color: "#fff", fontSize: 14, fontFamily: SANS, fontWeight: 500,
+        cursor: disabled ? "default" : "pointer",
+    };
+}
+function Suggestions({ options, onPick }) {
+    if (!options || options.length === 0)
+        return null;
+    return (_jsx("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }, children: options.slice(0, 6).map((o) => (_jsx("button", { type: "button", onClick: () => onPick(o), style: {
+                fontSize: 12, padding: "4px 10px", borderRadius: 20, fontFamily: SANS,
+                border: `1px solid ${C.border}`, background: C.cream, color: C.inkSoft, cursor: "pointer",
+            }, children: o }, o))) }));
+}
+// Container picker: type a name, get matching existing containers as
+// tappable chips (each showing where it lives), or offer to create a new
+// one on the fly if what's typed doesn't match anything and a building is
+// set. Selecting "Remove" clears it back to a direct building/area.
+function ContainerPicker({ containers, value, onSelect, newBuilding, newArea, onCreateNew }) {
+    const [text, setText] = useState("");
+    const selected = containers.find((c) => c.id === value);
+    const matches = containers.filter((c) => c.name.toLowerCase().includes(text.trim().toLowerCase()));
+    const exactMatch = containers.some((c) => c.name.trim().toLowerCase() === text.trim().toLowerCase());
+    if (selected) {
+        return (_jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Container" }), _jsxs("div", { style: {
+                        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+                        padding: "10px 12px", border: `1px solid ${C.border}`, borderRadius: 10, background: C.sageTint,
+                    }, children: [_jsxs("span", { style: { fontSize: 14, color: C.ink, display: "flex", alignItems: "center", gap: 6, minWidth: 0 }, children: [_jsx(IconBox, { size: 14, color: C.sageDeep, style: { flexShrink: 0 } }), _jsxs("span", { style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, children: [selected.name, " ", _jsxs("span", { style: { color: C.muted }, children: ["\u2014 ", selected.building, ", ", selected.area] })] })] }), _jsx("button", { type: "button", onClick: () => onSelect(null), style: { background: "none", border: "none", color: C.warn, fontSize: 12, cursor: "pointer", fontFamily: SANS, flexShrink: 0 }, children: "Remove" })] })] }));
     }
-    if (isEdit) {
-      await updateItem(item.id, payload);
-      toast('Saved');
-      go('itemDetail', { id: item.id });
-    } else {
-      await addItem({ ...payload, tempLocationId: null });
-      toast('Added to vault');
-      state.formCategory = null;
-      go('home');
+    return (_jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Container (optional)" }), _jsx("input", { value: text, onChange: (e) => setText(e.target.value), placeholder: "e.g. Makita Tool Bag", style: inputStyle() }), text.trim().length > 0 && matches.length > 0 && (_jsx("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }, children: matches.slice(0, 6).map((c) => (_jsxs("button", { type: "button", onClick: () => { onSelect(c.id); setText(""); }, style: {
+                        fontSize: 12, padding: "4px 10px", borderRadius: 20, fontFamily: SANS,
+                        border: `1px solid ${C.border}`, background: C.cream, color: C.inkSoft, cursor: "pointer",
+                    }, children: [c.name, " \u2014 ", c.building, ", ", c.area] }, c.id))) })), text.trim().length > 1 && !exactMatch && newBuilding && newArea && (_jsxs("button", { type: "button", onClick: () => {
+                    const id = onCreateNew({ name: text.trim(), building: newBuilding, area: newArea });
+                    onSelect(id);
+                    setText("");
+                }, style: { marginTop: 6, fontSize: 12, color: C.sageDeep, fontFamily: SANS, background: "none", border: "none", textDecoration: "underline", cursor: "pointer", padding: 0 }, children: ["+ Create container \"", text.trim(), "\" at ", newBuilding, ", ", newArea] })), text.trim().length > 1 && !exactMatch && (!newBuilding || !newArea) && (_jsx("div", { style: { marginTop: 6, fontSize: 12, color: C.muted, fontFamily: SANS }, children: "Fill in building & area above to create a new container." }))] }));
+}
+const CATEGORY_KEYWORDS = [
+    ["battery", ["battery", "batteries", "charger", "amp hour", "ah pack"]],
+    ["sandpaper", ["sandpaper", "grit", "sanding disc", "sanding sheet", "sanding belt", "sanding sponge", "abrasive", "sanding block"]],
+    ["blade", ["blade", "blades"]],
+    ["bit", ["bit", "bits", "forstner", "countersink", "hole saw", "spade", "auger", "chuck key", "end mill", "cutter", "bullnose"]],
+    ["power_tool", ["drill", "driver", "impact", "sander", "router", "planer", "jointer", "grinder", "sawzall", "reciprocating", "circular saw", "jigsaw", "jig saw", "miter saw", "table saw", "band saw", "bandsaw", "track saw", "nailer", "stapler gun", "compressor", "shop vac", "vacuum", "dust collector", "oscillating", "multitool", "multi-tool", "heat gun", "lathe", "drill press", "biscuit joiner", "domino", "festool", "makita", "dewalt", "milwaukee", "ryobi", "bosch", "saw"]],
+    ["hardware", ["screw", "screws", "nail", "nails", "bolt", "bolts", "nut", "nuts", "washer", "washers", "hinge", "hinges", "bracket", "anchor", "anchors", "dowel", "dowels", "biscuit", "biscuits", "pocket hole", "kreg screw", "knob", "knobs", "pull", "pulls", "slide", "slides", "rivet", "staple", "staples", "brad", "fastener", "caster", "casters", "latch", "handle", "handles"]],
+    ["material", ["plywood", "lumber", "board", "boards", "mdf", "oak", "maple", "walnut", "pine", "cedar", "cherry", "ash", "poplar", "birch", "stain", "finish", "polyurethane", "poly", "glue", "wood glue", "epoxy", "wax", "oil", "varnish", "lacquer", "shellac", "paint", "primer", "veneer", "sheet goods", "stock", "offcut", "offcuts", "scrap"]],
+];
+const CATEGORY_ALIASES = { "power tool": "power_tool", "power tools": "power_tool", "powertool": "power_tool", "tool": "tool", "tools": "tool", "hand tool": "tool", "hand tools": "tool", "bit": "bit", "bits": "bit", "blade": "blade", "blades": "blade", "sandpaper": "sandpaper", "sand paper": "sandpaper", "battery": "battery", "batteries": "battery", "hardware": "hardware", "material": "material", "materials": "material" };
+function matchCategory(raw) {
+    const k = (raw || "").toLowerCase().trim();
+    if (!k)
+        return null;
+    if (CATEGORY_ALIASES[k])
+        return CATEGORY_ALIASES[k];
+    const m = CATEGORIES.find((c) => c.label.toLowerCase() === k);
+    return m ? m.id : null;
+}
+function guessCategory(name) {
+    const text = " " + name.toLowerCase().replace(/[^a-z0-9\s\-\/.]/g, " ").replace(/\s+/g, " ") + " ";
+    for (const [cat, words] of CATEGORY_KEYWORDS) {
+        for (const w of words) {
+            if (text.includes(" " + w + " ") || text.includes(" " + w + "s "))
+                return cat;
+        }
     }
-  });
-
-  bindCommon();
+    return "tool";
 }
-
-/* ================= LOCATION FORM ================= */
-function renderLocationForm(isEdit) {
-  const loc = isEdit ? locationById(state.params.id) : null;
-  const presetParent = state.params.presetParent || loc?.parentId || null;
-  const kind = state.formKind || loc?.kind || 'place';
-
-  screenEl.innerHTML = `
-    ${topbar({ title: isEdit ? 'Edit Location' : 'New Location', back: true, backTo: isEdit ? `locationDetail:${loc.id}` : 'locations' })}
-
-    <div class="field-group">
-      <label class="field-label">Type</label>
-      <div class="category-picker" style="grid-template-columns:repeat(2,1fr);">
-        <div class="cat-chip ${kind === 'place' ? 'selected' : ''}" data-set-kind="place">Place / Room</div>
-        <div class="cat-chip ${kind === 'container' ? 'selected' : ''}" data-set-kind="container">Container / Bin</div>
-      </div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Name</label>
-      <input id="l-name" class="field-input" placeholder="e.g. Router Bit Drawer" value="${esc(loc?.name || '')}" autocomplete="off" />
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">Inside (parent location)</label>
-      <div class="loc-row" style="margin-bottom:0;" data-open-sheet="pickLocation" data-target="l-parent" data-exclude="${loc?.id || ''}">
-        <div class="loc-icon">${ICONS.pin}</div>
-        <div style="flex:1;min-width:0;">
-          <div class="loc-name" id="l-parent-label">${presetParent ? esc(pathLabel(presetParent)) : 'Top level (no parent)'}</div>
-          <div class="loc-sub">Tap to choose</div>
-        </div>
-        <span class="chev">${ICONS.chev}</span>
-      </div>
-      <input type="hidden" id="l-parent" value="${presetParent || ''}" />
-    </div>
-
-    <button class="btn-primary" id="save-loc-btn">${isEdit ? 'Save Changes' : 'Create Location'}</button>
-    ${isEdit ? `<button class="btn-danger-text" data-action="deleteLocation" data-id="${loc.id}">Delete Location</button>` : ''}
-  `;
-
-  document.querySelectorAll('[data-set-kind]').forEach(el => el.addEventListener('click', () => {
-    state.formKind = el.getAttribute('data-set-kind');
-    render();
-  }));
-
-  document.getElementById('save-loc-btn').addEventListener('click', async () => {
-    const name = document.getElementById('l-name').value.trim();
-    if (!name) { toast('Give it a name first'); return; }
-    const parentId = document.getElementById('l-parent').value || null;
-    const payload = { name, kind: state.formKind || kind, parentId };
-    if (isEdit) {
-      await updateLocation(loc.id, payload);
-      toast('Saved');
-      go('locationDetail', { id: loc.id });
-    } else {
-      const newId = await addLocation(payload);
-      toast('Location created');
-      state.formKind = null;
-      go('locationDetail', { id: newId });
+// Pulls a quantity out of free text: "3x Clamp", "x3 Clamp", "qty 3 Clamp", "Clamp x3", "Clamp (3)", "Clamp qty 3".
+// A plain leading number is NOT a quantity ("80 grit discs", "1/4 router bit").
+function extractQuantity(text) {
+    let name = text.trim();
+    let qty = null;
+    let m;
+    if ((m = name.match(/^(\d+)\s*[x×]\s+(.+)$/i))) {
+        qty = Number(m[1]);
+        name = m[2];
     }
-  });
-
-  bindCommon();
+    else if ((m = name.match(/^(?:[x×]|qty|quantity)\s*:?\s*(\d+)\s+(.+)$/i))) {
+        qty = Number(m[1]);
+        name = m[2];
+    }
+    else if ((m = name.match(/^(.+?)\s+[x×]\s*(\d+)$/i))) {
+        qty = Number(m[2]);
+        name = m[1];
+    }
+    else if ((m = name.match(/^(.+?)\s*\(\s*(\d+)\s*\)$/))) {
+        qty = Number(m[2]);
+        name = m[1];
+    }
+    else if ((m = name.match(/^(.+?)\s*[-–]?\s*(?:qty|quantity)\s*:?\s*(\d+)$/i))) {
+        qty = Number(m[2]);
+        name = m[1];
+    }
+    return { name: name.trim(), qty };
 }
-
-/* ================= UNKNOWN / MISSING ================= */
-function renderUnknown() {
-  const unknownItems = state.items.filter(i => !i.locationId && !i.missing);
-  screenEl.innerHTML = `
-    ${topbar({ title: 'Unknown Location' })}
-    <p class="tagline">Items you own but haven't assigned a spot to yet. Still useful — it means you know not to buy another.</p>
-    ${unknownItems.length ? unknownItems.map(itemCardHtml).join('') : emptyState('Nothing unresolved', 'Every item has a known location.', ICONS.pin)}
-    <div class="section-title">Marked missing</div>
-    ${renderMissingList()}
-  `;
-  bindCommon();
-}
-
-function renderMissingList() {
-  const missing = state.items.filter(i => i.missing);
-  return missing.length ? missing.map(itemCardHtml).join('') : emptyState('Nothing missing', 'Anything you mark missing will show up here.', ICONS.question);
-}
-
-function renderMissing() { renderUnknown(); }
-
-/* ================= INVENTORY CHECK ================= */
-let inventoryCheckedIds = new Set();
-let inventoryCheckLocId = null;
-
-function renderInventoryCheck() {
-  const loc = locationById(state.params.id);
-  if (!loc) return go('locations');
-  if (inventoryCheckLocId !== loc.id) {
-    inventoryCheckedIds = new Set();
-    inventoryCheckLocId = loc.id;
-  }
-  const expected = itemsInLocation(loc.id);
-  screenEl.innerHTML = `
-    ${topbar({ title: 'Inventory Check', back: true, backTo: `locationDetail:${loc.id}` })}
-    <p class="tagline">Confirm what's physically inside <strong>${esc(loc.name)}</strong>. Tap each item you can see. Anything left unchecked gets marked missing when you finish.</p>
-    ${expected.length ? expected.map(item => `
-      <div class="check-row" data-check-row="${item.id}">
-        <div class="check-circle ${inventoryCheckedIds.has(item.id) ? 'checked' : ''}" data-toggle-check="${item.id}">${ICONS.check}</div>
-        <div class="check-name">${esc(item.name)}${item.brand ? ' — ' + esc(item.brand) : ''}</div>
-      </div>
-    `).join('') : emptyState('Nothing expected here', 'This location has no items on record.')}
-    ${expected.length ? `<button class="btn-primary" id="finish-check-btn" style="margin-top:20px;">Finish Check</button>` : ''}
-    <button class="btn-secondary" data-go="locationDetail" data-id="${loc.id}">Cancel</button>
-  `;
-  document.querySelectorAll('[data-toggle-check]').forEach(el => {
-    el.addEventListener('click', () => {
-      const id = el.getAttribute('data-toggle-check');
-      if (inventoryCheckedIds.has(id)) inventoryCheckedIds.delete(id);
-      else inventoryCheckedIds.add(id);
-      el.classList.toggle('checked');
-    });
-  });
-  const finishBtn = document.getElementById('finish-check-btn');
-  if (finishBtn) {
-    finishBtn.addEventListener('click', async () => {
-      const missingOnes = expected.filter(i => !inventoryCheckedIds.has(i.id));
-      if (missingOnes.length) {
-        if (!confirm(`${missingOnes.length} item${missingOnes.length === 1 ? '' : 's'} weren't checked off. Mark ${missingOnes.length === 1 ? 'it' : 'them'} as missing?`)) {
-          return;
+// Accepts both styles on every line:
+//   "3x Clamps, Garage"                      (just name, optional place)
+//   "Forstner Bit Set, Bits, Condo, Closet, 2" (name, category, building, area, qty in any order)
+function parseBulkLine(line, defaultBuilding, defaultArea, overrides) {
+    const parts = line.split(",").map((s) => s.trim()).filter(Boolean);
+    if (!parts.length)
+        return null;
+    let { name, qty } = extractQuantity(parts[0]);
+    if (!name)
+        return null;
+    let category = null;
+    const places = [];
+    for (const p of parts.slice(1)) {
+        const cat = matchCategory(p);
+        if (cat && !category) {
+            category = cat;
+            continue;
         }
-        for (const it of missingOnes) {
-          await updateItem(it.id, {
-            missing: true,
-            missingSince: new Date().toLocaleDateString(),
-            history: arrayUnion({ note: 'Marked missing during inventory check', at: new Date().toISOString() })
-          });
+        if (/^\d+$/.test(p) && qty == null) {
+            qty = Number(p);
+            continue;
         }
-        toast(`Marked ${missingOnes.length} item${missingOnes.length === 1 ? '' : 's'} missing`);
-      } else {
-        toast('Everything checked out');
-      }
-      inventoryCheckLocId = null;
-      go('locationDetail', { id: loc.id });
-    });
-  }
-  bindCommon();
+        places.push(p);
+    }
+    const guessed = !category;
+    if (!category)
+        category = guessCategory(name);
+    if (overrides && overrides[line])
+        category = overrides[line];
+    const building = places[0] || defaultBuilding;
+    const area = places[1] || (places[0] ? "" : defaultArea) || "";
+    if (!building)
+        return { error: "no building", name };
+    return { name, category, guessed: guessed && !(overrides && overrides[line]), building, area, quantity: qty || 1, unit: "", notes: "", containerId: null, line };
 }
-
-/* ================= SCAN ================= */
-let html5Scanner = null;
-function renderScan() {
-  screenEl.innerHTML = `
-    ${topbar({ title: 'Scan QR' })}
-    <p class="tagline">Point your camera at a location or container's QR code to jump straight to it.</p>
-    <div id="qr-reader" style="width:100%;"></div>
-    <div id="scan-status" style="text-align:center;color:var(--text-secondary);font-size:13px;margin-top:12px;"></div>
-  `;
-  try {
-    html5Scanner = new Html5Qrcode("qr-reader");
-    html5Scanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 230 },
-      (decodedText) => {
-        const match = decodedText.match(/[?&]loc=([a-zA-Z0-9]+)/);
-        const locId = match ? match[1] : decodedText.trim();
-        if (locationById(locId)) {
-          stopScanner();
-          go('locationDetail', { id: locId });
-        } else {
-          document.getElementById('scan-status').textContent = "That code isn't a recognized Tool Vault location.";
+function BulkAddForm({ buildings, onImport }) {
+    const [text, setText] = useState("");
+    const [defaultBuilding, setDefaultBuilding] = useState("");
+    const [defaultArea, setDefaultArea] = useState("");
+    const [overrides, setOverrides] = useState({});
+    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+    const parsed = lines.map((l) => parseBulkLine(l, defaultBuilding.trim(), defaultArea.trim(), overrides));
+    const good = parsed.filter((p) => p && !p.error);
+    const bad = parsed.filter((p) => p && p.error);
+    return (_jsxs("div", { style: panelStyle(), children: [
+        _jsxs("div", { style: { fontSize: 13, color: C.inkSoft, marginBottom: 10, lineHeight: 1.5 }, children: ["Type or paste one item per line, as messy as you like. The app guesses the category and you can fix any guess before importing.", _jsx("br", {}), "Quantity: ", _jsx("span", { style: { fontFamily: "monospace", fontSize: 12 }, children: "3x Clamps" }), " or ", _jsx("span", { style: { fontFamily: "monospace", fontSize: 12 }, children: "Clamps (3)" }), ". Different place on one line: ", _jsx("span", { style: { fontFamily: "monospace", fontSize: 12 }, children: "Router, Condo, Closet" }), "."] }),
+        _jsxs("div", { style: { display: "flex", gap: 10 }, children: [_jsxs("div", { style: { flex: 1 }, children: [_jsx("label", { style: labelStyle(), children: "Building for this list" }), _jsx("input", { value: defaultBuilding, onChange: (e) => setDefaultBuilding(e.target.value), placeholder: "e.g. Parents' house", style: inputStyle() }), _jsx(Suggestions, { options: buildings, onPick: setDefaultBuilding })] })] }),
+        _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Area for this list" }), _jsx("input", { value: defaultArea, onChange: (e) => setDefaultArea(e.target.value), placeholder: "e.g. Garage", style: inputStyle() })] }),
+        _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Items" }), _jsx("textarea", { value: text, onChange: (e) => setText(e.target.value), rows: 7, placeholder: "Makita impact driver\n3x bar clamps\n80 grit sanding discs\n1/4 round over bit\n18v batteries (4)", style: { ...inputStyle(), resize: "vertical", fontSize: 14 } })] }),
+        good.length > 0 && (_jsx("div", { style: { marginTop: 12, border: `1px solid ${C.border}`, borderRadius: 12, background: C.cream, overflow: "hidden" }, children: good.map((p, i) => (_jsxs("div", { style: { padding: "9px 12px", borderTop: i ? `1px solid ${C.border}` : "none", display: "flex", alignItems: "center", gap: 8 }, children: [
+            _jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [_jsxs("div", { style: { fontSize: 14, color: C.ink, wordBreak: "break-word" }, children: [p.name, p.quantity > 1 ? ` × ${p.quantity}` : ""] }), _jsx("div", { style: { fontSize: 11.5, color: C.muted, marginTop: 1 }, children: p.area ? `${p.building} › ${p.area}` : p.building })] }),
+            _jsx("select", { "aria-label": `Category for ${p.name}`, value: p.category, onChange: (e) => setOverrides({ ...overrides, [p.line]: e.target.value }), style: { fontSize: 13, padding: "6px 4px", borderRadius: 8, border: `1px solid ${p.guessed ? C.gold : C.border}`, background: C.paper, color: C.ink, maxWidth: 112 }, children: CATEGORIES.map((c) => _jsx("option", { value: c.id, children: c.label }, c.id)) })
+        ] }, i))) })),
+        lines.length > 0 && (_jsxs("div", { style: { marginTop: 8, fontSize: 12.5, color: bad.length > 0 ? C.warn : C.inkSoft, lineHeight: 1.5 }, children: [good.length, " item", good.length !== 1 ? "s" : "", " ready", good.some((p) => p.guessed) ? " — gold outline means the category is a guess, tap to change it" : "", bad.length > 0 ? `. Skipped (no building): ${bad.map((b) => b.name).join(", ")}. Fill in "Building for this list" above.` : ""] })),
+        _jsxs("button", { onClick: () => { if (good.length) {
+                    onImport(good.map(({ guessed, line, ...it }) => it));
+                } }, disabled: good.length === 0, style: saveButtonStyle(good.length === 0), children: ["Import ", good.length > 0 ? good.length : "", " item", good.length === 1 ? "" : "s"] })
+    ] }));
+}
+function AddContainerForm({ buildings, areasFor, onCreate }) {
+    const [name, setName] = useState("");
+    const [building, setBuilding] = useState("");
+    const [area, setArea] = useState("");
+    function submit() {
+        if (!name.trim() || !building.trim() || !area.trim())
+            return;
+        onCreate({ name: name.trim(), building: building.trim(), area: area.trim() });
+    }
+    const disabled = !name.trim() || !building.trim() || !area.trim();
+    return (_jsxs("div", { style: panelStyle(), children: [_jsx("label", { style: labelStyle(), children: "Container name" }), _jsx("input", { value: name, onChange: (e) => setName(e.target.value), placeholder: "e.g. Makita Tool Bag", style: inputStyle(), autoFocus: true }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Building" }), _jsx("input", { value: building, onChange: (e) => setBuilding(e.target.value), placeholder: "e.g. Parents' house", style: inputStyle() }), _jsx(Suggestions, { options: buildings, onPick: setBuilding })] }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Area" }), _jsx("input", { value: area, onChange: (e) => setArea(e.target.value), placeholder: "e.g. Garage", style: inputStyle() }), _jsx(Suggestions, { options: areasFor(building), onPick: setArea })] }), _jsx("button", { onClick: submit, disabled: disabled, style: saveButtonStyle(disabled), children: "Save container" })] }));
+}
+function ContainerRow({ container, itemCount, expanded, onToggle, onUpdate, onDelete, buildings, areasFor }) {
+    const [name, setName] = useState(container.name);
+    const [building, setBuilding] = useState(container.building);
+    const [area, setArea] = useState(container.area);
+    function save() {
+        onUpdate({
+            name: name.trim() || container.name,
+            building: building.trim() || container.building,
+            area: area.trim() || container.area,
+        });
+    }
+    const moved = building !== container.building || area !== container.area;
+    return (_jsxs("div", { style: { borderBottom: `1px solid ${C.border}` }, children: [_jsxs("button", { onClick: onToggle, style: rowButtonStyle(), children: [_jsx("div", { style: { width: 28, height: 28, borderRadius: 7, background: C.sageTint, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: _jsx(IconBox, { size: 14, color: C.sageDeep }) }), _jsxs("div", { style: { minWidth: 0, flex: 1 }, children: [_jsx("div", { style: { fontSize: 14.5, color: C.ink, fontWeight: 500, fontFamily: SANS }, children: container.name }), _jsxs("div", { style: { fontSize: 12, color: C.muted, marginTop: 1 }, children: [container.building, " \u2192 ", container.area] })] }), _jsxs("div", { style: { fontSize: 12, color: C.inkSoft, flexShrink: 0 }, children: [itemCount, " item", itemCount !== 1 ? "s" : ""] })] }), expanded && (_jsxs("div", { style: { padding: "2px 2px 18px 38px" }, children: [_jsx("label", { style: labelStyle(), children: "Name" }), _jsx("input", { value: name, onChange: (e) => setName(e.target.value), style: inputStyle() }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Building" }), _jsx("input", { value: building, onChange: (e) => setBuilding(e.target.value), style: inputStyle() }), _jsx(Suggestions, { options: buildings, onPick: setBuilding })] }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Area" }), _jsx("input", { value: area, onChange: (e) => setArea(e.target.value), style: inputStyle() }), _jsx(Suggestions, { options: areasFor(building), onPick: setArea })] }), moved && (_jsxs("div", { style: { marginTop: 8, fontSize: 12, color: C.gold, display: "flex", gap: 5, alignItems: "flex-start" }, children: [_jsx(IconAlert, { size: 13, style: { marginTop: 1, flexShrink: 0 } }), "Saving will move all ", itemCount, " item", itemCount !== 1 ? "s" : "", " in this container to ", building, ", ", area, "."] })), _jsxs("div", { style: { display: "flex", gap: 8, marginTop: 14 }, children: [_jsx("button", { onClick: save, style: { flex: 1, padding: "10px", borderRadius: 8, border: `1px solid ${C.sageDeep}`, background: C.sageDeep, color: "#fff", fontSize: 13, fontFamily: SANS, fontWeight: 500, cursor: "pointer" }, children: "Save changes" }), _jsxs("button", { onClick: () => { if (window.confirm(`Delete "${container.name}"? This can't be undone.`))
+                                    onDelete(); }, disabled: itemCount > 0, title: itemCount > 0 ? "Move or remove the items inside first" : "", style: {
+                                    padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`,
+                                    background: C.paper, color: itemCount > 0 ? "#C9C0AD" : C.warn, fontSize: 13, fontFamily: SANS,
+                                    cursor: itemCount > 0 ? "default" : "pointer", display: "flex", alignItems: "center", gap: 5,
+                                }, children: [_jsx(IconTrash, { size: 13 }), " Delete"] })] }), itemCount > 0 && (_jsx("div", { style: { marginTop: 6, fontSize: 12, color: C.muted }, children: "Empty this container out before deleting it." }))] }))] }));
+}
+function rowButtonStyle() {
+    return {
+        width: "100%", textAlign: "left", background: "none", border: "none", cursor: "pointer",
+        padding: "11px 2px", display: "flex", alignItems: "center", gap: 10, fontFamily: SANS,
+    };
+}
+function stepperButtonStyle() {
+    return {
+        width: 26, height: 26, borderRadius: 7, border: `1px solid ${C.border}`, background: C.paper,
+        color: C.inkSoft, fontSize: 15, lineHeight: 1, cursor: "pointer", display: "flex",
+        alignItems: "center", justifyContent: "center", fontFamily: SANS, padding: 0,
+    };
+}
+function CategoryPicker({ value, onChange }) {
+    return (_jsx("div", { style: { display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }, children: CATEGORIES.map((c) => {
+            const active = value === c.id;
+            return (_jsxs("button", { type: "button", onClick: () => onChange(c.id), style: {
+                    flex: "1 1 46%", padding: "9px 0", borderRadius: 8, fontSize: 13, fontFamily: SANS, cursor: "pointer",
+                    border: active ? `1px solid ${C.sageDeep}` : `1px solid ${C.border}`,
+                    background: active ? C.sageDeep : C.paper, color: active ? "#fff" : C.inkSoft,
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
+                }, children: [categoryIcon(c.id, { size: 12 }), " ", c.label] }, c.id));
+        }) }));
+}
+function AddForm({ buildings, areasFor, containers, findDuplicates, onCreate, onCreateContainer }) {
+    const [name, setName] = useState("");
+    const [category, setCategory] = useState("tool");
+    const [quantity, setQuantity] = useState(1);
+    const [unit, setUnit] = useState("");
+    const [building, setBuilding] = useState("");
+    const [area, setArea] = useState("");
+    const [notes, setNotes] = useState("");
+    const [containerId, setContainerId] = useState(null);
+    const [confirmedDupe, setConfirmedDupe] = useState(false);
+    const dupes = findDuplicates(name);
+    function submit() {
+        if (!name.trim())
+            return;
+        if (!containerId && !building.trim())
+            return;
+        const payload = {
+            name: name.trim(), category, quantity: Number(quantity) || 1,
+            unit: unit.trim(), notes: notes.trim(), containerId: containerId || null,
+        };
+        if (!containerId) {
+            payload.building = building.trim();
+            payload.area = area.trim();
         }
-      },
-      () => {}
-    ).catch(err => {
-      document.getElementById('scan-status').textContent = 'Camera unavailable — check permissions.';
-    });
-  } catch (e) {
-    document.getElementById('scan-status').textContent = 'Camera unavailable on this device.';
-  }
+        onCreate(payload);
+    }
+    const disabled = !name.trim() || (!containerId && !building.trim());
+    return (_jsxs("div", { style: panelStyle(), children: [_jsx("label", { style: labelStyle(), children: "Name" }), _jsx("input", { value: name, onChange: (e) => { setName(e.target.value); setConfirmedDupe(false); }, placeholder: "Item name", style: inputStyle(), autoFocus: true }), dupes.length > 0 && !confirmedDupe && (_jsxs("div", { style: { marginTop: 8, padding: 10, background: C.warnTint, border: `1px solid #E6C4AE`, borderRadius: 8, fontSize: 13, color: "#7C3F26", display: "flex", gap: 7 }, children: [_jsx(IconAlert, { size: 14, style: { flexShrink: 0, marginTop: 1 } }), _jsxs("div", { children: ["You already have \"", dupes[0].name, "\" \u2014 ", dupes[0].quantity, dupes[0].unit ? ` ${dupes[0].unit}` : "", ".", _jsx("div", { children: _jsx("button", { type: "button", onClick: () => setConfirmedDupe(true), style: { marginTop: 4, fontSize: 12, color: "#7C3F26", textDecoration: "underline", background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: SANS }, children: "Add another anyway" }) })] })] })), _jsx(CategoryPicker, { value: category, onChange: setCategory }), _jsxs("div", { style: { display: "flex", gap: 10, marginTop: 10 }, children: [_jsxs("div", { style: { width: 90 }, children: [_jsx("label", { style: labelStyle(), children: "Qty" }), _jsx("input", { type: "number", min: 0, value: quantity, onChange: (e) => setQuantity(e.target.value), style: inputStyle() })] }), _jsxs("div", { style: { flex: 1 }, children: [_jsx("label", { style: labelStyle(), children: "Unit (optional)" }), _jsx("input", { value: unit, onChange: (e) => setUnit(e.target.value), placeholder: "pcs, ft, box\u2026", style: inputStyle() })] })] }), !containerId && (_jsxs(_Fragment, { children: [_jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Building" }), _jsx("input", { value: building, onChange: (e) => setBuilding(e.target.value), placeholder: "e.g. Parents' house", style: inputStyle() }), _jsx(Suggestions, { options: buildings, onPick: setBuilding })] }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Area (optional)" }), _jsx("input", { value: area, onChange: (e) => setArea(e.target.value), placeholder: "e.g. Garage", style: inputStyle() }), _jsx(Suggestions, { options: areasFor(building), onPick: setArea })] })] })), _jsx(ContainerPicker, { containers: containers, value: containerId, onSelect: setContainerId, newBuilding: building.trim(), newArea: area.trim(), onCreateNew: onCreateContainer }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Notes (optional)" }), _jsx("input", { value: notes, onChange: (e) => setNotes(e.target.value), style: inputStyle() })] }), _jsx("button", { onClick: submit, disabled: disabled, style: saveButtonStyle(disabled), children: "Save" })] }));
 }
-
-function stopScanner() {
-  if (html5Scanner) {
-    html5Scanner.stop().catch(() => {});
-    html5Scanner = null;
-  }
-}
-
-/* ================= SHEETS (bottom modals) ================= */
-function openSheet(type, opts = {}) {
-  const overlay = document.createElement('div');
-  overlay.className = 'sheet-overlay';
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-
-  let html = '';
-  if (type === 'pickLocation') {
-    html = pickLocationSheet(opts);
-  } else if (type === 'itemMove') {
-    html = itemMoveSheet(opts);
-  } else if (type === 'locationActions') {
-    html = locationActionsSheet(opts);
-  } else if (type === 'qr') {
-    html = qrSheet(opts);
-  }
-  overlay.innerHTML = `<div class="sheet">${html}</div>`;
-  document.body.appendChild(overlay);
-  bindSheetEvents(overlay, type, opts);
-}
-
-function pickLocationSheet(opts) {
-  const excludeSet = new Set(opts.excludeIds || (opts.exclude ? [opts.exclude] : []));
-  const options = state.locations.filter(l => !excludeSet.has(l.id));
-  return `
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">Choose a Location</div>
-    <div class="sheet-option" data-pick-loc="">Unknown location</div>
-    ${options.map(l => `<div class="sheet-option" data-pick-loc="${l.id}">${esc(pathLabel(l.id))}</div>`).join('')}
-    ${!options.length ? `<p style="color:var(--text-secondary);font-size:13.5px;padding:10px 0;">No locations yet — create one first from the Locations tab.</p>` : ''}
-  `;
-}
-
-function itemMoveSheet(opts) {
-  const item = state.items.find(i => i.id === opts.id);
-  return `
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">Move ${esc(item.name)}</div>
-    <div class="sheet-option" data-move-type="permanent">Move permanently</div>
-    <div class="sheet-option" data-move-type="temp">Move temporarily</div>
-  `;
-}
-
-function locationActionsSheet(opts) {
-  const loc = locationById(opts.id);
-  return `
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">${esc(loc.name)}</div>
-    <div class="sheet-option" data-loc-action="addSub">Add container/location inside</div>
-    <div class="sheet-option" data-loc-action="edit">Edit name / type</div>
-    <div class="sheet-option" data-loc-action="move">Move this location</div>
-    <div class="sheet-option" data-loc-action="delete" style="color:var(--danger);">Delete location</div>
-  `;
-}
-
-function qrSheet(opts) {
-  const loc = locationById(opts.id);
-  return `
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">${esc(loc.name)}</div>
-    <div class="qr-box">
-      <div id="qr-canvas"></div>
-      <p style="font-size:12.5px;color:var(--text-secondary);text-align:center;margin-top:12px;">Print this and stick it on the container. Scanning it opens this location directly.</p>
-    </div>
-    <button class="btn-secondary" data-print-qr="1">Print</button>
-  `;
-}
-
-function bindSheetEvents(overlay, type, opts) {
-  if (type === 'pickLocation' && !opts.moveType && !opts.locMove) {
-    overlay.querySelectorAll('[data-pick-loc]').forEach(el => {
-      el.addEventListener('click', () => {
-        const val = el.getAttribute('data-pick-loc');
-        const target = document.getElementById(opts.target);
-        const label = document.getElementById(opts.target + '-label');
-        if (target) target.value = val;
-        if (label) label.textContent = val ? pathLabel(val) : (opts.target === 'l-parent' ? 'Top level (no parent)' : 'Unknown location');
-        overlay.remove();
-      });
-    });
-  }
-
-  overlay.querySelectorAll('[data-move-type]').forEach(el => {
-    el.addEventListener('click', () => {
-      const item = state.items.find(i => i.id === opts.id);
-      overlay.remove();
-      openSheet('pickLocation', { target: '__move__', moveType: el.getAttribute('data-move-type'), item });
-    });
-  });
-
-  if (opts.moveType) {
-    overlay.querySelectorAll('[data-pick-loc]').forEach(el => {
-      el.addEventListener('click', async () => {
-        const val = el.getAttribute('data-pick-loc') || null;
-        if (opts.moveType === 'permanent') await moveItemPermanent(opts.item, val);
-        else await moveItemTemp(opts.item, val);
-        overlay.remove();
-        go('itemDetail', { id: opts.item.id });
-      });
-    });
-  }
-
-  overlay.querySelectorAll('[data-loc-action]').forEach(el => {
-    el.addEventListener('click', () => {
-      const action = el.getAttribute('data-loc-action');
-      const loc = locationById(opts.id);
-      overlay.remove();
-      if (action === 'addSub') { state.formKind = null; go('addLocation', { presetParent: loc.id }); }
-      else if (action === 'edit') { state.formKind = loc.kind || null; go('editLocation', { id: loc.id }); }
-      else if (action === 'move') openSheet('pickLocation', { target: '__movLoc__', locMove: loc, excludeIds: descendantIds(loc.id) });
-      else if (action === 'delete') {
-        const blocked = directChildren(loc.id).length || locationHasAnyItemRef(loc.id);
-        if (blocked) {
-          toast("Move or remove what's inside first");
-        } else if (confirm(`Delete "${loc.name}"?`)) {
-          deleteLocation(loc.id);
-          go('locations');
+function ItemRow({ item, containers, expanded, onToggle, onUpdate, onDelete, buildings, areasFor, onCreateContainer }) {
+    const [name, setName] = useState(item.name);
+    const [category, setCategory] = useState(item.category);
+    const [quantity, setQuantity] = useState(item.quantity);
+    const [unit, setUnit] = useState(item.unit || "");
+    const [building, setBuilding] = useState(item.building || "");
+    const [area, setArea] = useState(item.area || "");
+    const [notes, setNotes] = useState(item.notes || "");
+    const [containerId, setContainerId] = useState(item.containerId || null);
+    const loc = effectiveLocation(item, containers);
+    function save() {
+        const patch = {
+            name: name.trim() || item.name,
+            category,
+            quantity: Number(quantity) || 1,
+            unit: unit.trim(),
+            notes: notes.trim(),
+            containerId: containerId || null,
+        };
+        if (!containerId) {
+            patch.building = building.trim() || item.building;
+            patch.area = area.trim();
         }
-      }
-    });
-  });
-
-  if (opts.locMove) {
-    overlay.querySelectorAll('[data-pick-loc]').forEach(el => {
-      el.addEventListener('click', async () => {
-        const val = el.getAttribute('data-pick-loc') || null;
-        if (val && descendantIds(opts.locMove.id).includes(val)) { toast("Can't move a location inside itself or something stored inside it"); overlay.remove(); return; }
-        await moveLocation(opts.locMove.id, val);
-        overlay.remove();
-        go('locationDetail', { id: opts.locMove.id });
-      });
-    });
-  }
-
-  if (type === 'qr') {
-    setTimeout(() => {
-      const holder = document.getElementById('qr-canvas');
-      if (holder && window.QRCode) {
-        const url = `${window.location.origin}${window.location.pathname}?loc=${opts.id}`;
-        new QRCode(holder, { text: url, width: 180, height: 180, colorDark: '#201D19', colorLight: '#ffffff' });
-      }
-    }, 0);
-    overlay.querySelectorAll('[data-print-qr]').forEach(el => {
-      el.addEventListener('click', () => window.print());
-    });
-  }
+        onUpdate(patch);
+    }
+    return (_jsxs("div", { style: { borderBottom: `1px solid ${C.border}` }, children: [_jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, padding: "11px 2px" }, children: [_jsxs("button", { onClick: onToggle, style: { display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0, background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: SANS, textAlign: "left" }, children: [_jsx("div", { style: { width: 30, height: 30, borderRadius: 8, background: C.sageTint, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: categoryIcon(item.category, { size: 14, color: C.sageDeep }) }), _jsxs("div", { style: { minWidth: 0, flex: 1 }, children: [_jsx("div", { style: { fontSize: 15, color: C.ink, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, children: item.name }), _jsxs("div", { style: { fontSize: 12, color: item.missing ? C.warn : C.muted, marginTop: 2, display: "flex", alignItems: "center", gap: 3, overflow: "hidden" }, children: [item.missing ? _jsx(IconAlert, { size: 11, style: { flexShrink: 0 } }) : _jsx(IconPin, { size: 11, style: { flexShrink: 0 } }), _jsx("span", { style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, children: item.missing ? "Can't find it — check before buying another" : locationLabel(loc) })] })] })] }), _jsxs("div", { style: { display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }, children: [_jsx("button", { onClick: () => onUpdate({ quantity: Math.max(0, (item.quantity || 0) - 1) }), style: stepperButtonStyle(), "aria-label": "Decrease quantity", children: "\u2212" }), _jsxs("div", { style: { fontSize: 12.5, color: C.inkSoft, background: C.cream, padding: "3px 9px", borderRadius: 20, border: `1px solid ${C.border}`, minWidth: 34, textAlign: "center" }, children: ["\u00D7", item.quantity, item.unit ? ` ${item.unit}` : ""] }), _jsx("button", { onClick: () => onUpdate({ quantity: (item.quantity || 0) + 1 }), style: stepperButtonStyle(), "aria-label": "Increase quantity", children: "+" })] })] }), expanded && (_jsxs("div", { style: { padding: "2px 2px 18px 40px" }, children: [_jsx("label", { style: labelStyle(), children: "Name" }), _jsx("input", { value: name, onChange: (e) => setName(e.target.value), style: inputStyle() }), _jsx(CategoryPicker, { value: category, onChange: setCategory }), _jsxs("div", { style: { display: "flex", gap: 10, marginTop: 10 }, children: [_jsxs("div", { style: { width: 90 }, children: [_jsx("label", { style: labelStyle(), children: "Qty" }), _jsx("input", { type: "number", min: 0, value: quantity, onChange: (e) => setQuantity(e.target.value), style: inputStyle() })] }), _jsxs("div", { style: { flex: 1 }, children: [_jsx("label", { style: labelStyle(), children: "Unit" }), _jsx("input", { value: unit, onChange: (e) => setUnit(e.target.value), style: inputStyle() })] })] }), !containerId && (_jsxs(_Fragment, { children: [_jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Building" }), _jsx("input", { value: building, onChange: (e) => setBuilding(e.target.value), placeholder: "e.g. Parents' house", style: inputStyle() }), _jsx(Suggestions, { options: buildings, onPick: setBuilding })] }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Area" }), _jsx("input", { value: area, onChange: (e) => setArea(e.target.value), placeholder: "e.g. Garage", style: inputStyle() }), _jsx(Suggestions, { options: areasFor(building), onPick: setArea })] })] })), _jsx(ContainerPicker, { containers: containers, value: containerId, onSelect: (id) => {
+                            setContainerId(id);
+                            // Assigning to a container saves immediately — same as the
+                            // quantity stepper and the missing-flag — since the box
+                            // visually looks "selected" right away and it should
+                            // actually be true. Removing (id === null) is left for the
+                            // Save button below, since that needs a building/area typed
+                            // in first to fall back to.
+                            if (id)
+                                onUpdate({ containerId: id });
+                        }, newBuilding: building.trim(), newArea: area.trim(), onCreateNew: onCreateContainer }), _jsxs("div", { style: { marginTop: 10 }, children: [_jsx("label", { style: labelStyle(), children: "Notes" }), _jsx("input", { value: notes, onChange: (e) => setNotes(e.target.value), style: inputStyle() })] }), _jsxs("button", { onClick: () => onUpdate({ missing: !item.missing }), style: {
+                            width: "100%", marginTop: 10, padding: "9px", borderRadius: 8, fontSize: 13, fontFamily: SANS,
+                            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                            border: item.missing ? `1px solid ${C.sage}` : `1px solid #E6C4AE`,
+                            background: item.missing ? C.sageTint : C.warnTint,
+                            color: item.missing ? C.sageDeep : "#7C3F26",
+                        }, children: [_jsx(IconAlert, { size: 13 }), item.missing ? "Found it — clear the flag" : "Can't find it right now"] }), _jsxs("div", { style: { display: "flex", gap: 8, marginTop: 10 }, children: [_jsx("button", { onClick: save, style: { flex: 1, padding: "10px", borderRadius: 8, border: `1px solid ${C.sageDeep}`, background: C.sageDeep, color: "#fff", fontSize: 13, fontFamily: SANS, fontWeight: 500, cursor: "pointer" }, children: "Save changes" }), _jsxs("button", { onClick: () => { if (window.confirm(`Delete "${item.name}"? This can't be undone.`))
+                                    onDelete(); }, style: { padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, background: C.paper, color: C.warn, fontSize: 13, fontFamily: SANS, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }, children: [_jsx(IconTrash, { size: 13 }), " Delete"] })] })] }))] }));
 }
 
-/* ================= COMMON BINDINGS ================= */
-function bindCommon() {
-  document.querySelectorAll('[data-go]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      const screen = el.getAttribute('data-go');
-      const id = el.getAttribute('data-id');
-      const presetLoc = el.getAttribute('data-preset-loc');
-      const presetParent = el.getAttribute('data-preset-parent');
-      const params = {};
-      if (id) params.id = id;
-      if (presetLoc) params.presetLoc = presetLoc;
-      if (presetParent) params.presetParent = presetParent;
-      if (screen === 'addItem') state.formCategory = null;
-      if (screen === 'editItem') {
-        const editingItem = state.items.find(i => i.id === id);
-        state.formCategory = editingItem ? editingItem.category : null;
-      }
-      if (screen === 'addLocation') state.formKind = null;
-      if (screen === 'editLocation') {
-        const editingLoc = locationById(id);
-        state.formKind = editingLoc ? editingLoc.kind : null;
-      }
-      go(screen, params);
-    });
-  });
-
-  document.querySelectorAll('[data-back]').forEach(el => {
-    el.addEventListener('click', () => {
-      const backTo = el.getAttribute('data-back');
-      if (backTo && backTo.includes(':')) {
-        const [screen, id] = backTo.split(':');
-        go(screen, { id });
-      } else if (backTo) {
-        go(backTo);
-      } else {
-        go('home');
-      }
-    });
-  });
-
-  document.querySelectorAll('[data-open-sheet]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const type = el.getAttribute('data-open-sheet');
-      const opts = {
-        id: el.getAttribute('data-id'),
-        target: el.getAttribute('data-target'),
-        exclude: el.getAttribute('data-exclude') || undefined
-      };
-      openSheet(type, opts);
-    });
-  });
-
-  document.querySelectorAll('[data-show-qr]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openSheet('qr', { id: el.getAttribute('data-show-qr') });
-    });
-  });
-
-  document.querySelectorAll('[data-action]').forEach(el => {
-    el.addEventListener('click', async (e) => {
-      const action = el.getAttribute('data-action');
-      const id = el.getAttribute('data-id');
-      if (action === 'deleteItem') {
-        if (confirm('Delete this item permanently?')) {
-          await deleteItem(id);
-          toast('Item deleted');
-          go('home');
-        }
-      } else if (action === 'toggleMissing') {
-        const item = state.items.find(i => i.id === id);
-        if (!item.missing) {
-          await updateItem(id, { missing: true, missingSince: new Date().toLocaleDateString(), history: arrayUnion({ note: 'Marked missing', at: new Date().toISOString() }) });
-          toast('Marked as missing');
-        } else {
-          await updateItem(id, { missing: false, missingSince: null, history: arrayUnion({ note: 'Marked found', at: new Date().toISOString() }) });
-          toast('Marked as found');
-        }
-        go('itemDetail', { id });
-      } else if (action === 'returnHome') {
-        const item = state.items.find(i => i.id === id);
-        await returnItemHome(item);
-        go('itemDetail', { id });
-      } else if (action === 'deleteLocation') {
-        const loc = locationById(id);
-        const blocked = directChildren(loc.id).length || locationHasAnyItemRef(loc.id);
-        if (blocked) { toast("Move or remove what's inside first"); return; }
-        if (confirm(`Delete "${loc.name}"?`)) {
-          await deleteLocation(id);
-          go('locations');
-        }
-      }
-    });
-  });
-}
-
-/* ================= NAV BAR ================= */
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    stopScanner();
-    const nav = btn.getAttribute('data-nav');
-    if (nav === 'add') go('addItem');
-    else if (nav === 'unknown') go('unknown');
-    else go(nav);
-  });
-});
-
-/* ================= DEEP LINK (QR → URL) ================= */
-function checkDeepLink() {
-  const params = new URLSearchParams(window.location.search);
-  const loc = params.get('loc');
-  if (loc) {
-    state.screen = 'locationDetail';
-    state.params = { id: loc };
-  }
-}
-checkDeepLink();
-render();
-
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  const root = createRoot(document.getElementById('root'));
+  root.render(React.createElement(GroundUpVault));
 </script>
 </body>
 </html>
