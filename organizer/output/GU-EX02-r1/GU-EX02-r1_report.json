@@ -1,0 +1,317 @@
+{
+  "design": {
+    "design_id": "GU-EX02",
+    "revision": 1,
+    "name": "Example bathroom drawer: straight walls, rounded corners, open floor area",
+    "spec_sha256": "055b6e817eca83e600856890b9ff57a3845ca644b654971f6aa23e2160fbb4da",
+    "units_in_file": "mm"
+  },
+  "generator_version": "0.1.0+d44be0f",
+  "status": {
+    "geometry_checks": "passed",
+    "physical_verification": "NOT VERIFIED - print and test before selling"
+  },
+  "resolved": {
+    "outside_at_floor_mm": [
+      378.0,
+      418.0
+    ],
+    "outside_overall_mm": [
+      378.0,
+      418.0,
+      60.0
+    ],
+    "interior_at_floor_mm": [
+      372.0,
+      412.0
+    ],
+    "height_mm": 60.0,
+    "wall_angles_deg": {
+      "left": 0.0,
+      "right": 0.0,
+      "front": 0.0,
+      "back": 0.0
+    },
+    "fit_clearance_per_side_mm": 1.0,
+    "outside_corner_radius_mm": 9.0,
+    "construction_mm": {
+      "perimeter_wall_mm": 3.0,
+      "divider_wall_mm": 2.4,
+      "floor_mm": 1.2,
+      "top_edge_radius_mm": 0.6,
+      "bottom_chamfer_mm": 0.5,
+      "seam_gap_mm": 0.15,
+      "min_compartment_mm": 15.0,
+      "min_open_gap_mm": 10.0,
+      "min_section_mm": 40.0
+    },
+    "compartments_interior_coords": [
+      {
+        "id": "hairdryer",
+        "label": "Hair dryer",
+        "x": 0.0,
+        "y": 0.0,
+        "width": 150.0,
+        "depth": 240.0
+      },
+      {
+        "id": "brushes",
+        "label": "Brushes",
+        "x": 152.4,
+        "y": 0.0,
+        "width": 219.6,
+        "depth": 110.0
+      },
+      {
+        "id": "small1",
+        "label": "Small 1",
+        "x": 152.4,
+        "y": 112.4,
+        "width": 108.6,
+        "depth": 127.6
+      },
+      {
+        "id": "small2",
+        "label": "Small 2",
+        "x": 263.4,
+        "y": 112.4,
+        "width": 108.6,
+        "depth": 127.6
+      },
+      {
+        "id": "towels",
+        "label": "Towels",
+        "x": 0.0,
+        "y": 242.4,
+        "width": 200.0,
+        "depth": 169.6
+      },
+      {
+        "id": "misc",
+        "label": "Misc",
+        "x": 202.4,
+        "y": 242.4,
+        "width": 120.0,
+        "depth": 100.0
+      }
+    ],
+    "shared_walls": [
+      [
+        "hairdryer",
+        "brushes"
+      ],
+      [
+        "hairdryer",
+        "small1"
+      ],
+      [
+        "hairdryer",
+        "towels"
+      ],
+      [
+        "brushes",
+        "small1"
+      ],
+      [
+        "brushes",
+        "small2"
+      ],
+      [
+        "small1",
+        "small2"
+      ],
+      [
+        "small1",
+        "towels"
+      ],
+      [
+        "small1",
+        "misc"
+      ],
+      [
+        "small2",
+        "misc"
+      ],
+      [
+        "towels",
+        "misc"
+      ]
+    ]
+  },
+  "printer": {
+    "name": "Bambu Lab P1S",
+    "usable_mm": [
+      252.0,
+      252.0,
+      256.0
+    ],
+    "margin_mm": 2.0
+  },
+  "seams": [
+    {
+      "between": [
+        "hairdryer",
+        "towels"
+      ],
+      "owner": "towels",
+      "seam_line": "y = 240.00 mm (interior)",
+      "divider_from_mm": 240.0,
+      "divider_to_mm": 242.4
+    },
+    {
+      "between": [
+        "hairdryer",
+        "brushes"
+      ],
+      "owner": "split",
+      "seam_line": "x = 151.20 mm (interior)",
+      "divider_from_mm": 150.0,
+      "divider_to_mm": 152.4
+    },
+    {
+      "between": [
+        "towels",
+        "misc"
+      ],
+      "owner": "towels",
+      "seam_line": "x = 202.40 mm (interior)",
+      "divider_from_mm": 200.0,
+      "divider_to_mm": 202.4
+    }
+  ],
+  "sections": [
+    {
+      "section": "P1-of-4",
+      "file": "GU-EX02-r1_P1-of-4.stl",
+      "compartments": [
+        "hairdryer"
+      ],
+      "size_mm": [
+        154.13,
+        242.85,
+        60.0
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 129.56,
+      "solid_weight_pla_g": 160.7,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 2306,
+        "volume_mm3": 129559.48
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": 151.125,
+        "y0": null,
+        "y1": 239.85
+      }
+    },
+    {
+      "section": "P2-of-4",
+      "file": "GU-EX02-r1_P2-of-4.stl",
+      "compartments": [
+        "brushes",
+        "small1",
+        "small2"
+      ],
+      "size_mm": [
+        223.73,
+        242.85,
+        60.0
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 211.03,
+      "solid_weight_pla_g": 261.7,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 2698,
+        "volume_mm3": 211022.58
+      },
+      "region_interior_mm": {
+        "x0": 151.275,
+        "x1": null,
+        "y0": null,
+        "y1": 239.85
+      }
+    },
+    {
+      "section": "P3-of-4",
+      "file": "GU-EX02-r1_P3-of-4.stl",
+      "compartments": [
+        "towels"
+      ],
+      "size_mm": [
+        205.4,
+        175.0,
+        60.0
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 161.45,
+      "solid_weight_pla_g": 200.2,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 2986,
+        "volume_mm3": 161451.18
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": 202.4,
+        "y0": 240.0,
+        "y1": null
+      }
+    },
+    {
+      "section": "P4-of-4",
+      "file": "GU-EX02-r1_P4-of-4.stl",
+      "compartments": [
+        "misc"
+      ],
+      "size_mm": [
+        172.45,
+        175.0,
+        60.0
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 151.51,
+      "solid_weight_pla_g": 187.9,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 2910,
+        "volume_mm3": 151505.25
+      },
+      "region_interior_mm": {
+        "x0": 202.55,
+        "x1": null,
+        "y0": 240.0,
+        "y1": null
+      }
+    }
+  ],
+  "totals": {
+    "sections": 4,
+    "volume_cm3": 653.5,
+    "solid_weight_pla_g": 810.0,
+    "weight_note": "Upper bound if printed 100% solid. Use the slicer for real grams and print time."
+  },
+  "warnings": [],
+  "files": [
+    "GU-EX02-r1_P1-of-4.stl",
+    "GU-EX02-r1_P2-of-4.stl",
+    "GU-EX02-r1_P3-of-4.stl",
+    "GU-EX02-r1_P4-of-4.stl",
+    "GU-EX02-r1_assembly-preview.stl",
+    "GU-EX02-r1_layout.svg"
+  ]
+}

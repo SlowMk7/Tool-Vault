@@ -1,0 +1,18 @@
+{
+  "spec_version": 1,
+  "design_id": "GU-BAD",
+  "revision": 1,
+  "name": "Deliberately broken design to show the error messages",
+  "units": "mm",
+  "drawer": {"width": 380, "depth": 420, "height": 100},
+  "organizer": {"height": 60},
+  "layout": {
+    "compartments": [
+      {"id": "a", "x": 0,   "y": 0, "width": 150, "depth": 240},
+      {"id": "b", "x": 140, "y": 0, "width": 100, "depth": 100},
+      {"id": "c", "x": 155, "y": 150, "width": 8, "depth": 100}
+    ]
+  },
+  "seams": [{"between": ["a", "c"], "owner": "a"}],
+  "printer": {"profile": "bambu-p1s"}
+}

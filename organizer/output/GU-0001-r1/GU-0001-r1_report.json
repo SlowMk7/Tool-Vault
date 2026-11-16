@@ -1,0 +1,313 @@
+{
+  "design": {
+    "design_id": "GU-0001",
+    "revision": 1,
+    "name": "Owner's condo cutlery drawer (example layout)",
+    "spec_sha256": "b6224bbc86fafc88440ab56674e51661f0c27bf02e490ffa679ee3278e6d122c",
+    "units_in_file": "in"
+  },
+  "generator_version": "0.1.0+d44be0f",
+  "status": {
+    "geometry_checks": "passed",
+    "physical_verification": "NOT VERIFIED - print and test before selling"
+  },
+  "resolved": {
+    "outside_at_floor_mm": [
+      302.8,
+      328.2
+    ],
+    "outside_overall_mm": [
+      309.94,
+      328.2,
+      50.8
+    ],
+    "interior_at_floor_mm": [
+      296.8,
+      322.2
+    ],
+    "height_mm": 50.8,
+    "wall_angles_deg": {
+      "left": 4.086,
+      "right": 4.086,
+      "front": 0.0,
+      "back": 0.0
+    },
+    "fit_clearance_per_side_mm": 1.0,
+    "outside_corner_radius_mm": 0.0,
+    "construction_mm": {
+      "perimeter_wall_mm": 3.0,
+      "divider_wall_mm": 3.0,
+      "floor_mm": 1.6,
+      "top_edge_radius_mm": 0.8,
+      "bottom_chamfer_mm": 0.5,
+      "seam_gap_mm": 0.15,
+      "min_compartment_mm": 15.0,
+      "min_open_gap_mm": 10.0,
+      "min_section_mm": 40.0
+    },
+    "compartments_interior_coords": [
+      {
+        "id": "knives",
+        "label": "Knives",
+        "x": 0.0,
+        "y": 0.0,
+        "width": 57.15,
+        "depth": 228.6
+      },
+      {
+        "id": "forks",
+        "label": "Forks",
+        "x": 60.15,
+        "y": 0.0,
+        "width": 76.883,
+        "depth": 228.6
+      },
+      {
+        "id": "tablespoons",
+        "label": "Tablespoons",
+        "x": 140.033,
+        "y": 0.0,
+        "width": 76.883,
+        "depth": 228.6
+      },
+      {
+        "id": "teaspoons",
+        "label": "Teaspoons",
+        "x": 219.917,
+        "y": 0.0,
+        "width": 76.883,
+        "depth": 228.6
+      },
+      {
+        "id": "utensils",
+        "label": "Utensils",
+        "x": 0.0,
+        "y": 231.6,
+        "width": 146.9,
+        "depth": 90.6
+      },
+      {
+        "id": "misc",
+        "label": "Misc",
+        "x": 149.9,
+        "y": 231.6,
+        "width": 146.9,
+        "depth": 90.6
+      }
+    ],
+    "shared_walls": [
+      [
+        "knives",
+        "forks"
+      ],
+      [
+        "knives",
+        "utensils"
+      ],
+      [
+        "forks",
+        "tablespoons"
+      ],
+      [
+        "forks",
+        "utensils"
+      ],
+      [
+        "tablespoons",
+        "teaspoons"
+      ],
+      [
+        "tablespoons",
+        "utensils"
+      ],
+      [
+        "tablespoons",
+        "misc"
+      ],
+      [
+        "teaspoons",
+        "misc"
+      ],
+      [
+        "utensils",
+        "misc"
+      ]
+    ]
+  },
+  "printer": {
+    "name": "Bambu Lab P1S",
+    "usable_mm": [
+      252.0,
+      252.0,
+      256.0
+    ],
+    "margin_mm": 2.0
+  },
+  "seams": [
+    {
+      "between": [
+        "forks",
+        "utensils"
+      ],
+      "owner": "forks",
+      "seam_line": "y = 231.60 mm (interior)",
+      "divider_from_mm": 228.6,
+      "divider_to_mm": 231.6
+    },
+    {
+      "between": [
+        "forks",
+        "tablespoons"
+      ],
+      "owner": "forks",
+      "seam_line": "x = 140.03 mm (interior)",
+      "divider_from_mm": 137.033,
+      "divider_to_mm": 140.033
+    },
+    {
+      "between": [
+        "utensils",
+        "misc"
+      ],
+      "owner": "split",
+      "seam_line": "x = 148.40 mm (interior)",
+      "divider_from_mm": 146.9,
+      "divider_to_mm": 149.9
+    }
+  ],
+  "sections": [
+    {
+      "section": "P1-of-4",
+      "file": "GU-0001-r1_P1-of-4.stl",
+      "compartments": [
+        "knives",
+        "forks"
+      ],
+      "size_mm": [
+        146.6,
+        234.6,
+        50.8
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 197.4,
+      "solid_weight_pla_g": 244.8,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 6300,
+        "volume_mm3": 197393.88
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": 140.033,
+        "y0": null,
+        "y1": 231.6
+      }
+    },
+    {
+      "section": "P2-of-4",
+      "file": "GU-0001-r1_P2-of-4.stl",
+      "compartments": [
+        "tablespoons",
+        "teaspoons"
+      ],
+      "size_mm": [
+        163.19,
+        234.6,
+        50.8
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 174.83,
+      "solid_weight_pla_g": 216.8,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 6978,
+        "volume_mm3": 174824.21
+      },
+      "region_interior_mm": {
+        "x0": 140.183,
+        "x1": null,
+        "y0": null,
+        "y1": 231.6
+      }
+    },
+    {
+      "section": "P3-of-4",
+      "file": "GU-0001-r1_P3-of-4.stl",
+      "compartments": [
+        "utensils"
+      ],
+      "size_mm": [
+        154.89,
+        93.45,
+        50.8
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 64.83,
+      "solid_weight_pla_g": 80.4,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 4400,
+        "volume_mm3": 64827.14
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": 148.325,
+        "y0": 231.75,
+        "y1": null
+      }
+    },
+    {
+      "section": "P4-of-4",
+      "file": "GU-0001-r1_P4-of-4.stl",
+      "compartments": [
+        "misc"
+      ],
+      "size_mm": [
+        154.89,
+        93.45,
+        50.8
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 64.83,
+      "solid_weight_pla_g": 80.4,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 4402,
+        "volume_mm3": 64827.16
+      },
+      "region_interior_mm": {
+        "x0": 148.475,
+        "x1": null,
+        "y0": 231.75,
+        "y1": null
+      }
+    }
+  ],
+  "totals": {
+    "sections": 4,
+    "volume_cm3": 501.9,
+    "solid_weight_pla_g": 622.0,
+    "weight_note": "Upper bound if printed 100% solid. Use the slicer for real grams and print time."
+  },
+  "warnings": [],
+  "files": [
+    "GU-0001-r1_P1-of-4.stl",
+    "GU-0001-r1_P2-of-4.stl",
+    "GU-0001-r1_P3-of-4.stl",
+    "GU-0001-r1_P4-of-4.stl",
+    "GU-0001-r1_assembly-preview.stl",
+    "GU-0001-r1_layout.svg"
+  ]
+}

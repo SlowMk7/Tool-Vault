@@ -1,0 +1,54 @@
+{
+  "spec_version": 1,
+  "design_id": "GU-0001",
+  "revision": 1,
+  "name": "Owner's condo cutlery drawer (example layout)",
+  "notes": "Drawer measurements are the owner's real measurements. The compartment layout, organizer height and corner radius are EXAMPLE values until the original organizer is measured.",
+  "units": "in",
+  "drawer": {
+    "width": 12,
+    "depth": 13,
+    "height": "3 1/2",
+    "corner_radius": 0,
+    "taper": {
+      "top_width": "12 1/2",
+      "measured_at_height": "3 1/2",
+      "width_sides": "both"
+    }
+  },
+  "organizer": {
+    "height": 2,
+    "fit_clearance": "1mm"
+  },
+  "construction": {
+    "perimeter_wall_mm": 3.0,
+    "divider_wall_mm": 3.0,
+    "floor_mm": 1.6
+  },
+  "layout": {
+    "rows": [
+      {
+        "size": 9,
+        "columns": [
+          {"id": "knives", "label": "Knives", "size": "2 1/4"},
+          {"id": "forks", "label": "Forks", "fill": 1},
+          {"id": "tablespoons", "label": "Tablespoons", "fill": 1},
+          {"id": "teaspoons", "label": "Teaspoons", "fill": 1}
+        ]
+      },
+      {
+        "fill": 1,
+        "columns": [
+          {"id": "utensils", "label": "Utensils", "fill": 1},
+          {"id": "misc", "label": "Misc", "fill": 1}
+        ]
+      }
+    ]
+  },
+  "seams": [
+    {"between": ["forks", "utensils"], "owner": "forks", "note": "front/back split along the long cross wall"},
+    {"between": ["forks", "tablespoons"], "owner": "forks"},
+    {"between": ["utensils", "misc"], "owner": "split"}
+  ],
+  "printer": {"profile": "bambu-p1s"}
+}

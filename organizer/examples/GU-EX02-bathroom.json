@@ -1,0 +1,27 @@
+{
+  "spec_version": 1,
+  "design_id": "GU-EX02",
+  "revision": 1,
+  "name": "Example bathroom drawer: straight walls, rounded corners, open floor area",
+  "notes": "Fictional example used to prove the generator works for more than one design.",
+  "units": "mm",
+  "drawer": {"width": 380, "depth": 420, "height": 100, "corner_radius": 10},
+  "organizer": {"height": 60, "fit_clearance": 1.0},
+  "construction": {"perimeter_wall_mm": 3.0, "divider_wall_mm": 2.4, "floor_mm": 1.2, "top_edge_radius_mm": 0.6},
+  "layout": {
+    "compartments": [
+      {"id": "hairdryer", "label": "Hair dryer", "x": 0,     "y": 0,     "width": 150,   "depth": 240},
+      {"id": "brushes",   "label": "Brushes",    "x": 152.4, "y": 0,     "width": 219.6, "depth": 110},
+      {"id": "small1",    "label": "Small 1",    "x": 152.4, "y": 112.4, "width": 108.6, "depth": 127.6},
+      {"id": "small2",    "label": "Small 2",    "x": 263.4, "y": 112.4, "width": 108.6, "depth": 127.6},
+      {"id": "towels",    "label": "Towels",     "x": 0,     "y": 242.4, "width": 200,   "depth": 169.6},
+      {"id": "misc",      "label": "Misc",       "x": 202.4, "y": 242.4, "width": 120,   "depth": 100}
+    ]
+  },
+  "seams": [
+    {"between": ["hairdryer", "towels"], "owner": "towels"},
+    {"between": ["hairdryer", "brushes"], "owner": "split"},
+    {"between": ["towels", "misc"], "owner": "towels"}
+  ],
+  "printer": {"profile": "bambu-p1s"}
+}
