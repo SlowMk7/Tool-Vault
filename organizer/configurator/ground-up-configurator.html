@@ -210,6 +210,7 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
   </div>
   <div class="overall" id="overall" aria-live="polite"></div>
   <div class="editor"><svg id="ed" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="row"><button class="btn" id="b-row-back">+ Row at the back</button><button class="btn" id="b-row-front">+ Row at the front</button></div>
   <div id="layout-msg" class="msg" hidden></div>
   <div class="grid2">
     <div class="panel selpanel" id="selpanel" hidden>
@@ -694,9 +695,13 @@ function renderEditor() {
   const splits = [];
   (function walkSplits(n) { if (n.kind === "split") { splits.push(n); n.kids.forEach((k) => walkSplits(k.node)); } })(tree);
   const r = fs * 1.1;
-  for (const n of splits) {
-    if (n.dir !== "cols") continue;
-    const b = n.box;
+  // a "row" is a side-by-side group, or a single compartment spanning its own row
+  const rowTargets = splits.filter((n) => n.dir === "cols").map((n) => ({ n, b: n.box, single: false }));
+  for (const l of leaves) {
+    const par = rowOf(l);
+    if (!par || par.dir === "rows") rowTargets.push({ n: l, b: l.box, single: true });
+  }
+  for (const { n, b, single } of rowTargets) {
     const atRight = b.x1 >= dims().W - 0.01;
     const bx = atRight ? oW + pad * 0.5 : TP + b.x1 - r * 1.3;
     const by = Y(TP + (b.y0 + b.y1) / 2);
@@ -706,6 +711,11 @@ function renderEditor() {
     const t = svgEl("text", { x: bx, y: by + r * 0.42, "text-anchor": "middle", "font-size": r * 1.4 }, g);
     t.textContent = "+";
     g.addEventListener("click", () => {
+      if (single) {
+        const err = splitLeaf(n, "cols");
+        setMsg("layout-msg", err ? "bad" : "ok", err ? `No room beside ${n.label}: it's too narrow to split.` : `Added one beside ${n.label}; they now share the row. Not better? Tap the red × on it, or Undo.`);
+        return;
+      }
       const res = addToRow(n);
       setMsg("layout-msg", res.error ? "bad" : "ok", res.error || res.ok);
     });
@@ -902,26 +912,43 @@ function addCompartment() {
   if (err) setMsg("layout-msg", "bad", "There's no room left for another compartment. Make one bigger or remove one first.");
   else setMsg("sel-msg", "ok", `Added a new compartment next to ${l.label}. Drag the yellow handle or type exact sizes.`);
 }
-function addToRow(node) {
+function addToRow(node, at = "end") {
   const ax = axOf(node), n = node.kids.length;
   const word = ax === "x" ? "wide" : "deep";
   const old = node.kids.reduce((a, k) => a + k.size, 0);
   const newSize = (old - TD) / (n + 1); // the size each would have if the row were shared equally
   const factor = (old - TD - newSize) / old;
   const tight = node.kids.find((k) => k.size * factor < extentMin(k.node, ax) - 0.01);
-  if (newSize < MIN || tight) {
+  if (newSize < MIN) {
     return { error: `No room for another one here. Each would be only ${fmt(Math.max(newSize, 0))} ${word} (minimum ${fmt(MIN)}).` };
+  }
+  if (tight) {
+    const names = leavesOf(tight.node).map((l) => l.label);
+    return { error: `No room for another one here: ${names.slice(0, 3).join(", ")}${names.length > 3 ? " and others" : ""} would get smaller than the ${fmt(MIN)} minimum. Remove or shrink something first.` };
   }
   pushUndo();
   node.kids.forEach((k) => { k.size *= factor; rescale(k.node, ax, k.size); });
   const fresh = leaf("New");
-  node.kids.push({ size: newSize, node: fresh });
+  if (at === "start") node.kids.unshift({ size: newSize, node: fresh }); else node.kids.push({ size: newSize, node: fresh });
   fitTree(); selected = fresh.id; refreshLayout(); save();
   const sizes = node.kids.map((k) => k.size);
   const equal = Math.max(...sizes) - Math.min(...sizes) < 0.5;
-  return { ok: (equal ? `Now ${n + 1} in this row, each ${fmt(newSize)} ${word}.` : `Added one ${fmt(newSize)} ${word}; the others shrank to make room.`)
+  const group = ax === "x" ? "in this row" : (node === tree ? "rows" : "in this column");
+  const others = ax === "x" ? "the others got narrower to make room" : "the other rows got shallower to make room";
+  return { ok: (equal ? `Now ${n + 1} ${group}, each ${fmt(newSize)} ${word}.` : `Added one ${fmt(newSize)} ${word}; ${others}.`)
     + (newSize < 35 ? ` That's narrow. Use "Will it fit?" to check your widest utensil.` : "")
     + ` Not better? Tap the red × on it, or Undo.` };
+}
+function addRowAt(where) {
+  const at = where === "front" ? "start" : "end"; // rows run front (first) to back (last)
+  if (tree.kind === "split" && tree.dir === "rows") return addToRow(tree, at);
+  const { D } = dims();
+  const before = tree;
+  tree = { id: "n" + uid++, kind: "split", dir: "rows", kids: [{ size: D, node: before }] };
+  const res = addToRow(tree, at);
+  if (res.error) { tree = before; fitTree(); refreshLayout(); }
+  else undoStack[undoStack.length - 1] = JSON.stringify(before); // Undo returns to the layout before the new row
+  return res;
 }
 function rowOf(l) { const path = findPath(l); return path && path.length ? path[path.length - 1].node : null; }
 function itemFits(l) {
@@ -1182,6 +1209,10 @@ $("ed").addEventListener("pointermove", onDragMove);
 $("ed").addEventListener("pointerup", endDrag);
 $("ed").addEventListener("pointercancel", endDrag);
 $("b-add").addEventListener("click", addCompartment);
+["front", "back"].forEach((w) => $("b-row-" + w).addEventListener("click", () => {
+  const res = addRowAt(w);
+  setMsg("layout-msg", res.error ? "bad" : "ok", res.error || res.ok);
+}));
 $("b-undo").addEventListener("click", undo);
 $("show-pieces").addEventListener("change", (e) => { showPieces = e.target.checked; renderEditor(); });
 $("b-tpl").addEventListener("click", () => { $("tpl-confirm").hidden = false; });
