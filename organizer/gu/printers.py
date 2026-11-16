@@ -10,6 +10,8 @@ in the design file.
 from __future__ import annotations
 
 PRINTERS: dict[str, dict] = {
+    "bambu-h2s": {"name": "Bambu Lab H2S", "bed_width_mm": 340, "bed_depth_mm": 320, "max_height_mm": 340},
+    "bambu-h2d": {"name": "Bambu Lab H2D (one nozzle)", "bed_width_mm": 325, "bed_depth_mm": 320, "max_height_mm": 325},
     "bambu-a1-mini": {"name": "Bambu Lab A1 mini", "bed_width_mm": 180, "bed_depth_mm": 180, "max_height_mm": 180},
     "bambu-a1": {"name": "Bambu Lab A1", "bed_width_mm": 256, "bed_depth_mm": 256, "max_height_mm": 256},
     "bambu-p1s": {"name": "Bambu Lab P1S", "bed_width_mm": 256, "bed_depth_mm": 256, "max_height_mm": 256},

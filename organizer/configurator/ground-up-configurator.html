@@ -205,6 +205,7 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
       </div>
       <div id="sel-msg" class="msg" hidden></div>
     </div>
+    <div class="panel" id="pp-layout"></div>
     <div class="panel">
       <h3>Will it fit?</h3>
       <p class="lead" style="margin:0;font-size:13px">Measure an item and see which compartments can hold it lying flat.</p>
@@ -232,18 +233,7 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
     <button class="btn" id="v-iso">3D view</button>
   </div>
   <div class="grid2">
-    <div class="panel">
-      <h3>Printer</h3>
-      <label class="f">Printer the files are made for
-        <select id="printer">
-          <option value="bambu-p1s">Bambu Lab P1S / X1 / A1 (256 mm)</option>
-          <option value="bambu-a1-mini">Bambu Lab A1 mini (180 mm)</option>
-          <option value="prusa-mk4">Prusa MK4 (250 × 210 mm)</option>
-          <option value="prusa-core-one">Prusa CORE One (250 × 220 mm)</option>
-        </select>
-      </label>
-      <p class="lead" style="margin:0;font-size:13px">If you choose "We print it for you", we use our own printers.</p>
-    </div>
+    <div class="panel" id="pp-preview"></div>
     <div class="panel">
       <h3 id="pieces-title">Pieces</h3>
       <div class="pieces" id="pieces"></div>
@@ -297,11 +287,18 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
 // ---------------------------------------------------------------- constants
 const MM_IN = 25.4, MIN = 15, CLEAR = 1.0, TP = 2.5, TD = 2.5, FLOOR = 1.6, PLA = 1.24, INFILL_FACTOR = 0.81, MARGIN = 2;
 const PRINTERS = {
+  "bambu-h2s": { x: 340, y: 320, z: 340, name: "Bambu Lab H2S" },
+  "bambu-h2d": { x: 325, y: 320, z: 325, name: "Bambu Lab H2D (one nozzle)" },
   "bambu-p1s": { x: 256, y: 256, z: 256, name: "Bambu Lab P1S / X1 / A1" },
   "bambu-a1-mini": { x: 180, y: 180, z: 180, name: "Bambu Lab A1 mini" },
   "prusa-mk4": { x: 250, y: 210, z: 220, name: "Prusa MK4" },
   "prusa-core-one": { x: 250, y: 220, z: 270, name: "Prusa CORE One" },
 };
+function bed() {
+  if (S.printer === "custom") return { x: S.cx, y: S.cy, z: S.cz, name: `your printer (${Math.round(S.cx)} × ${Math.round(S.cy)} mm)` };
+  return PRINTERS[S.printer] || PRINTERS["bambu-p1s"];
+}
+const printerName = () => bed().name;
 const PIECE_COLORS = ["#d9560a", "#2f6db5", "#2f8a57", "#8a4fb3", "#c2960a", "#b8336a", "#2f8f8f", "#6b6b6b"];
 const $ = (id) => document.getElementById(id);
 
@@ -319,7 +316,7 @@ function templateTree(name) {
 }
 const DEFAULT = {
   units: "in", w: 9 * MM_IN, d: 13 * MM_IN, h: 3.5 * MM_IN, oh: 3.5 * MM_IN,
-  slope: true, tw: 9.5 * MM_IN, td: 13 * MM_IN, printer: "bambu-p1s",
+  slope: true, tw: 9.5 * MM_IN, td: 13 * MM_IN, printer: "bambu-p1s", cx: 300, cy: 300, cz: 300, margin: 2,
   fulfil: "digital", step: "drawer",
 };
 let S = JSON.parse(JSON.stringify(DEFAULT));
@@ -423,8 +420,8 @@ function tooSmall() { return layout().leaves.filter((l) => l.box.x1 - l.box.x0 <
 // ---------------------------------------------------------------- piece planner (same seam rules as the generator)
 function planPieces() {
   const { W, D, H, lean } = dims();
-  const pr = PRINTERS[S.printer];
-  const ux = pr.x - 2 * MARGIN, uy = pr.y - 2 * MARGIN, lim = Math.max(ux, uy);
+  const pr = bed();
+  const ux = pr.x - 2 * S.margin, uy = pr.y - 2 * S.margin, lim = Math.max(ux, uy);
   layout();
   const eps = 1e-6;
   const ext = (r, ax) => ax === "x"
@@ -450,19 +447,34 @@ function planPieces() {
     }
     return [la[0], lb[0]];
   };
+  // Fewest pieces along this row; among those, the cut that makes the pieces most even in size.
+  function balancedGroups(node, r, ax, lim, groupRect, ext) {
+    const n = node.kids.length;
+    let best = null;
+    for (let k = 1; k <= n && !best; k++) {
+      (function choose(start, left, acc) {
+        if (left === 1) {
+          const groups = acc.concat([[start, n - 1]]);
+          const sizes = groups.map(([a, b]) => ext(groupRect(node, r, a, b), ax));
+          const worst = Math.max(...sizes.map((x, i) => groups[i][0] === groups[i][1] ? 0 : x));
+          if (worst <= lim) {
+            const spread = Math.max(...sizes) - Math.min(...sizes);
+            if (!best || spread < best.spread) best = { groups, spread };
+          }
+          return;
+        }
+        for (let end = start; end <= n - left; end++) choose(end + 1, left - 1, acc.concat([[start, end]]));
+      })(0, k, []);
+    }
+    return best.groups;
+  }
   (function plan(node, r) {
     if (fits(r)) { pieces.push(Object.assign({}, r, { leaves: leavesOf(node) })); return; }
     if (node.kind === "leaf") { pieces.push(Object.assign({}, r, { leaves: [node], tooBig: true })); return; }
     const ax = axOf(node), n = node.kids.length;
     let groups = [];
-    if (ext(r, ax) > lim) {
-      let g = [0, 0];
-      for (let i = 1; i < n; i++) {
-        if (ext(groupRect(node, r, g[0], i), ax) <= lim) g = [g[0], i];
-        else { groups.push(g); g = [i, i]; }
-      }
-      groups.push(g);
-    } else groups = node.kids.map((_, i) => [i, i]);
+    if (ext(r, ax) > lim) groups = balancedGroups(node, r, ax, lim, groupRect, ext);
+    else groups = node.kids.map((_, i) => [i, i]);
     for (let gi = 1; gi < groups.length; gi++) seams.push(seamPair(node, groups[gi - 1][1]));
     for (const g of groups) {
       const gr = groupRect(node, r, g[0], g[1]);
@@ -474,6 +486,10 @@ function planPieces() {
   pieces.forEach((p, i) => {
     p.name = "P" + (i + 1); p.color = PIECE_COLORS[i % PIECE_COLORS.length];
     p.ex = ext(p, "x"); p.ey = ext(p, "y");
+    // room left on the bed in the best orientation that fits
+    const opts = [[ux - p.ex, uy - p.ey], [ux - p.ey, uy - p.ex]].filter(([a, b]) => a >= -1e-6 && b >= -1e-6);
+    p.spare = opts.length ? Math.max(...opts.map(([a, b]) => Math.min(a, b))) + S.margin : null;
+    p.rotate = opts.length > 0 && !(ux - p.ex >= -1e-6 && uy - p.ey >= -1e-6);
   });
   return { pieces, seams };
 }
@@ -665,12 +681,12 @@ function renderEditor() {
     lm.textContent = tooBigText(plan);
   } else if (plan) {
     lm.hidden = false; lm.className = "msg note";
-    lm.textContent = `${plan.pieces.length} printed piece${plan.pieces.length > 1 ? "s" : ""} for the ${PRINTERS[S.printer].name}. Pieces split along walls and push together in the drawer.`;
+    lm.textContent = `${plan.pieces.length} printed piece${plan.pieces.length > 1 ? "s" : ""} for the ${printerName()}. Pieces split along walls and push together in the drawer.`;
   } else lm.hidden = true;
 }
 function tooBigText(plan) {
   const big = plan.pieces.filter((p) => p.tooBig).map((p) => p.leaves[0].label);
-  return `${big.join(", ")} ${big.length > 1 ? "are" : "is"} bigger than the ${PRINTERS[S.printer].name} can print in one piece. Split it with a wall, or choose a bigger printer at the Preview step.`;
+  return `${big.join(", ")} ${big.length > 1 ? "are" : "is"} bigger than the ${printerName()} can print in one piece. Split it with a wall, or choose a bigger printer.`;
 }
 function toMM(e) {
   const svg = $("ed"); const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
@@ -839,6 +855,43 @@ function itemFits(l) {
 function refreshLayout() { renderEditor(); renderSelPanel(); }
 
 // ---------------------------------------------------------------- step 3: pieces + 3D
+function printerPanel(which) {
+  const box = $("pp-" + which);
+  const opt = (v, t) => `<option value="${v}"${S.printer === v ? " selected" : ""}>${t}</option>`;
+  const v = (n) => (Math.round(n * 10) / 10).toString();
+  box.innerHTML = `<h3>Printer</h3>
+    <label class="f">Printer the files are made for
+      <select id="pr-sel-${which}" data-pr="sel">
+        ${opt("bambu-h2s", "Bambu Lab H2S (340 × 320 mm)")}
+        ${opt("bambu-h2d", "Bambu Lab H2D, one nozzle (325 × 320 mm)")}
+        ${opt("bambu-p1s", "Bambu Lab P1S / X1 / A1 (256 mm)")}
+        ${opt("bambu-a1-mini", "Bambu Lab A1 mini (180 mm)")}
+        ${opt("prusa-mk4", "Prusa MK4 (250 × 210 mm)")}
+        ${opt("prusa-core-one", "Prusa CORE One (250 × 220 mm)")}
+        ${opt("custom", "Other: enter bed size")}
+      </select></label>
+    <div class="fields" ${S.printer === "custom" ? "" : "hidden"}>
+      <label class="f">Bed width (mm)<input type="text" inputmode="decimal" id="pr-w-${which}" data-pr="cx" value="${v(S.cx)}"></label>
+      <label class="f">Bed depth (mm)<input type="text" inputmode="decimal" id="pr-d-${which}" data-pr="cy" value="${v(S.cy)}"></label>
+      <label class="f">Max height (mm)<input type="text" inputmode="decimal" id="pr-h-${which}" data-pr="cz" value="${v(S.cz)}"></label>
+    </div>
+    <label class="f">Edge of the bed
+      <select id="pr-m-${which}" data-pr="margin">
+        <option value="2"${S.margin === 2 ? " selected" : ""}>Use the whole bed (2 mm from the edge)</option>
+        <option value="10"${S.margin === 10 ? " selected" : ""}>Leave room at the edges (10 mm)</option>
+      </select></label>
+    <p class="lead" style="margin:0;font-size:13px">Bigger printers need fewer pieces. If you choose "We print it for you", we use our own printers.</p>`;
+}
+function onPrinterChange(e) {
+  const k = e.target.dataset.pr; if (!k) return;
+  if (k === "sel") S.printer = e.target.value;
+  else if (k === "margin") S.margin = +e.target.value;
+  else { const n = parseFloat(e.target.value); if (n >= 50 && n <= 2000) S[k] = n; else return; }
+  save();
+  printerPanel("layout"); printerPanel("preview");
+  if (S.step === "layout") { showPieces = true; $("show-pieces").checked = true; renderEditor(); }
+  if (S.step === "preview") build3D();
+}
 function renderPieces() {
   const plan = planPieces();
   const box = $("pieces"); box.innerHTML = "";
@@ -847,10 +900,12 @@ function renderPieces() {
   for (const p of plan.pieces) {
     const g = grams(p); total += g;
     const row = document.createElement("div"); row.className = "pc";
-    row.innerHTML = `<i style="background:${p.color}"></i><span><b>${p.name}</b> · ${p.leaves.map((l) => l.label).join(", ")}</span><span class="mono">${fmt(p.ex)} × ${fmt(p.ey)}</span>`;
+    const room = p.tooBig ? "too big for this printer" : `${fmt(p.spare, "mm")} to spare on the bed` + (p.rotate ? ", turned sideways" : "");
+    row.innerHTML = `<i style="background:${p.color}"></i><span><b>${p.name}</b> · ${p.leaves.map((l) => l.label).join(", ")}<br><small style="color:var(--muted)">${room}</small></span><span class="mono">${fmt(p.ex)} × ${fmt(p.ey)}</span>`;
     box.appendChild(row);
   }
   if (plan.pieces.some((p) => p.tooBig)) setMsg("pieces-msg", "bad", tooBigText(plan));
+  else if (plan.pieces.some((p) => p.spare < 5)) setMsg("pieces-msg", "bad", `Tight fit: a piece has under 5 mm to spare on the bed. Check it in your slicer, or choose "Leave room at the edges" to split it.`);
   else setMsg("pieces-msg", "note", `About ${Math.round(total / 10) * 10} g of filament in total (estimate). Print time shows in your slicer.`);
   return { plan, total };
 }
@@ -975,7 +1030,9 @@ function designFile() {
     construction: { perimeter_wall_mm: TP, divider_wall_mm: TD, floor_mm: FLOOR, top_edge_radius_mm: 0.7 },
     layout: layoutJson,
     seams: plan.seams.map(([a, b]) => ({ between: [a._slug, b._slug], owner: "split" })),
-    printer: { profile: S.fulfil === "digital" ? S.printer : "bambu-p1s" },
+    printer: S.printer === "custom"
+      ? { name: "Customer printer", bed_width_mm: S.cx, bed_depth_mm: S.cy, max_height_mm: S.cz, margin_mm: S.margin }
+      : { profile: S.printer, margin_mm: S.margin },
   };
 }
 function renderOrder() {
@@ -988,7 +1045,7 @@ function renderOrder() {
     ["Drawer", `${fmt(S.w)} × ${fmt(S.d)}, ${fmt(S.h)} deep` + (S.slope && S.tw > S.w + 0.01 ? `, sloped sides` : "")],
     ["Organizer", `${fmt(oW)} × ${fmt(oD)} × ${fmt(S.oh)} tall`],
     ["Compartments", layout().leaves.map((l) => l.label).join(", ")],
-    ["Printed pieces", `${plan.pieces.length}` + (S.fulfil === "digital" ? ` (for ${PRINTERS[S.printer].name})` : "")],
+    ["Printed pieces", `${plan.pieces.length}` + (S.fulfil === "digital" ? ` (for ${printerName()})` : "")],
     ["Filament", `about ${Math.round(total / 10) * 10} g (estimate)`],
   ];
   if (S.fulfil === "printed") rows.push(["Options", `${$("mat").value}, ${$("col").value}, ${$("dlv").value}`]);
@@ -1008,7 +1065,8 @@ function go(step) {
   }
   if (step === "drawer") fillDrawerForm();
   if (step === "layout") refreshLayout();
-  if (step === "preview") { $("printer").value = S.printer; build3D(); }
+  if (step === "layout") printerPanel("layout");
+  if (step === "preview") { printerPanel("preview"); build3D(); }
   if (step === "order") renderOrder();
   window.scrollTo({ top: 0 });
 }
@@ -1056,7 +1114,7 @@ $("it-clear").addEventListener("click", () => { itemCheck = null; $("it-l").valu
 $("v-explode").addEventListener("click", () => { V.explode = !V.explode; applyExplode(); draw3D(); });
 $("v-top").addEventListener("click", () => { V.orbit.phi = 0.06; V.orbit.theta = -Math.PI / 2; draw3D(); });
 $("v-iso").addEventListener("click", () => { V.orbit.phi = 0.95; V.orbit.theta = -0.9; draw3D(); });
-$("printer").addEventListener("change", (e) => { S.printer = e.target.value; save(); build3D(); });
+["pp-layout", "pp-preview"].forEach((id) => $(id).addEventListener("change", onPrinterChange));
 document.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => { S.fulfil = b.dataset.f; save(); renderOrder(); }));
 ["mat", "col", "dlv"].forEach((id) => $(id).addEventListener("change", renderOrder));
 $("b-order").addEventListener("click", () => {
