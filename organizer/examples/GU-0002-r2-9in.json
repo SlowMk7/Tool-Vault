@@ -1,0 +1,91 @@
+{
+  "spec_version": 1,
+  "design_id": "GU-0002",
+  "revision": 2,
+  "name": "Customer test order: 9 x 13 in drawer, layout from photo",
+  "notes": "Revision 2: owner asked for a 9 in wide x 13 in long drawer, 3 1/2 in tall, for testing (not for printing). Same side slope as before (1/4 in per side). Narrower drawer fits the bed across, so only a front/back seam is needed.",
+  "units": "in",
+  "drawer": {
+    "width": 9,
+    "depth": 13,
+    "height": "3 1/2",
+    "corner_radius": 0,
+    "taper": {
+      "top_width": "9 1/2",
+      "measured_at_height": "3 1/2",
+      "width_sides": "both"
+    }
+  },
+  "organizer": {
+    "height": "3 1/2",
+    "fit_clearance": "1mm"
+  },
+  "construction": {
+    "perimeter_wall_mm": 2.5,
+    "divider_wall_mm": 2.5,
+    "floor_mm": 1.6,
+    "top_edge_radius_mm": 0.7
+  },
+  "layout": {
+    "rows": [
+      {
+        "id": "gadgets",
+        "label": "Gadgets",
+        "fill": 1
+      },
+      {
+        "fill": 1,
+        "columns": [
+          {
+            "id": "cords",
+            "label": "Cords & bands",
+            "fill": 1
+          },
+          {
+            "id": "clips",
+            "label": "Clips",
+            "fill": 1
+          }
+        ]
+      },
+      {
+        "size": "7 1/2",
+        "columns": [
+          {
+            "id": "spoons",
+            "label": "Spoons",
+            "fill": 1
+          },
+          {
+            "id": "forks",
+            "label": "Forks",
+            "fill": 1
+          },
+          {
+            "id": "knives",
+            "label": "Knives",
+            "fill": 1
+          },
+          {
+            "id": "tools",
+            "label": "Tools",
+            "fill": 1
+          }
+        ]
+      }
+    ]
+  },
+  "seams": [
+    {
+      "between": [
+        "cords",
+        "spoons"
+      ],
+      "owner": "spoons",
+      "note": "front/back split on the wall behind the small bins"
+    }
+  ],
+  "printer": {
+    "profile": "bambu-p1s"
+  }
+}

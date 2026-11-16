@@ -1,0 +1,248 @@
+{
+  "design": {
+    "design_id": "GU-0002",
+    "revision": 2,
+    "name": "Customer test order: 9 x 13 in drawer, layout from photo",
+    "spec_sha256": "704369c51e2f7674a63fda8168c4ec4cb7400fc4f439c8601446c65132e73ccb",
+    "units_in_file": "in"
+  },
+  "generator_version": "0.1.0+e3c049c",
+  "status": {
+    "geometry_checks": "passed",
+    "physical_verification": "NOT VERIFIED - print and test before selling"
+  },
+  "resolved": {
+    "outside_at_floor_mm": [
+      226.6,
+      328.2
+    ],
+    "outside_overall_mm": [
+      239.2,
+      328.2,
+      88.9
+    ],
+    "interior_at_floor_mm": [
+      221.6,
+      323.2
+    ],
+    "height_mm": 88.9,
+    "wall_angles_deg": {
+      "left": 4.086,
+      "right": 4.086,
+      "front": 0.0,
+      "back": 0.0
+    },
+    "fit_clearance_per_side_mm": 1.0,
+    "outside_corner_radius_mm": 0.0,
+    "construction_mm": {
+      "perimeter_wall_mm": 2.5,
+      "divider_wall_mm": 2.5,
+      "floor_mm": 1.6,
+      "top_edge_radius_mm": 0.7,
+      "bottom_chamfer_mm": 0.5,
+      "seam_gap_mm": 0.15,
+      "min_compartment_mm": 15.0,
+      "min_open_gap_mm": 10.0,
+      "min_section_mm": 40.0
+    },
+    "compartments_interior_coords": [
+      {
+        "id": "gadgets",
+        "label": "Gadgets",
+        "x": 0.0,
+        "y": 0.0,
+        "width": 221.6,
+        "depth": 63.85
+      },
+      {
+        "id": "cords",
+        "label": "Cords & bands",
+        "x": 0.0,
+        "y": 66.35,
+        "width": 109.55,
+        "depth": 63.85
+      },
+      {
+        "id": "clips",
+        "label": "Clips",
+        "x": 112.05,
+        "y": 66.35,
+        "width": 109.55,
+        "depth": 63.85
+      },
+      {
+        "id": "spoons",
+        "label": "Spoons",
+        "x": 0.0,
+        "y": 132.7,
+        "width": 53.525,
+        "depth": 190.5
+      },
+      {
+        "id": "forks",
+        "label": "Forks",
+        "x": 56.025,
+        "y": 132.7,
+        "width": 53.525,
+        "depth": 190.5
+      },
+      {
+        "id": "knives",
+        "label": "Knives",
+        "x": 112.05,
+        "y": 132.7,
+        "width": 53.525,
+        "depth": 190.5
+      },
+      {
+        "id": "tools",
+        "label": "Tools",
+        "x": 168.075,
+        "y": 132.7,
+        "width": 53.525,
+        "depth": 190.5
+      }
+    ],
+    "shared_walls": [
+      [
+        "gadgets",
+        "cords"
+      ],
+      [
+        "gadgets",
+        "clips"
+      ],
+      [
+        "cords",
+        "clips"
+      ],
+      [
+        "cords",
+        "spoons"
+      ],
+      [
+        "cords",
+        "forks"
+      ],
+      [
+        "clips",
+        "knives"
+      ],
+      [
+        "clips",
+        "tools"
+      ],
+      [
+        "spoons",
+        "forks"
+      ],
+      [
+        "forks",
+        "knives"
+      ],
+      [
+        "knives",
+        "tools"
+      ]
+    ]
+  },
+  "printer": {
+    "name": "Bambu Lab P1S",
+    "usable_mm": [
+      252.0,
+      252.0,
+      256.0
+    ],
+    "margin_mm": 2.0
+  },
+  "seams": [
+    {
+      "between": [
+        "cords",
+        "spoons"
+      ],
+      "owner": "spoons",
+      "seam_line": "y = 130.20 mm (interior)",
+      "divider_from_mm": 130.2,
+      "divider_to_mm": 132.7
+    }
+  ],
+  "sections": [
+    {
+      "section": "P1-of-2",
+      "file": "GU-0002-r2_P1-of-2.stl",
+      "compartments": [
+        "gadgets",
+        "cords",
+        "clips"
+      ],
+      "size_mm": [
+        239.2,
+        132.55,
+        88.9
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 219.16,
+      "solid_weight_pla_g": 271.8,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 5886,
+        "volume_mm3": 219162.08
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": null,
+        "y0": null,
+        "y1": 130.05
+      }
+    },
+    {
+      "section": "P2-of-2",
+      "file": "GU-0002-r2_P2-of-2.stl",
+      "compartments": [
+        "spoons",
+        "forks",
+        "knives",
+        "tools"
+      ],
+      "size_mm": [
+        239.2,
+        195.5,
+        88.9
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 380.15,
+      "solid_weight_pla_g": 471.4,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 11552,
+        "volume_mm3": 380153.3
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": null,
+        "y0": 130.2,
+        "y1": null
+      }
+    }
+  ],
+  "totals": {
+    "sections": 2,
+    "volume_cm3": 599.3,
+    "solid_weight_pla_g": 743.0,
+    "weight_note": "Upper bound if printed 100% solid. Use the slicer for real grams and print time."
+  },
+  "warnings": [],
+  "files": [
+    "GU-0002-r2_P1-of-2.stl",
+    "GU-0002-r2_P2-of-2.stl",
+    "GU-0002-r2_assembly-preview.stl",
+    "GU-0002-r2_layout.svg"
+  ]
+}
