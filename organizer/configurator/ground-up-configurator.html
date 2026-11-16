@@ -95,6 +95,24 @@ svg .plabel { font-family: var(--display); font-weight: 800; pointer-events: non
 svg .ruler { fill: var(--muted); font-family: var(--mono); }
 .selpanel[hidden] { display: none; }
 .pieces { display: grid; gap: 8px; }
+.overall { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.overall .k { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.overall .v { font: 500 18px/1.2 var(--mono); font-variant-numeric: tabular-nums; }
+.overall .s { font-size: 13px; color: var(--muted); width: 100%; }
+svg .dimline { stroke: var(--tape); }
+svg .dimtxt { fill: var(--ink); font-family: var(--mono); font-weight: 500; paint-order: stroke; stroke: var(--sunken); }
+.verdict { border-width: 2px; }
+.verdict.good { border-color: var(--ok); }
+.verdict.warn { border-color: var(--tape); }
+.verdict.bad { border-color: var(--bad); }
+.verdict .big { font: 800 20px/1.25 var(--display); text-wrap: balance; }
+.verdict.good .big { color: var(--ok); }
+.verdict.bad .big { color: var(--bad); }
+.cmp { display: grid; gap: 6px; }
+.cmp button { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; text-align: left; font: 500 14px/1.3 var(--body); padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.cmp button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.cmp .res { font-weight: 600; }
+.cmp .res.ok { color: var(--ok); } .cmp .res.no { color: var(--bad); }
 .pc { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px; background: var(--bg); font-size: 14px; }
 .pc i { width: 14px; height: 14px; border-radius: 3px; display: block; }
 #view3d { width: 100%; aspect-ratio: 4 / 3; max-height: 70vh; border-radius: 12px; overflow: hidden; background: var(--sunken); touch-action: none; position: relative; }
@@ -186,6 +204,7 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
     <p class="lead" style="margin:0">This replaces your current compartments.</p>
     <div class="row"><button class="btn primary" data-tpl="cutlery">Cutlery layout</button><button class="btn primary" data-tpl="empty">Empty drawer</button><button class="btn" id="tpl-cancel">Keep my layout</button></div>
   </div>
+  <div class="overall" id="overall" aria-live="polite"></div>
   <div class="editor"><svg id="ed" xmlns="http://www.w3.org/2000/svg"></svg></div>
   <div id="layout-msg" class="msg" hidden></div>
   <div class="grid2">
@@ -205,7 +224,6 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
       </div>
       <div id="sel-msg" class="msg" hidden></div>
     </div>
-    <div class="panel" id="pp-layout"></div>
     <div class="panel">
       <h3>Will it fit?</h3>
       <p class="lead" style="margin:0;font-size:13px">Measure an item and see which compartments can hold it lying flat.</p>
@@ -226,6 +244,10 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
     <h1>Preview</h1>
     <p class="lead">Drag to rotate, pinch or scroll to zoom. Large organizers are split into pieces that fit a printer bed and push together in the drawer.</p>
   </div>
+  <div class="panel verdict" id="verdict">
+    <div class="big" id="verdict-big"></div>
+    <div class="lead" style="margin:0" id="verdict-sub"></div>
+  </div>
   <div id="view3d"><div class="loading" id="v3-loading">Loading 3D preview…</div></div>
   <div class="row">
     <button class="btn" id="v-explode">Separate pieces</button>
@@ -234,6 +256,11 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
   </div>
   <div class="grid2">
     <div class="panel" id="pp-preview"></div>
+    <div class="panel">
+      <h3>Pieces on other printers</h3>
+      <p class="lead" style="margin:0;font-size:13px">Same organizer, same bed-edge setting. Tap one to switch.</p>
+      <div class="cmp" id="cmp"></div>
+    </div>
     <div class="panel">
       <h3 id="pieces-title">Pieces</h3>
       <div class="pieces" id="pieces"></div>
@@ -596,7 +623,7 @@ function renderEditor() {
   const svg = $("ed"); svg.innerHTML = "";
   const { oW, oD, W, D } = dims();
   const pad = Math.max(oW, oD) * 0.07;
-  svg.setAttribute("viewBox", `${-pad} ${-pad * 0.4} ${oW + 2 * pad} ${oD + pad * 1.6}`);
+  svg.setAttribute("viewBox", `${-pad * 1.9} ${-pad * 0.4} ${oW + pad * 2.9} ${oD + pad * 2.6}`);
   const Y = (y) => oD - y; // front at the bottom
   const fs = Math.max(oW, oD) / 38;
   svgEl("rect", { x: 0, y: 0, width: oW, height: oD, class: "perim", rx: 1 }, svg);
@@ -672,17 +699,40 @@ function renderEditor() {
       t.textContent = p.name;
     }
   }
-  // overall size rulers
-  const rw = svgEl("text", { x: oW / 2, y: oD + pad * 0.75, "text-anchor": "middle", "font-size": fs * 0.85, class: "ruler" }, svg);
-  rw.textContent = `FRONT · organizer ${fmt(oW)} wide × ${fmt(oD)} deep`;
+  // tape-measure dimension lines for the assembled organizer (outside size at the bottom)
+  const tick = pad * 0.25, sw = fs * 0.14;
+  const wy = oD + pad * 0.6;
+  svgEl("line", { x1: 0, y1: wy, x2: oW, y2: wy, class: "dimline", "stroke-width": sw }, svg);
+  svgEl("line", { x1: 0, y1: wy - tick, x2: 0, y2: wy + tick, class: "dimline", "stroke-width": sw }, svg);
+  svgEl("line", { x1: oW, y1: wy - tick, x2: oW, y2: wy + tick, class: "dimline", "stroke-width": sw }, svg);
+  const wt = svgEl("text", { x: oW / 2, y: wy + fs * 1.35, "text-anchor": "middle", "font-size": fs * 1.05, class: "dimtxt", "stroke-width": fs * 0.3 }, svg);
+  wt.textContent = `${fmt(oW)} wide`;
+  const ft = svgEl("text", { x: oW / 2, y: wy + fs * 2.7, "text-anchor": "middle", "font-size": fs * 0.75, class: "ruler" }, svg);
+  ft.textContent = "FRONT OF DRAWER";
+  const dx = -pad * 0.6;
+  svgEl("line", { x1: dx, y1: 0, x2: dx, y2: oD, class: "dimline", "stroke-width": sw }, svg);
+  svgEl("line", { x1: dx - tick, y1: 0, x2: dx + tick, y2: 0, class: "dimline", "stroke-width": sw }, svg);
+  svgEl("line", { x1: dx - tick, y1: oD, x2: dx + tick, y2: oD, class: "dimline", "stroke-width": sw }, svg);
+  const dt = svgEl("text", { x: 0, y: 0, "text-anchor": "middle", "font-size": fs * 1.05, class: "dimtxt", "stroke-width": fs * 0.3,
+    transform: `translate(${dx - fs * 0.6} ${oD / 2}) rotate(-90)` }, svg);
+  dt.textContent = `${fmt(oD)} deep`;
+  renderOverall();
   const lm = $("layout-msg");
   if (plan && plan.pieces.some((p) => p.tooBig)) {
     lm.hidden = false; lm.className = "msg bad";
     lm.textContent = tooBigText(plan);
   } else if (plan) {
     lm.hidden = false; lm.className = "msg note";
-    lm.textContent = `${plan.pieces.length} printed piece${plan.pieces.length > 1 ? "s" : ""} for the ${printerName()}. Pieces split along walls and push together in the drawer.`;
+    lm.textContent = `${plan.pieces.length} printed piece${plan.pieces.length > 1 ? "s" : ""} on the ${printerName()}. Change the printer on the Preview step.`;
   } else lm.hidden = true;
+}
+function renderOverall() {
+  const { oW, oD, H, lean } = dims();
+  const topW = oW + lean.L + lean.R, topD = oD + lean.F + lean.B;
+  const sloped = topW - oW > 0.5 || topD - oD > 0.5;
+  $("overall").innerHTML = `<span class="k">Assembled size</span>
+    <span class="v"><span style="white-space:nowrap">${fmt(oW)} W</span> × <span style="white-space:nowrap">${fmt(oD)} D</span> × <span style="white-space:nowrap">${fmt(H)} H</span></span>
+    <span class="s">All pieces together, measured outside at the bottom.${sloped ? ` The sides lean out to ${fmt(topW)} × ${fmt(topD)} at the top.` : ""} Your drawer is ${fmt(S.w)} × ${fmt(S.d)} inside, so it drops in with ${fmt(CLEAR, "mm")} to spare on each side.</span>`;
 }
 function tooBigText(plan) {
   const big = plan.pieces.filter((p) => p.tooBig).map((p) => p.leaves[0].label);
@@ -888,9 +938,30 @@ function onPrinterChange(e) {
   else if (k === "margin") S.margin = +e.target.value;
   else { const n = parseFloat(e.target.value); if (n >= 50 && n <= 2000) S[k] = n; else return; }
   save();
-  printerPanel("layout"); printerPanel("preview");
-  if (S.step === "layout") { showPieces = true; $("show-pieces").checked = true; renderEditor(); }
-  if (S.step === "preview") build3D();
+  printerPanel("preview");
+  build3D();
+}
+function verdictFor(plan) {
+  const n = plan.pieces.length, big = plan.pieces.filter((p) => p.tooBig);
+  if (big.length) return { cls: "bad", short: "Too big", big: `Too big for the ${printerName()}`,
+    sub: `${big.map((p) => p.leaves[0].label).join(", ")} ${big.length > 1 ? "are" : "is"} larger than its bed. Choose a bigger printer below, or add a wall through ${big.length > 1 ? "them" : "it"} on the Layout step.` };
+  const tight = plan.pieces.some((p) => p.spare < 5);
+  if (n === 1) return { cls: tight ? "warn" : "good", short: "1 piece", big: `Fits your ${printerName()} in one piece`,
+    sub: tight ? `Only ${fmt(plan.pieces[0].spare, "mm")} to spare on the bed. Choose "Leave room at the edges" to print it in pieces instead.` : "No assembly needed." };
+  return { cls: tight ? "warn" : "good", short: `${n} pieces`, big: `Prints on your ${printerName()} in ${n} pieces`,
+    sub: `The organizer is bigger than the bed in one piece, so it splits along walls into ${n} pieces that push together in the drawer.` + (tight ? " One piece is a tight fit on the bed." : "") };
+}
+function renderVerdict(plan) {
+  const v = verdictFor(plan);
+  const el = $("verdict"); el.className = "panel verdict " + v.cls;
+  $("verdict-big").textContent = v.big; $("verdict-sub").textContent = v.sub;
+  const keep = S.printer, list = Object.keys(PRINTERS);
+  const rows = list.map((k) => {
+    S.printer = k; const pl = planPieces(); const vv = verdictFor(pl);
+    return `<button data-pick="${k}" aria-pressed="${k === keep}"><span>${PRINTERS[k].name}</span><span class="res ${vv.cls === "bad" ? "no" : "ok"}">${vv.short}</span></button>`;
+  });
+  S.printer = keep; planPieces();
+  $("cmp").innerHTML = rows.join("");
 }
 function renderPieces() {
   const plan = planPieces();
@@ -904,6 +975,7 @@ function renderPieces() {
     row.innerHTML = `<i style="background:${p.color}"></i><span><b>${p.name}</b> · ${p.leaves.map((l) => l.label).join(", ")}<br><small style="color:var(--muted)">${room}</small></span><span class="mono">${fmt(p.ex)} × ${fmt(p.ey)}</span>`;
     box.appendChild(row);
   }
+  if ($("verdict") && S.step === "preview") renderVerdict(plan);
   if (plan.pieces.some((p) => p.tooBig)) setMsg("pieces-msg", "bad", tooBigText(plan));
   else if (plan.pieces.some((p) => p.spare < 5)) setMsg("pieces-msg", "bad", `Tight fit: a piece has under 5 mm to spare on the bed. Check it in your slicer, or choose "Leave room at the edges" to split it.`);
   else setMsg("pieces-msg", "note", `About ${Math.round(total / 10) * 10} g of filament in total (estimate). Print time shows in your slicer.`);
@@ -1065,7 +1137,6 @@ function go(step) {
   }
   if (step === "drawer") fillDrawerForm();
   if (step === "layout") refreshLayout();
-  if (step === "layout") printerPanel("layout");
   if (step === "preview") { printerPanel("preview"); build3D(); }
   if (step === "order") renderOrder();
   window.scrollTo({ top: 0 });
@@ -1114,7 +1185,11 @@ $("it-clear").addEventListener("click", () => { itemCheck = null; $("it-l").valu
 $("v-explode").addEventListener("click", () => { V.explode = !V.explode; applyExplode(); draw3D(); });
 $("v-top").addEventListener("click", () => { V.orbit.phi = 0.06; V.orbit.theta = -Math.PI / 2; draw3D(); });
 $("v-iso").addEventListener("click", () => { V.orbit.phi = 0.95; V.orbit.theta = -0.9; draw3D(); });
-["pp-layout", "pp-preview"].forEach((id) => $(id).addEventListener("change", onPrinterChange));
+$("pp-preview").addEventListener("change", onPrinterChange);
+$("cmp").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-pick]"); if (!b) return;
+  S.printer = b.dataset.pick; save(); printerPanel("preview"); build3D();
+});
 document.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => { S.fulfil = b.dataset.f; save(); renderOrder(); }));
 ["mat", "col", "dlv"].forEach((id) => $(id).addEventListener("change", renderOrder));
 $("b-order").addEventListener("click", () => {
