@@ -85,6 +85,9 @@ svg .wallv { fill: var(--wall); }
 svg .hit { fill: transparent; cursor: col-resize; }
 svg .hit.rows { cursor: row-resize; }
 svg .grip { fill: var(--tape); stroke: var(--tape-ink); }
+svg .addbub { cursor: pointer; }
+svg .addbub circle { fill: var(--accent); }
+svg .addbub text { fill: var(--accent-ink); font-family: var(--display); font-weight: 800; pointer-events: none; }
 svg .lbl { fill: var(--ink); font-family: var(--body); font-weight: 600; pointer-events: none; }
 svg .dim { fill: var(--muted); font-family: var(--mono); pointer-events: none; }
 svg .piece { fill: none; stroke-dasharray: 6 4; pointer-events: none; }
@@ -169,7 +172,7 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
 <section class="step" id="step-layout" hidden>
   <div>
     <h1>Design your compartments</h1>
-    <p class="lead">Drag the yellow handles to move a wall. Tap a compartment to resize, split, rename or remove it. Neighbouring compartments share one wall. The front of the drawer is at the bottom.</p>
+    <p class="lead">Drag the yellow handles to move a wall. Tap <b>⊕</b> beside a row to try one more compartment in it. Tap a compartment to resize, rename or remove it. The front of the drawer is at the bottom.</p>
   </div>
   <div class="row">
     <button class="btn tape" id="b-add">+ Add compartment</button>
@@ -195,6 +198,7 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
       </div>
       <div class="row"><button class="btn" id="sel-apply">Apply sizes</button></div>
       <div class="row">
+        <button class="btn tape" id="sel-addrow">Add another in this row</button>
         <button class="btn" id="sel-splitx">Split side by side</button>
         <button class="btn" id="sel-splity">Split front / back</button>
         <button class="btn" id="sel-del">Remove</button>
@@ -624,6 +628,25 @@ function renderEditor() {
       [hit, g].forEach((el) => el.addEventListener("pointerdown", (e) => startDrag(e, dv)));
     }
   }
+  const splits = [];
+  (function walkSplits(n) { if (n.kind === "split") { splits.push(n); n.kids.forEach((k) => walkSplits(k.node)); } })(tree);
+  const r = fs * 1.1;
+  for (const n of splits) {
+    if (n.dir !== "cols") continue;
+    const b = n.box;
+    const atRight = b.x1 >= dims().W - 0.01;
+    const bx = atRight ? oW + pad * 0.5 : TP + b.x1 - r * 1.3;
+    const by = Y(TP + (b.y0 + b.y1) / 2);
+    const g = svgEl("g", { class: "addbub", role: "button", "aria-label": "Add another compartment to this row" }, svg);
+    svgEl("circle", { cx: bx, cy: by, r: r * 1.5, style: "fill: transparent" }, g); // bigger tap target
+    svgEl("circle", { cx: bx, cy: by, r }, g);
+    const t = svgEl("text", { x: bx, y: by + r * 0.42, "text-anchor": "middle", "font-size": r * 1.4 }, g);
+    t.textContent = "+";
+    g.addEventListener("click", () => {
+      const res = addToRow(n);
+      setMsg("layout-msg", res.error ? "bad" : "ok", res.error || res.ok);
+    });
+  }
   if (plan) {
     for (const p of plan.pieces) {
       const rg = pieceRegionGlobal(p);
@@ -692,6 +715,9 @@ function renderSelPanel() {
   layout();
   const w = l.box.x1 - l.box.x0, d = l.box.y1 - l.box.y0;
   $("sel-title").textContent = l.label;
+  const row = rowOf(l);
+  $("sel-addrow").hidden = !row;
+  if (row) $("sel-addrow").textContent = row.dir === "cols" ? "Add another in this row" : "Add another in this column";
   $("sel-size").textContent = `${fmt(w)} × ${fmt(d)}`;
   if (document.activeElement !== $("sel-name")) $("sel-name").value = l.label;
   if (document.activeElement !== $("sel-w")) { $("sel-w").value = fmt(w, S.units, false); $("sel-w").dataset.shown = $("sel-w").value; }
@@ -765,8 +791,9 @@ function removeLeaf(l) {
   const ax = axOf(P);
   const gone = P.kids[i];
   P.kids.splice(i, 1);
-  const nb = P.kids[i > 0 ? i - 1 : 0]; // the neighbour before it, or after it if it was first
-  nb.size += gone.size + TD; rescale(nb.node, ax, nb.size);
+  // share the freed space across the rest of the row, in proportion, so add-then-remove restores the row
+  const old = P.kids.reduce((a, k) => a + k.size, 0), factor = (old + gone.size + TD) / old;
+  P.kids.forEach((k) => { k.size *= factor; rescale(k.node, ax, k.size); });
   if (P.kids.length === 1) {
     const only = P.kids[0].node;
     if (path.length === 1) tree = only; else { const up = path[path.length - 2]; up.node.kids[up.i].node = only; }
@@ -783,6 +810,28 @@ function addCompartment() {
   if (err) setMsg("layout-msg", "bad", "There's no room left for another compartment. Make one bigger or remove one first.");
   else setMsg("sel-msg", "ok", `Added a new compartment next to ${l.label}. Drag the yellow handle or type exact sizes.`);
 }
+function addToRow(node) {
+  const ax = axOf(node), n = node.kids.length;
+  const word = ax === "x" ? "wide" : "deep";
+  const old = node.kids.reduce((a, k) => a + k.size, 0);
+  const newSize = (old - TD) / (n + 1); // the size each would have if the row were shared equally
+  const factor = (old - TD - newSize) / old;
+  const tight = node.kids.find((k) => k.size * factor < extentMin(k.node, ax) - 0.01);
+  if (newSize < MIN || tight) {
+    return { error: `No room for another one here. Each would be only ${fmt(Math.max(newSize, 0))} ${word} (minimum ${fmt(MIN)}).` };
+  }
+  pushUndo();
+  node.kids.forEach((k) => { k.size *= factor; rescale(k.node, ax, k.size); });
+  const fresh = leaf("New");
+  node.kids.push({ size: newSize, node: fresh });
+  fitTree(); selected = fresh.id; refreshLayout(); save();
+  const sizes = node.kids.map((k) => k.size);
+  const equal = Math.max(...sizes) - Math.min(...sizes) < 0.5;
+  return { ok: (equal ? `Now ${n + 1} in this row, each ${fmt(newSize)} ${word}.` : `Added one ${fmt(newSize)} ${word}; the others shrank to make room.`)
+    + (newSize < 35 ? ` That's narrow. Use "Will it fit?" to check your widest utensil.` : "")
+    + ` Not better? Tap Undo, or Remove it.` };
+}
+function rowOf(l) { const path = findPath(l); return path && path.length ? path[path.length - 1].node : null; }
 function itemFits(l) {
   const w = l.box.x1 - l.box.x0, d = l.box.y1 - l.box.y0, { L, W } = itemCheck;
   return (L <= d && W <= w) || (L <= w && W <= d);
@@ -989,6 +1038,7 @@ document.querySelectorAll("[data-tpl]").forEach((b) => b.addEventListener("click
 $("sel-apply").addEventListener("click", applySel);
 $("sel-name").addEventListener("keydown", (e) => { if (e.key === "Enter") applySel(); });
 ["sel-w", "sel-d"].forEach((id) => $(id).addEventListener("keydown", (e) => { if (e.key === "Enter") applySel(); }));
+$("sel-addrow").addEventListener("click", () => { const row = rowOf(byId(selected)); if (!row) return; const res = addToRow(row); setMsg("sel-msg", res.error ? "bad" : "ok", res.error || res.ok); });
 $("sel-splitx").addEventListener("click", () => { const e = splitLeaf(byId(selected), "cols"); setMsg("sel-msg", e ? "bad" : "ok", e || "Split in two. Drag the new wall to adjust."); });
 $("sel-splity").addEventListener("click", () => { const e = splitLeaf(byId(selected), "rows"); setMsg("sel-msg", e ? "bad" : "ok", e || "Split in two. Drag the new wall to adjust."); });
 $("sel-del").addEventListener("click", () => { const e = removeLeaf(byId(selected)); if (e) setMsg("sel-msg", "bad", e); });
