@@ -1,0 +1,7 @@
+# Pinned versions verified by the Stage 0 feasibility test
+build123d==0.13.0
+trimesh==5.2.1
+rtree
+numpy
+matplotlib==3.11.2
+pytest==9.2.0

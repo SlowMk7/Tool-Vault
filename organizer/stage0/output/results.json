@@ -1,0 +1,130 @@
+{
+  "parameters": {
+    "outer_floor_mm": [
+      120.0,
+      80.0
+    ],
+    "height_mm": 40.0,
+    "taper_deg_left_right": 10.0,
+    "corner_radius_mm": 6.0,
+    "perimeter_wall_mm": 3.0,
+    "divider_mm": 3.0,
+    "floor_mm": 1.6,
+    "top_fillet_mm": 0.8,
+    "bottom_chamfer_mm": 0.5,
+    "seam_gap_mm": 0.15
+  },
+  "whole": {
+    "build_seconds": 0.77,
+    "occt_valid": true,
+    "top_edges_filleted": 20,
+    "volume_mm3": 69198.2,
+    "mesh": {
+      "file": "whole.stl",
+      "triangles": 51538,
+      "watertight": true,
+      "winding_consistent": true,
+      "separate_bodies": 1,
+      "volume_mm3": 69200.7,
+      "size_mm": [
+        133.8,
+        80.0,
+        40.0
+      ]
+    },
+    "measured": {
+      "top_width_expected_mm": 134.11,
+      "walls_crossed_at_mid_height_mm": [
+        3.0,
+        3.0,
+        3.0
+      ],
+      "expected_walls_mm": [
+        3.0,
+        3.0,
+        3.0
+      ],
+      "outer_width_at_mid_height_expected_mm": 127.05,
+      "outer_width_at_mid_height_mm": 127.053
+    }
+  },
+  "seam_owner": {
+    "cut_seconds": 0.17,
+    "left": {
+      "file": "seam_owner_left.stl",
+      "triangles": 26186,
+      "watertight": true,
+      "winding_consistent": true,
+      "separate_bodies": 1,
+      "volume_mm3": 39387.4,
+      "size_mm": [
+        68.4,
+        80.0,
+        40.0
+      ],
+      "occt_valid": true,
+      "walls_crossed_at_mid_height_mm": [
+        3.0,
+        3.0
+      ]
+    },
+    "right": {
+      "file": "seam_owner_right.stl",
+      "triangles": 23734,
+      "watertight": true,
+      "winding_consistent": true,
+      "separate_bodies": 1,
+      "volume_mm3": 29756.1,
+      "size_mm": [
+        65.25,
+        80.0,
+        40.0
+      ],
+      "occt_valid": true,
+      "walls_crossed_at_mid_height_mm": [
+        3.0
+      ]
+    },
+    "volume_removed_by_seam_gap_mm3": 53.59
+  },
+  "seam_split": {
+    "cut_seconds": 0.2,
+    "left": {
+      "file": "seam_split_left.stl",
+      "triangles": 25704,
+      "watertight": true,
+      "winding_consistent": true,
+      "separate_bodies": 1,
+      "volume_mm3": 34358.8,
+      "size_mm": [
+        66.82,
+        80.0,
+        40.0
+      ],
+      "occt_valid": true,
+      "walls_crossed_at_mid_height_mm": [
+        3.0,
+        1.425
+      ]
+    },
+    "right": {
+      "file": "seam_split_right.stl",
+      "triangles": 31302,
+      "watertight": true,
+      "winding_consistent": true,
+      "separate_bodies": 1,
+      "volume_mm3": 34358.8,
+      "size_mm": [
+        66.82,
+        80.0,
+        40.0
+      ],
+      "occt_valid": true,
+      "walls_crossed_at_mid_height_mm": [
+        1.425,
+        3.0
+      ]
+    },
+    "volume_removed_by_seam_gap_mm3": 479.86
+  }
+}
