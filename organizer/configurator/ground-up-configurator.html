@@ -86,6 +86,10 @@ svg .hit { fill: transparent; cursor: col-resize; }
 svg .hit.rows { cursor: row-resize; }
 svg .grip { fill: var(--tape); stroke: var(--tape-ink); }
 svg .addbub { cursor: pointer; }
+svg .delbub { cursor: pointer; }
+svg .delbub .dot { fill: var(--bad); }
+svg .delbub text { fill: var(--bg); font-family: var(--body); font-weight: 700; pointer-events: none; }
+.msg .undo { margin-left: 8px; font: 600 13px/1 var(--body); padding: 6px 10px; border-radius: 6px; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
 svg .addbub circle { fill: var(--accent); }
 svg .addbub text { fill: var(--accent-ink); font-family: var(--display); font-weight: 800; pointer-events: none; }
 svg .lbl { fill: var(--ink); font-family: var(--body); font-weight: 600; pointer-events: none; }
@@ -190,7 +194,7 @@ pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 1
 <section class="step" id="step-layout" hidden>
   <div>
     <h1>Design your compartments</h1>
-    <p class="lead">Drag the yellow handles to move a wall. Tap <b>⊕</b> beside a row to try one more compartment in it. Tap a compartment to resize, rename or remove it. The front of the drawer is at the bottom.</p>
+    <p class="lead">Drag the yellow handles to move a wall. Tap <b>⊕</b> beside a row to try one more compartment in it. Tap a compartment, then the red <b>×</b> to remove it, or use the panel below to resize or rename it. The front of the drawer is at the bottom.</p>
   </div>
   <div class="row">
     <button class="btn tape" id="b-add">+ Add compartment</button>
@@ -671,6 +675,22 @@ function renderEditor() {
       [hit, g].forEach((el) => el.addEventListener("pointerdown", (e) => startDrag(e, dv)));
     }
   }
+  const selLeaf = selected && leaves.find((l) => l.id === selected);
+  if (selLeaf && leaves.length > 1 && !itemCheck) {
+    const b = selLeaf.box, rr = fs * 0.85;
+    const bx = TP + b.x1 - rr * 1.35, by = Y(TP + b.y1) + rr * 1.35;
+    const g = svgEl("g", { class: "delbub", role: "button", "aria-label": `Remove ${selLeaf.label}` }, svg);
+    svgEl("circle", { cx: bx, cy: by, r: rr * 1.6, style: "fill: transparent" }, g); // bigger tap target
+    svgEl("circle", { cx: bx, cy: by, r: rr, class: "dot" }, g);
+    const t = svgEl("text", { x: bx, y: by + rr * 0.45, "text-anchor": "middle", "font-size": rr * 1.35 }, g);
+    t.textContent = "×";
+    g.addEventListener("click", () => {
+      const name = selLeaf.label;
+      const err = removeLeaf(selLeaf);
+      if (err) setMsg("layout-msg", "bad", err);
+      else setMsgUndo("layout-msg", `Removed ${name}. The compartments around it grew to fill the space.`);
+    });
+  }
   const splits = [];
   (function walkSplits(n) { if (n.kind === "split") { splits.push(n); n.kids.forEach((k) => walkSplits(k.node)); } })(tree);
   const r = fs * 1.1;
@@ -773,6 +793,12 @@ function endDrag() { if (drag) { drag = null; save(); } }
 function pushUndo() { undoStack.push(JSON.stringify(tree)); if (undoStack.length > 50) undoStack.shift(); }
 function undo() { if (!undoStack.length) return; tree = JSON.parse(undoStack.pop()); fitTree(); if (selected && !byId(selected)) selected = null; refreshLayout(); save(); }
 function select(id) { selected = selected === id ? null : id; renderEditor(); renderSelPanel(); }
+function setMsgUndo(id, text) {
+  const m = $(id); m.hidden = false; m.className = "msg ok"; m.textContent = text;
+  const b = document.createElement("button"); b.className = "undo"; b.textContent = "Undo";
+  b.addEventListener("click", () => { undo(); setMsg(id, "note", "Brought it back."); });
+  m.appendChild(b);
+}
 function setMsg(id, cls, text) { const m = $(id); if (!text) { m.hidden = true; return; } m.hidden = false; m.className = "msg " + cls; m.textContent = text; }
 function renderSelPanel() {
   const l = selected && byId(selected);
@@ -895,7 +921,7 @@ function addToRow(node) {
   const equal = Math.max(...sizes) - Math.min(...sizes) < 0.5;
   return { ok: (equal ? `Now ${n + 1} in this row, each ${fmt(newSize)} ${word}.` : `Added one ${fmt(newSize)} ${word}; the others shrank to make room.`)
     + (newSize < 35 ? ` That's narrow. Use "Will it fit?" to check your widest utensil.` : "")
-    + ` Not better? Tap Undo, or Remove it.` };
+    + ` Not better? Tap the red × on it, or Undo.` };
 }
 function rowOf(l) { const path = findPath(l); return path && path.length ? path[path.length - 1].node : null; }
 function itemFits(l) {
@@ -1170,7 +1196,12 @@ $("sel-name").addEventListener("keydown", (e) => { if (e.key === "Enter") applyS
 $("sel-addrow").addEventListener("click", () => { const row = rowOf(byId(selected)); if (!row) return; const res = addToRow(row); setMsg("sel-msg", res.error ? "bad" : "ok", res.error || res.ok); });
 $("sel-splitx").addEventListener("click", () => { const e = splitLeaf(byId(selected), "cols"); setMsg("sel-msg", e ? "bad" : "ok", e || "Split in two. Drag the new wall to adjust."); });
 $("sel-splity").addEventListener("click", () => { const e = splitLeaf(byId(selected), "rows"); setMsg("sel-msg", e ? "bad" : "ok", e || "Split in two. Drag the new wall to adjust."); });
-$("sel-del").addEventListener("click", () => { const e = removeLeaf(byId(selected)); if (e) setMsg("sel-msg", "bad", e); });
+$("sel-del").addEventListener("click", () => {
+  const l = byId(selected); if (!l) return; const name = l.label;
+  const e = removeLeaf(l);
+  if (e) setMsg("sel-msg", "bad", e);
+  else { setMsgUndo("layout-msg", `Removed ${name}. The compartments around it grew to fill the space.`); $("layout-msg").scrollIntoView({ block: "center" }); }
+});
 $("it-check").addEventListener("click", () => {
   const L = parseLen($("it-l").value, S.units), W = parseLen($("it-w").value, S.units);
   if (!(L > 0) || !(W > 0)) { setMsg("it-msg", "bad", "Enter the item's length and width, e.g. 8 1/4 and 1 1/2."); return; }
