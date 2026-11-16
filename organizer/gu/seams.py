@@ -9,6 +9,10 @@ How seams work (version 1):
         owner = one compartment id -> that side keeps the whole wall,
                                       the other side is open floor at the seam.
         owner = "split"            -> each side keeps half the wall.
+  * A seam may continue straight across a compartment's floor only if that
+    compartment is listed in "through". This gives a floor-only butt joint
+    (no wall) and is reported as a warning so it gets a physical test. It is
+    needed when a compartment is wider than the printer bed.
   * A small seam gap (construction.seam_gap_mm) is removed at every seam so
     printed parts that come out slightly oversize still fit together.
 
@@ -68,7 +72,10 @@ class Section:
 
 
 def plan_sections(res: Resolved, seams: list[SeamRequest]) -> tuple[list[Section], list[SeamDetail], list[str]]:
+    """Return (sections, seam details, warnings). Compartments crossed by
+    floor seams are listed in res.floor_seam_compartments."""
     p = Problems()
+    res.floor_seam_compartments = set()
     warnings: list[str] = []
     t = res.divider
     gap = res.spec.construction.seam_gap_mm
@@ -105,7 +112,19 @@ def plan_sections(res: Resolved, seams: list[SeamRequest]) -> tuple[list[Section
             p.add(f'Seam {n}: "{a.id}" and "{b.id}" are already in different sections because of an earlier seam.')
             continue
 
-        crossings = _crossings(res, region, axis, line, exclude=())
+        unknown = [i for i in seam.through if res.by_id(i) is None]
+        if unknown:
+            p.add(f"Seam {n}: \"through\" lists unknown compartment(s): {', '.join(unknown)}.")
+            continue
+        crossed = _crossings(res, region, axis, line, exclude=())
+        allowed = [c for c in crossed if c.id in seam.through]
+        crossings = [c for c in crossed if c.id not in seam.through]
+        unused = sorted(set(seam.through) - {c.id for c in allowed})
+        if unused:
+            p.add(f"Seam {n}: it does not cross {', '.join(repr(u) for u in unused)}, so remove "
+                  'them from "through".')
+            continue
+        res.floor_seam_compartments.update(c.id for c in allowed)
         if crossings:
             names = ", ".join(f'"{c.id}"' for c in crossings)
             p.add(f'Seam {n} (between "{a.id}" and "{b.id}") would cut through compartment {names}. '
@@ -116,9 +135,10 @@ def plan_sections(res: Resolved, seams: list[SeamRequest]) -> tuple[list[Section
         detail = SeamDetail((a.id, b.id), seam.owner, axis, line, p_face, q_face)
         open_len = _open_floor_length(res, region, axis, line)
         if open_len > 1.0:
+            via = f" (through {', '.join(repr(c.id) for c in allowed)})" if allowed else ""
             detail.warnings.append(
-                f'Seam {n} (between "{a.id}" and "{b.id}") crosses {open_len:.0f} mm of open floor with no wall. '
-                "That part of the joint is floor-only and weaker; check it in a test print.")
+                f'Seam {n} (between "{a.id}" and "{b.id}") crosses {open_len:.0f} mm of floor with no wall{via}. '
+                "That part of the joint is floor-only (butt joint, no wall); check it in a test print.")
         details.append(detail)
         warnings.extend(detail.warnings)
 

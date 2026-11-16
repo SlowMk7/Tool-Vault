@@ -133,3 +133,21 @@ def test_narrow_section_is_rejected(tmp_path, small):
     small["seams"] = [{"between": ["a", "b"], "owner": "a"}]
     with pytest.raises(DesignError, match="minimum is 40 mm"):
         generate(write(tmp_path, small), tmp_path / "out")
+
+
+def test_photo_order_with_floor_seam(tmp_path):
+    """Full-width front bin is wider than a P1S bed; the floor seam makes it printable."""
+    r = generate(EXAMPLES / "GU-0002-from-photo.json", tmp_path / "out")
+    assert r.report["totals"]["sections"] == 4
+    for sec in r.report["sections"]:
+        assert sec["mesh"]["watertight"] and sec["mesh"]["separate_bodies"] == 1
+        assert max(sec["size_mm"][:2]) <= 252
+    assert any("floor-only" in w for w in r.warnings)
+    assert r.report["resolved"]["outside_overall_mm"][2] == pytest.approx(88.9, abs=0.01)
+
+
+def test_wide_bin_without_floor_seam_is_refused_with_advice(tmp_path):
+    spec = json.loads((EXAMPLES / "GU-0002-from-photo.json").read_text())
+    spec["seams"][2].pop("through")
+    with pytest.raises(DesignError, match='cut through compartment "gadgets"'):
+        generate(write(tmp_path, spec), tmp_path / "out")

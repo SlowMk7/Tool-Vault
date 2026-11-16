@@ -1,0 +1,39 @@
+{
+  "spec_version": 1,
+  "design_id": "GU-0002",
+  "revision": 1,
+  "name": "Customer photo order: 4 cutlery slots, 2 small bins, 1 full-width front bin",
+  "notes": "Drawer size, height and side slope are customer measurements. Compartment SIZES are estimates from a photo and must be confirmed. Assumed the full-width bin is at the FRONT. Slot depth 7 1/2 in chosen so dinner forks and spoons fit.",
+  "units": "in",
+  "drawer": {
+    "width": 12,
+    "depth": 13,
+    "height": "3 1/2",
+    "corner_radius": 0,
+    "taper": {"top_width": "12 1/2", "measured_at_height": "3 1/2", "width_sides": "both"}
+  },
+  "organizer": {"height": "3 1/2", "fit_clearance": "1mm"},
+  "construction": {"perimeter_wall_mm": 2.5, "divider_wall_mm": 2.5, "floor_mm": 1.6, "top_edge_radius_mm": 0.7},
+  "layout": {
+    "rows": [
+      {"id": "gadgets", "label": "Gadgets", "fill": 1},
+      {"fill": 1, "columns": [
+        {"id": "cords", "label": "Cords & bands", "fill": 1},
+        {"id": "clips", "label": "Clips", "fill": 1}
+      ]},
+      {"size": "7 1/2", "columns": [
+        {"id": "spoons", "label": "Spoons", "fill": 1},
+        {"id": "forks", "label": "Forks", "fill": 1},
+        {"id": "knives", "label": "Knives", "fill": 1},
+        {"id": "tools", "label": "Tools", "fill": 1}
+      ]}
+    ]
+  },
+  "seams": [
+    {"between": ["cords", "spoons"], "owner": "spoons", "note": "front/back split on the wall behind the small bins"},
+    {"between": ["forks", "knives"], "owner": "split"},
+    {"between": ["cords", "clips"], "owner": "split", "through": ["gadgets"],
+     "note": "continues across the gadget bin floor, like the original; the bin is wider than a P1S bed"}
+  ],
+  "printer": {"profile": "bambu-p1s"}
+}

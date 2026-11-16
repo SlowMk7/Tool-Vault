@@ -73,6 +73,7 @@ class Resolved:
     angles: dict[str, float]  # outward lean of each side, degrees
     compartments: list[Compartment]
     shared_walls: list[tuple[str, str]] = field(default_factory=list)
+    floor_seam_compartments: set[str] = field(default_factory=set)
     warnings: list[str] = field(default_factory=list)
 
     def lean(self, side: str, z: float) -> float:

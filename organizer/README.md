@@ -29,7 +29,7 @@ python3 -m venv .venv
 
 .venv/bin/python -m gu check    examples/GU-0001-owner-drawer.json   # quick check, no 3D files
 .venv/bin/python -m gu generate examples/GU-0001-owner-drawer.json   # builds the files
-.venv/bin/python -m pytest tests                                       # runs all 55 tests (~10 s)
+.venv/bin/python -m pytest tests                                       # runs all 59 tests (~10 s)
 ```
 
 Files go into `output/<design-id>-r<revision>/`:
@@ -45,7 +45,7 @@ The section STLs keep their assembly position. Bambu Studio places each one on t
 
 ## The design file, explained
 
-See `examples/GU-0001-owner-drawer.json` (rows/columns style) and `examples/GU-EX02-bathroom.json` (exact rectangles style).
+See `examples/GU-0002-from-photo.json` (the owner's photo as a customer order, with a floor seam), `examples/GU-0001-owner-drawer.json` (rows/columns style) and `examples/GU-EX02-bathroom.json` (exact rectangles style).
 
 - **`units`**: `"in"` or `"mm"`. This applies to the drawer, organizer and layout values. Any of those values can also carry its own unit, e.g. `"1mm"`.
 - **`drawer`**: inside `width` and `depth` measured at the floor, plus `height` and `corner_radius`. An optional `taper` takes either `top_width` / `top_depth` with `measured_at_height`, or `angles_deg` per side.
@@ -57,6 +57,8 @@ See `examples/GU-0001-owner-drawer.json` (rows/columns style) and `examples/GU-E
 - **`seams`**: each seam names two compartments that share a wall.
   - `"owner"` decides who keeps that wall: one of the two compartment names, or `"split"` (each side keeps half).
   - Seams are applied in order. Each one only cuts the section that currently contains both compartments, which is how you get stepped seams.
+  - Walls running across a seam are simply cut. Each piece carries its part of the wall, so the wall continues across the joint.
+  - **Floor seams:** a seam may continue across a compartment's floor only if you list that compartment in `"through"`, e.g. `"through": ["gadgets"]`. You need this when a compartment is wider than the printer bed. That part of the joint has no wall (a floor-only butt joint), so the generator always warns about it.
 - **`printer`**: a `profile` (`bambu-p1s`, `bambu-a1`, `bambu-a1-mini`, `bambu-x1c`, `bambu-p1p`, `prusa-mk4`, `prusa-core-one`), or your own `bed_width_mm`, `bed_depth_mm`, `max_height_mm`. The default `margin_mm` is 2.
 
 ### Coordinates
@@ -75,7 +77,7 @@ See `examples/GU-0001-owner-drawer.json` (rows/columns style) and `examples/GU-E
 
 ## What has been tested
 
-- **55 automated tests**, all passing. They cover:
+- **59 automated tests**, all passing. They cover:
   - unit conversion, including inches and fractions;
   - design-file errors;
   - overlaps, slivers and minimum sizes;

@@ -32,7 +32,7 @@ DRAWER_KEYS = {"width", "depth", "height", "corner_radius", "taper"}
 TAPER_KEYS = {"top_width", "top_depth", "measured_at_height", "width_sides", "depth_sides", "angles_deg"}
 ORGANIZER_KEYS = {"height", "fit_clearance"}
 PRINTER_KEYS = {"profile", "name", "bed_width_mm", "bed_depth_mm", "max_height_mm", "margin_mm"}
-SEAM_KEYS = {"between", "owner", "note"}
+SEAM_KEYS = {"between", "owner", "through", "note"}
 
 
 @dataclass
@@ -80,6 +80,7 @@ class Printer:
 class SeamRequest:
     between: tuple[str, str]
     owner: str          # one of the two compartment ids, or "split"
+    through: tuple[str, ...] = ()   # compartments this seam may cross (floor-only joint)
 
 
 @dataclass
@@ -252,7 +253,11 @@ def parse_spec(data: Any) -> Spec:
         if owner not in (between[0], between[1], "split"):
             p.add(f'{where}: "owner" must be "{between[0]}", "{between[1]}" or "split" (got {owner!r}).')
             continue
-        seams.append(SeamRequest((between[0], between[1]), owner))
+        through = s.get("through", [])
+        if not (isinstance(through, list) and all(isinstance(t, str) for t in through)):
+            p.add(f'{where}: "through" must be a list of compartment ids the seam may cross, e.g. ["drawer-front"].')
+            continue
+        seams.append(SeamRequest((between[0], between[1]), owner, tuple(through)))
 
     # --- printer ----------------------------------------------------------------
     printer = _parse_printer(data.get("printer"), p)

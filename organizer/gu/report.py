@@ -43,7 +43,8 @@ def layout_svg(res: Resolved, sections: list[Section]) -> str:
     p = res.perimeter
     out.append(rect(p, p, p + res.interior_width, p + res.interior_depth, fill="#d6d1c6", stroke="none"))
 
-    # Section regions.
+    # Section regions (labels drawn last so they sit on top).
+    labels: list[str] = []
     for i, s in enumerate(sections):
         r = s.region
         x0 = max(-lean_l, r.x0 + p) if not math.isinf(r.x0) else gx0
@@ -52,9 +53,9 @@ def layout_svg(res: Resolved, sections: list[Section]) -> str:
         y1 = min(gy1, r.y1 + p) if not math.isinf(r.y1) else gy1
         col = SECTION_COLOURS[i % len(SECTION_COLOURS)]
         out.append(rect(x0, y0, x1, y1, fill=col, fill_opacity="0.10", stroke=col, stroke_width=2))
-        out.append(f'<text x="{X(x0) + 14:.1f}" y="{Y(y1) + 28:.1f}" font-size="16" font-weight="bold" '
-                   f'fill="{col}" stroke="#ffffff" stroke-width="3" paint-order="stroke">'
-                   f'{escape(s.name.split("-of-")[0])}</text>')
+        labels.append(f'<text x="{(X(x0) + X(x1)) / 2:.1f}" y="{(Y(y0) + Y(y1)) / 2 + 40:.1f}" font-size="18" '
+                      f'font-weight="bold" text-anchor="middle" fill="{col}" stroke="#ffffff" stroke-width="4" '
+                      f'paint-order="stroke">{escape(s.name.split("-of-")[0])}</text>')
 
     # Compartments.
     for c in res.compartments:
@@ -65,6 +66,7 @@ def layout_svg(res: Resolved, sections: list[Section]) -> str:
         out.append(f'<text x="{cx:.1f}" y="{cy + 12:.1f}" font-size="10" text-anchor="middle" '
                    f'fill="#555">{c.width:.1f} × {c.depth:.1f}</text>')
 
+    out.extend(labels)
     title = f"{res.spec.label}  ·  outside {res.outer_width:.1f} × {res.outer_depth:.1f} mm at floor  ·  FRONT ↓"
     out.append(f'<text x="{pad}" y="{H - 12:.0f}" font-size="13" fill="#222">{escape(title)}</text>')
     out.append("</svg>")

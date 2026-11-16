@@ -55,11 +55,14 @@ def _precheck_printer(res: Resolved) -> None:
     ux, uy, _ = res.spec.printer.usable
     t = res.divider
     for c in res.compartments:
+        if c.id in res.floor_seam_compartments:
+            continue  # a floor seam splits it; the section check below is definitive
         need = (c.width + 2 * t, c.depth + 2 * t)
         if not (need[0] <= ux and need[1] <= uy) and not (need[1] <= ux and need[0] <= uy):
             p.add(f'Compartment "{c.id}" ({c.width:.0f} × {c.depth:.0f} mm plus walls) is larger than the '
                   f"usable bed of the {res.spec.printer.name} ({ux:.0f} × {uy:.0f} mm), so no seam along walls "
-                  "can make it printable. Add a divider through it, or choose a larger printer.")
+                  "can make it printable. Add a divider through it, let a seam cross its floor "
+                  '(list it in that seam\'s "through"), or choose a larger printer.')
     p.raise_if_any()
 
 

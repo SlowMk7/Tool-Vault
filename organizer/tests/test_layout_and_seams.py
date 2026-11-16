@@ -140,7 +140,7 @@ def test_seam_across_open_floor_warns(small):
     small["layout"] = rects(("a", 0, 0, 50, 40), ("b", 53, 0, 69, 40))
     small["seams"] = [{"between": ["a", "b"], "owner": "a"}]
     _, (_, _, warnings) = plan(small)
-    assert warnings and "crosses 39 mm of open floor" in warnings[0]
+    assert warnings and "crosses 39 mm of floor with no wall" in warnings[0]
 
 
 def test_seam_along_a_wall_face_is_not_open_floor(small):
@@ -167,4 +167,23 @@ def test_sections_are_numbered_front_left_first(small):
 def test_seam_between_already_separated_compartments(small):
     small["seams"] = [{"between": ["a", "b"], "owner": "a"}, {"between": ["a", "b"], "owner": "a"}]
     with pytest.raises(DesignError, match="already in different sections"):
+        plan(small)
+
+
+def test_floor_seam_needs_explicit_opt_in_and_is_reported():
+    spec = {
+        "spec_version": 1, "design_id": "T", "units": "mm",
+        "drawer": {"width": 206, "depth": 106}, "organizer": {"height": 40},
+        "layout": {"rows": [{"size": 47, "columns": [{"id": "a"}, {"id": "b"}]}, {"fill": 1, "id": "long"}]},
+        "seams": [{"between": ["a", "b"], "owner": "split", "through": ["long"]}],
+    }
+    res, (sections, _, warnings) = plan(spec)
+    assert len(sections) == 2
+    assert res.floor_seam_compartments == {"long"}
+    assert "floor-only" in warnings[0] and "'long'" in warnings[0]
+
+
+def test_through_must_name_a_crossed_compartment(small):
+    small["seams"] = [{"between": ["a", "b"], "owner": "a", "through": ["b"]}]
+    with pytest.raises(DesignError, match="does not cross"):
         plan(small)

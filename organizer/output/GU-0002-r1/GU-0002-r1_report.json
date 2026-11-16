@@ -1,0 +1,327 @@
+{
+  "design": {
+    "design_id": "GU-0002",
+    "revision": 1,
+    "name": "Customer photo order: 4 cutlery slots, 2 small bins, 1 full-width front bin",
+    "spec_sha256": "22a8eb1c29e6a62a7cc1eeb1f1e787e55f8ee9d364092150139c351716f98f70",
+    "units_in_file": "in"
+  },
+  "generator_version": "0.1.0+2886eec",
+  "status": {
+    "geometry_checks": "passed",
+    "physical_verification": "NOT VERIFIED - print and test before selling"
+  },
+  "resolved": {
+    "outside_at_floor_mm": [
+      302.8,
+      328.2
+    ],
+    "outside_overall_mm": [
+      315.4,
+      328.2,
+      88.9
+    ],
+    "interior_at_floor_mm": [
+      297.8,
+      323.2
+    ],
+    "height_mm": 88.9,
+    "wall_angles_deg": {
+      "left": 4.086,
+      "right": 4.086,
+      "front": 0.0,
+      "back": 0.0
+    },
+    "fit_clearance_per_side_mm": 1.0,
+    "outside_corner_radius_mm": 0.0,
+    "construction_mm": {
+      "perimeter_wall_mm": 2.5,
+      "divider_wall_mm": 2.5,
+      "floor_mm": 1.6,
+      "top_edge_radius_mm": 0.7,
+      "bottom_chamfer_mm": 0.5,
+      "seam_gap_mm": 0.15,
+      "min_compartment_mm": 15.0,
+      "min_open_gap_mm": 10.0,
+      "min_section_mm": 40.0
+    },
+    "compartments_interior_coords": [
+      {
+        "id": "gadgets",
+        "label": "Gadgets",
+        "x": 0.0,
+        "y": 0.0,
+        "width": 297.8,
+        "depth": 63.85
+      },
+      {
+        "id": "cords",
+        "label": "Cords & bands",
+        "x": 0.0,
+        "y": 66.35,
+        "width": 147.65,
+        "depth": 63.85
+      },
+      {
+        "id": "clips",
+        "label": "Clips",
+        "x": 150.15,
+        "y": 66.35,
+        "width": 147.65,
+        "depth": 63.85
+      },
+      {
+        "id": "spoons",
+        "label": "Spoons",
+        "x": 0.0,
+        "y": 132.7,
+        "width": 72.575,
+        "depth": 190.5
+      },
+      {
+        "id": "forks",
+        "label": "Forks",
+        "x": 75.075,
+        "y": 132.7,
+        "width": 72.575,
+        "depth": 190.5
+      },
+      {
+        "id": "knives",
+        "label": "Knives",
+        "x": 150.15,
+        "y": 132.7,
+        "width": 72.575,
+        "depth": 190.5
+      },
+      {
+        "id": "tools",
+        "label": "Tools",
+        "x": 225.225,
+        "y": 132.7,
+        "width": 72.575,
+        "depth": 190.5
+      }
+    ],
+    "shared_walls": [
+      [
+        "gadgets",
+        "cords"
+      ],
+      [
+        "gadgets",
+        "clips"
+      ],
+      [
+        "cords",
+        "clips"
+      ],
+      [
+        "cords",
+        "spoons"
+      ],
+      [
+        "cords",
+        "forks"
+      ],
+      [
+        "clips",
+        "knives"
+      ],
+      [
+        "clips",
+        "tools"
+      ],
+      [
+        "spoons",
+        "forks"
+      ],
+      [
+        "forks",
+        "knives"
+      ],
+      [
+        "knives",
+        "tools"
+      ]
+    ]
+  },
+  "printer": {
+    "name": "Bambu Lab P1S",
+    "usable_mm": [
+      252.0,
+      252.0,
+      256.0
+    ],
+    "margin_mm": 2.0
+  },
+  "seams": [
+    {
+      "between": [
+        "cords",
+        "spoons"
+      ],
+      "owner": "spoons",
+      "seam_line": "y = 130.20 mm (interior)",
+      "divider_from_mm": 130.2,
+      "divider_to_mm": 132.7
+    },
+    {
+      "between": [
+        "forks",
+        "knives"
+      ],
+      "owner": "split",
+      "seam_line": "x = 148.90 mm (interior)",
+      "divider_from_mm": 147.65,
+      "divider_to_mm": 150.15
+    },
+    {
+      "between": [
+        "cords",
+        "clips"
+      ],
+      "owner": "split",
+      "seam_line": "x = 148.90 mm (interior)",
+      "divider_from_mm": 147.65,
+      "divider_to_mm": 150.15
+    }
+  ],
+  "sections": [
+    {
+      "section": "P1-of-4",
+      "file": "GU-0002-r1_P1-of-4.stl",
+      "compartments": [
+        "cords"
+      ],
+      "size_mm": [
+        157.62,
+        132.55,
+        88.9
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 133.81,
+      "solid_weight_pla_g": 165.9,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 4206,
+        "volume_mm3": 133805.34
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": 148.825,
+        "y0": null,
+        "y1": 130.05
+      }
+    },
+    {
+      "section": "P2-of-4",
+      "file": "GU-0002-r1_P2-of-4.stl",
+      "compartments": [
+        "clips"
+      ],
+      "size_mm": [
+        157.62,
+        132.55,
+        88.9
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 133.81,
+      "solid_weight_pla_g": 165.9,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 4416,
+        "volume_mm3": 133805.3
+      },
+      "region_interior_mm": {
+        "x0": 148.975,
+        "x1": null,
+        "y0": null,
+        "y1": 130.05
+      }
+    },
+    {
+      "section": "P3-of-4",
+      "file": "GU-0002-r1_P3-of-4.stl",
+      "compartments": [
+        "spoons",
+        "forks"
+      ],
+      "size_mm": [
+        157.62,
+        195.5,
+        88.9
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 217.3,
+      "solid_weight_pla_g": 269.5,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 6706,
+        "volume_mm3": 217300.6
+      },
+      "region_interior_mm": {
+        "x0": null,
+        "x1": 148.825,
+        "y0": 130.2,
+        "y1": null
+      }
+    },
+    {
+      "section": "P4-of-4",
+      "file": "GU-0002-r1_P4-of-4.stl",
+      "compartments": [
+        "knives",
+        "tools"
+      ],
+      "size_mm": [
+        157.62,
+        195.5,
+        88.9
+      ],
+      "fits_printer": true,
+      "rotate_90_on_bed": false,
+      "volume_cm3": 217.3,
+      "solid_weight_pla_g": 269.5,
+      "mesh": {
+        "watertight": true,
+        "winding_consistent": true,
+        "separate_bodies": 1,
+        "triangles": 6810,
+        "volume_mm3": 217300.44
+      },
+      "region_interior_mm": {
+        "x0": 148.975,
+        "x1": null,
+        "y0": 130.2,
+        "y1": null
+      }
+    }
+  ],
+  "totals": {
+    "sections": 4,
+    "volume_cm3": 702.2,
+    "solid_weight_pla_g": 871.0,
+    "weight_note": "Upper bound if printed 100% solid. Use the slicer for real grams and print time."
+  },
+  "warnings": [
+    "Seam 3 (between \"cords\" and \"clips\") crosses 64 mm of floor with no wall (through 'gadgets'). That part of the joint is floor-only (butt joint, no wall); check it in a test print."
+  ],
+  "files": [
+    "GU-0002-r1_P1-of-4.stl",
+    "GU-0002-r1_P2-of-4.stl",
+    "GU-0002-r1_P3-of-4.stl",
+    "GU-0002-r1_P4-of-4.stl",
+    "GU-0002-r1_assembly-preview.stl",
+    "GU-0002-r1_layout.svg"
+  ]
+}

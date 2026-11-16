@@ -6,4 +6,5 @@ __pycache__/
 organizer/output/*
 !organizer/output/GU-0001-r1/
 !organizer/output/GU-EX02-r1/
+!organizer/output/GU-0002-r1/
 organizer/**/slice-check/
