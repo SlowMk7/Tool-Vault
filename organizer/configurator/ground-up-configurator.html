@@ -1,0 +1,1037 @@
+<title>Ground Up Organizer Builder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one column workbench — sticky step bar, then the active step; editor drawing leads, controls follow. */
+:root {
+  --bg: #eef0eb; --surface: #ffffff; --sunken: #e2e5de; --ink: #1b201d; --muted: #5c6660; --line: #cdd2c9;
+  --accent: #1f5e4e; --accent-ink: #ffffff; --tape: #f2b705; --tape-ink: #1b201d;
+  --ok: #2b7a4b; --ok-wash: #d9eedf; --bad: #b3392a; --bad-wash: #f6dcd7; --wall: #39403b; --floor: #d3d7cf;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #131714; --surface: #1c221e; --sunken: #252c27; --ink: #e6eae5; --muted: #9aa49d; --line: #333b35;
+  --accent: #63b49b; --accent-ink: #0c1310; --tape: #f2c230; --tape-ink: #141714;
+  --ok: #62c48e; --ok-wash: #1d3327; --bad: #ee7f6d; --bad-wash: #3b2421; --wall: #b9c1bb; --floor: #2c342f; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #131714; --surface: #1c221e; --sunken: #252c27; --ink: #e6eae5; --muted: #9aa49d; --line: #333b35;
+  --accent: #63b49b; --accent-ink: #0c1310; --tape: #f2c230; --tape-ink: #141714;
+  --ok: #62c48e; --ok-wash: #1d3327; --bad: #ee7f6d; --bad-wash: #3b2421; --wall: #b9c1bb; --floor: #2c342f; color-scheme: dark }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 48px; }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+header.top .wrap { padding-block: 10px; display: flex; flex-direction: column; gap: 8px; }
+.brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.brand b { font: 800 18px/1.1 var(--display); letter-spacing: .01em; }
+.brand span { font-size: 12px; color: var(--muted); }
+.proto { font: 600 11px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; background: var(--tape); color: var(--tape-ink); padding: 4px 7px; border-radius: 4px; }
+nav.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+nav.steps button { font: 600 13px/1.2 var(--body); padding: 9px 4px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+nav.steps button[aria-current="step"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+nav.steps small { display: block; font-weight: 500; font-size: 11px; opacity: .8; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: 24px; font-weight: 800; }
+h2 { font-size: 18px; font-weight: 800; }
+h3 { font-size: 15px; font-weight: 600; }
+.lead { color: var(--muted); margin: 4px 0 0; max-width: 62ch; }
+section.step { display: flex; flex-direction: column; gap: 16px; padding-top: 18px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: start; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600; }
+label.f small { font-weight: 400; color: var(--muted); }
+input[type=text], select { font: 500 16px/1.2 var(--mono); padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; min-width: 0; }
+input[type=text]:focus-visible, select:focus-visible, button:focus-visible { outline: 3px solid var(--tape); outline-offset: 1px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: 600 14px/1 var(--body); padding: 9px 14px; border: 0; background: var(--bg); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.btn { font: 600 14px/1.2 var(--body); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.tape { background: var(--tape); color: var(--tape-ink); border-color: var(--tape); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.check { display: flex; gap: 8px; align-items: center; font-weight: 600; font-size: 14px; }
+.check input { width: 20px; height: 20px; accent-color: var(--accent); }
+.msg { font-size: 13px; padding: 8px 10px; border-radius: 8px; }
+.msg.bad { background: var(--bad-wash); color: var(--bad); }
+.msg.ok { background: var(--ok-wash); color: var(--ok); }
+.msg.note { background: var(--sunken); color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.tips { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; display: grid; gap: 4px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.card { text-align: left; background: var(--surface); border: 2px solid var(--line); border-radius: 12px; padding: 14px; cursor: pointer; color: var(--ink); font: inherit; display: flex; flex-direction: column; gap: 4px; }
+.card[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+.card b { font-family: var(--display); font-size: 16px; }
+.card span { color: var(--muted); font-size: 13px; }
+/* editor */
+.editor { background: var(--sunken); border-radius: 12px; padding: 10px; touch-action: none; }
+.editor svg { width: 100%; height: auto; display: block; max-height: 70vh; }
+svg .floorpad { fill: var(--floor); }
+svg .perim { fill: var(--wall); }
+svg .comp { fill: var(--surface); stroke: none; cursor: pointer; }
+svg .comp.sel { fill: color-mix(in srgb, var(--tape) 28%, var(--surface)); }
+svg .comp.fits { fill: var(--ok-wash); }
+svg .comp.nofit { fill: var(--bad-wash); }
+svg .wallv { fill: var(--wall); }
+svg .hit { fill: transparent; cursor: col-resize; }
+svg .hit.rows { cursor: row-resize; }
+svg .grip { fill: var(--tape); stroke: var(--tape-ink); }
+svg .lbl { fill: var(--ink); font-family: var(--body); font-weight: 600; pointer-events: none; }
+svg .dim { fill: var(--muted); font-family: var(--mono); pointer-events: none; }
+svg .piece { fill: none; stroke-dasharray: 6 4; pointer-events: none; }
+svg .plabel { font-family: var(--display); font-weight: 800; pointer-events: none; paint-order: stroke; stroke: var(--surface); }
+svg .ruler { fill: var(--muted); font-family: var(--mono); }
+.selpanel[hidden] { display: none; }
+.pieces { display: grid; gap: 8px; }
+.pc { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px; background: var(--bg); font-size: 14px; }
+.pc i { width: 14px; height: 14px; border-radius: 3px; display: block; }
+#view3d { width: 100%; aspect-ratio: 4 / 3; max-height: 70vh; border-radius: 12px; overflow: hidden; background: var(--sunken); touch-action: none; position: relative; }
+#view3d canvas { display: block; width: 100%; height: 100%; }
+#view3d .loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 14px; }
+pre.json { background: var(--sunken); border-radius: 8px; padding: 12px; font: 12px/1.45 var(--mono); max-height: 320px; overflow: auto; margin: 0; white-space: pre; }
+.sum { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; }
+.sum dt { color: var(--muted); }
+.sum dd { margin: 0; font-weight: 600; }
+.price { font: 800 22px/1 var(--display); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><b>Ground Up Woodworking</b><span>Custom-fit drawer organizers</span><span class="proto">Prototype · test only</span></div>
+    <nav class="steps" aria-label="Steps">
+      <button id="nav-drawer" data-step="drawer">Drawer<small>measure</small></button>
+      <button id="nav-layout" data-step="layout">Layout<small>design</small></button>
+      <button id="nav-preview" data-step="preview">Preview<small>3D + pieces</small></button>
+      <button id="nav-order" data-step="order">Order<small>files or printed</small></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- STEP 1: DRAWER -->
+<section class="step" id="step-drawer">
+  <div>
+    <h1>Measure your drawer</h1>
+    <p class="lead">Measure the inside of the drawer. We make the organizer slightly smaller so it drops in.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="row"><span style="font-weight:600;font-size:14px">Units</span>
+        <div class="seg" role="group" aria-label="Units"><button id="u-in" data-u="in">Inches</button><button id="u-mm" data-u="mm">mm</button></div>
+      </div>
+      <div class="fields">
+        <label class="f">Inside width <small>left to right, at the bottom</small><input type="text" id="d-w" inputmode="decimal"></label>
+        <label class="f">Inside depth <small>front to back, at the bottom</small><input type="text" id="d-d" inputmode="decimal"></label>
+        <label class="f">Inside height <small>floor to top of drawer side</small><input type="text" id="d-h" inputmode="decimal"></label>
+        <label class="f">Organizer height <small>no taller than the drawer</small><input type="text" id="o-h" inputmode="decimal"></label>
+      </div>
+      <label class="check"><input type="checkbox" id="d-slope"> The drawer sides slope outward (wider at the top)</label>
+      <div class="fields" id="slopefields">
+        <label class="f">Inside width at the top <small>measured at the top edge</small><input type="text" id="d-tw" inputmode="decimal"></label>
+        <label class="f">Inside depth at the top <small>leave as-is if front/back are straight</small><input type="text" id="d-td" inputmode="decimal"></label>
+      </div>
+      <div id="drawer-msg" class="msg" hidden></div>
+    </div>
+    <div class="panel">
+      <h3>How to measure</h3>
+      <svg viewBox="0 0 290 150" role="img" aria-label="Drawer seen from the front, showing width at the bottom, width at the top and height">
+        <path d="M60 30 L200 30 L190 120 L70 120 Z" fill="none" stroke="currentColor" stroke-width="3" style="color:var(--wall)"/>
+        <line x1="70" y1="132" x2="190" y2="132" stroke="var(--tape)" stroke-width="3"/>
+        <text x="130" y="146" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--mono)">width at bottom</text>
+        <line x1="60" y1="18" x2="200" y2="18" stroke="var(--tape)" stroke-width="3"/>
+        <text x="130" y="12" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--mono)">width at top</text>
+        <line x1="218" y1="30" x2="218" y2="120" stroke="var(--tape)" stroke-width="3"/>
+        <text x="226" y="80" font-size="11" fill="var(--muted)" font-family="var(--mono)">height</text>
+      </svg>
+      <ul class="tips">
+        <li>Measure inside, wall to wall, in the middle of each side.</li>
+        <li>Measure width at the bottom and again at the top. If they differ, tick the slope box.</li>
+        <li>Check nothing sticks into the drawer: rails, lips or the cabinet frame above.</li>
+        <li>Not sure? Choose "Need help designing?" at the Order step.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="row"><button class="btn primary" data-go="layout">Next: design the layout</button></div>
+</section>
+
+<!-- STEP 2: LAYOUT -->
+<section class="step" id="step-layout" hidden>
+  <div>
+    <h1>Design your compartments</h1>
+    <p class="lead">Drag the yellow handles to move a wall. Tap a compartment to resize, split, rename or remove it. Neighbouring compartments share one wall. The front of the drawer is at the bottom.</p>
+  </div>
+  <div class="row">
+    <button class="btn tape" id="b-add">+ Add compartment</button>
+    <button class="btn" id="b-undo">Undo</button>
+    <label class="check"><input type="checkbox" id="show-pieces"> Show printed pieces</label>
+    <span style="flex:1"></span>
+    <button class="btn" id="b-tpl">Start over…</button>
+  </div>
+  <div id="tpl-confirm" class="panel" hidden>
+    <h3>Start over with a new layout?</h3>
+    <p class="lead" style="margin:0">This replaces your current compartments.</p>
+    <div class="row"><button class="btn primary" data-tpl="cutlery">Cutlery layout</button><button class="btn primary" data-tpl="empty">Empty drawer</button><button class="btn" id="tpl-cancel">Keep my layout</button></div>
+  </div>
+  <div class="editor"><svg id="ed" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div id="layout-msg" class="msg" hidden></div>
+  <div class="grid2">
+    <div class="panel selpanel" id="selpanel" hidden>
+      <div class="row" style="justify-content:space-between"><h2 id="sel-title">Compartment</h2><span class="mono" id="sel-size"></span></div>
+      <label class="f">Name<input type="text" id="sel-name" style="font-family:var(--body)"></label>
+      <div class="fields">
+        <label class="f">Inside width<input type="text" id="sel-w" inputmode="decimal"></label>
+        <label class="f">Inside depth<input type="text" id="sel-d" inputmode="decimal"></label>
+      </div>
+      <div class="row"><button class="btn" id="sel-apply">Apply sizes</button></div>
+      <div class="row">
+        <button class="btn" id="sel-splitx">Split side by side</button>
+        <button class="btn" id="sel-splity">Split front / back</button>
+        <button class="btn" id="sel-del">Remove</button>
+      </div>
+      <div id="sel-msg" class="msg" hidden></div>
+    </div>
+    <div class="panel">
+      <h3>Will it fit?</h3>
+      <p class="lead" style="margin:0;font-size:13px">Measure an item and see which compartments can hold it lying flat.</p>
+      <div class="fields">
+        <label class="f">Item length<input type="text" id="it-l" inputmode="decimal" placeholder="e.g. 8 1/4"></label>
+        <label class="f">Item width<input type="text" id="it-w" inputmode="decimal" placeholder="e.g. 1 1/2"></label>
+      </div>
+      <div class="row"><button class="btn" id="it-check">Check</button><button class="btn" id="it-clear">Clear</button></div>
+      <div id="it-msg" class="msg" hidden></div>
+    </div>
+  </div>
+  <div class="row"><button class="btn" data-go="drawer">Back</button><button class="btn primary" data-go="preview">Next: preview</button></div>
+</section>
+
+<!-- STEP 3: PREVIEW -->
+<section class="step" id="step-preview" hidden>
+  <div>
+    <h1>Preview</h1>
+    <p class="lead">Drag to rotate, pinch or scroll to zoom. Large organizers are split into pieces that fit a printer bed and push together in the drawer.</p>
+  </div>
+  <div id="view3d"><div class="loading" id="v3-loading">Loading 3D preview…</div></div>
+  <div class="row">
+    <button class="btn" id="v-explode">Separate pieces</button>
+    <button class="btn" id="v-top">Top view</button>
+    <button class="btn" id="v-iso">3D view</button>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Printer</h3>
+      <label class="f">Printer the files are made for
+        <select id="printer">
+          <option value="bambu-p1s">Bambu Lab P1S / X1 / A1 (256 mm)</option>
+          <option value="bambu-a1-mini">Bambu Lab A1 mini (180 mm)</option>
+          <option value="prusa-mk4">Prusa MK4 (250 × 210 mm)</option>
+          <option value="prusa-core-one">Prusa CORE One (250 × 220 mm)</option>
+        </select>
+      </label>
+      <p class="lead" style="margin:0;font-size:13px">If you choose "We print it for you", we use our own printers.</p>
+    </div>
+    <div class="panel">
+      <h3 id="pieces-title">Pieces</h3>
+      <div class="pieces" id="pieces"></div>
+      <div id="pieces-msg" class="msg" hidden></div>
+    </div>
+  </div>
+  <div class="row"><button class="btn" data-go="layout">Back</button><button class="btn primary" data-go="order">Next: order</button></div>
+</section>
+
+<!-- STEP 4: ORDER -->
+<section class="step" id="step-order" hidden>
+  <div>
+    <h1>How would you like it?</h1>
+    <p class="lead">Test checkout. Nothing is charged and nothing is sent.</p>
+  </div>
+  <div class="cards">
+    <button class="card" id="f-digital" data-f="digital"><b>Printable files</b><span>For your own 3D printer. You get numbered STL files already split to fit your printer.</span></button>
+    <button class="card" id="f-printed" data-f="printed"><b>We print it for you</b><span>Printed by Ground Up. Pickup in Vaughan / GTA or shipping within Canada.</span></button>
+  </div>
+  <div class="panel" id="printed-opts" hidden>
+    <div class="fields">
+      <label class="f">Material<select id="mat"><option>PLA (matte)</option><option>PETG (more heat resistant)</option></select></label>
+      <label class="f">Colour<select id="col"><option>Black</option><option>White</option><option>Grey</option><option>Sage green</option></select></label>
+      <label class="f">Delivery<select id="dlv"><option>Local pickup (Vaughan)</option><option>Shipping within Canada</option></select></label>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>Your design</h3>
+    <dl class="sum" id="summary"></dl>
+    <div class="row" style="justify-content:space-between"><span class="price" id="price">Price: set during testing</span><button class="btn primary" id="b-order">Place test order</button></div>
+    <div id="order-msg" class="msg" hidden></div>
+  </div>
+  <div class="panel" id="confirm" hidden>
+    <h2 id="conf-title">Test order received</h2>
+    <p class="lead" style="margin:0">This is a prototype, so nothing was charged or sent. Below is the design file the generator uses to make the real printable pieces. Copy it and send it to Claude to generate the files.</p>
+    <div class="row"><button class="btn tape" id="b-copy">Copy design file</button><span id="copy-msg" class="lead" style="margin:0"></span></div>
+    <pre class="json" id="json"></pre>
+  </div>
+  <div class="panel">
+    <h3>Need help designing?</h3>
+    <p class="lead" style="margin:0">Send photos of your drawer and the things you want to store, and Ground Up will design it with you. In the real site this opens a contact form.</p>
+  </div>
+  <div class="row"><button class="btn" data-go="preview">Back</button></div>
+</section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+"use strict";
+// ---------------------------------------------------------------- constants
+const MM_IN = 25.4, MIN = 15, CLEAR = 1.0, TP = 2.5, TD = 2.5, FLOOR = 1.6, PLA = 1.24, INFILL_FACTOR = 0.81, MARGIN = 2;
+const PRINTERS = {
+  "bambu-p1s": { x: 256, y: 256, z: 256, name: "Bambu Lab P1S / X1 / A1" },
+  "bambu-a1-mini": { x: 180, y: 180, z: 180, name: "Bambu Lab A1 mini" },
+  "prusa-mk4": { x: 250, y: 210, z: 220, name: "Prusa MK4" },
+  "prusa-core-one": { x: 250, y: 220, z: 270, name: "Prusa CORE One" },
+};
+const PIECE_COLORS = ["#d9560a", "#2f6db5", "#2f8a57", "#8a4fb3", "#c2960a", "#b8336a", "#2f8f8f", "#6b6b6b"];
+const $ = (id) => document.getElementById(id);
+
+// ---------------------------------------------------------------- state
+let uid = 1;
+const leaf = (label) => ({ id: "n" + uid++, kind: "leaf", label });
+const split = (dir, kids) => ({ id: "n" + uid++, kind: "split", dir, kids: kids.map(([size, node]) => ({ size, node })) });
+function templateTree(name) {
+  if (name === "empty") return leaf("Compartment");
+  return split("rows", [
+    [64, leaf("Gadgets")],
+    [64, split("cols", [[1, leaf("Cords & bands")], [1, leaf("Clips")]])],
+    [190.5, split("cols", [[1, leaf("Spoons")], [1, leaf("Forks")], [1, leaf("Knives")], [1, leaf("Tools")]])],
+  ]);
+}
+const DEFAULT = {
+  units: "in", w: 9 * MM_IN, d: 13 * MM_IN, h: 3.5 * MM_IN, oh: 3.5 * MM_IN,
+  slope: true, tw: 9.5 * MM_IN, td: 13 * MM_IN, printer: "bambu-p1s",
+  fulfil: "digital", step: "drawer",
+};
+let S = JSON.parse(JSON.stringify(DEFAULT));
+let tree = templateTree("cutlery");
+let selected = null, undoStack = [], itemCheck = null, showPieces = false;
+
+function save() {
+  try { localStorage.setItem("gu-config", JSON.stringify({ S, tree, uid })); } catch (e) { /* storage unavailable */ }
+}
+function load() {
+  try {
+    const raw = localStorage.getItem("gu-config");
+    if (!raw) return;
+    const v = JSON.parse(raw);
+    if (v && v.S && v.tree) { S = Object.assign(JSON.parse(JSON.stringify(DEFAULT)), v.S); tree = v.tree; uid = v.uid || 1000; }
+  } catch (e) { /* ignore */ }
+}
+
+// ---------------------------------------------------------------- units
+function parseLen(text, units) {
+  if (text == null) return NaN;
+  let t = String(text).trim().toLowerCase().replace(/[″”]/g, '"');
+  let u = units;
+  const m = t.match(/^(.*?)\s*(mm|cm|inches|inch|in|")$/);
+  if (m) { t = m[1].trim(); u = m[2] === "mm" ? "mm" : m[2] === "cm" ? "cm" : "in"; }
+  let n;
+  if (/^[+]?(\d+(\.\d*)?|\.\d+)$/.test(t)) n = parseFloat(t);
+  else {
+    const f = t.match(/^(?:(\d+(?:\.\d+)?)\s*[- ]\s*)?(\d+)\s*\/\s*(\d+)$/);
+    if (!f || +f[3] === 0) return NaN;
+    n = (f[1] ? parseFloat(f[1]) : 0) + (+f[2]) / (+f[3]);
+  }
+  return n * (u === "mm" ? 1 : u === "cm" ? 10 : MM_IN);
+}
+function fmt(mm, units = S.units, withUnit = true) {
+  if (units === "mm") return (Math.round(mm * 10) / 10).toString() + (withUnit ? " mm" : "");
+  const sixteenths = Math.round(mm / MM_IN * 16);
+  const whole = Math.floor(sixteenths / 16); let num = sixteenths % 16, den = 16;
+  while (num && num % 2 === 0) { num /= 2; den /= 2; }
+  const s = num ? (whole ? `${whole} ${num}/${den}` : `${num}/${den}`) : `${whole}`;
+  return s + (withUnit ? '"' : "");
+}
+
+// ---------------------------------------------------------------- geometry
+function dims() {
+  const oW = S.w - 2 * CLEAR, oD = S.d - 2 * CLEAR;
+  const W = oW - 2 * TP, D = oD - 2 * TP;
+  const sideW = S.slope ? Math.max(0, (S.tw - S.w) / 2) : 0;
+  const sideD = S.slope ? Math.max(0, (S.td - S.d) / 2) : 0;
+  const angW = Math.atan2(sideW, S.h), angD = Math.atan2(sideD, S.h);
+  const H = S.oh;
+  const lean = { L: H * Math.tan(angW), R: H * Math.tan(angW), F: H * Math.tan(angD), B: H * Math.tan(angD) };
+  return { oW, oD, W, D, H, lean, angW, angD };
+}
+const axOf = (n) => (n.dir === "cols" ? "x" : "y");
+function layout() {
+  const { W, D } = dims();
+  const out = { leaves: [], dividers: [] };
+  (function walk(node, x0, y0, x1, y1) {
+    node.box = { x0, y0, x1, y1 };
+    if (node.kind === "leaf") { out.leaves.push(node); return; }
+    const ax = axOf(node); let pos = ax === "x" ? x0 : y0;
+    node.kids.forEach((k, i) => {
+      if (ax === "x") walk(k.node, pos, y0, pos + k.size, y1); else walk(k.node, x0, pos, x1, pos + k.size);
+      if (i < node.kids.length - 1) out.dividers.push({ node, i, ax, p: pos + k.size, a: ax === "x" ? y0 : x0, b: ax === "x" ? y1 : x1 });
+      pos += k.size + TD;
+    });
+  })(tree, 0, 0, W, D);
+  return out;
+}
+function extentMin(node, ax) {
+  if (node.kind === "leaf") return MIN;
+  if (axOf(node) === ax) return node.kids.reduce((a, k) => a + extentMin(k.node, ax), 0) + (node.kids.length - 1) * TD;
+  return Math.max(...node.kids.map((k) => extentMin(k.node, ax)));
+}
+function rescale(node, ax, size) {
+  if (node.kind === "leaf") return;
+  if (axOf(node) === ax) {
+    const avail = size - (node.kids.length - 1) * TD;
+    const old = node.kids.reduce((a, k) => a + k.size, 0);
+    node.kids.forEach((k) => { k.size = k.size * avail / old; rescale(k.node, ax, k.size); });
+  } else node.kids.forEach((k) => rescale(k.node, ax, size));
+}
+function fitTree() { const { W, D } = dims(); rescale(tree, "x", W); rescale(tree, "y", D); }
+function findPath(target, node = tree, path = []) {
+  if (node === target) return path;
+  if (node.kind === "split") for (let i = 0; i < node.kids.length; i++) {
+    const r = findPath(target, node.kids[i].node, path.concat([{ node, i }]));
+    if (r) return r;
+  }
+  return null;
+}
+function byId(id, node = tree) {
+  if (node.id === id) return node;
+  if (node.kind === "split") for (const k of node.kids) { const r = byId(id, k.node); if (r) return r; }
+  return null;
+}
+const leavesOf = (node) => node.kind === "leaf" ? [node] : node.kids.flatMap((k) => leavesOf(k.node));
+function tooSmall() { return layout().leaves.filter((l) => l.box.x1 - l.box.x0 < MIN - 0.01 || l.box.y1 - l.box.y0 < MIN - 0.01); }
+
+// ---------------------------------------------------------------- piece planner (same seam rules as the generator)
+function planPieces() {
+  const { W, D, H, lean } = dims();
+  const pr = PRINTERS[S.printer];
+  const ux = pr.x - 2 * MARGIN, uy = pr.y - 2 * MARGIN, lim = Math.max(ux, uy);
+  layout();
+  const eps = 1e-6;
+  const ext = (r, ax) => ax === "x"
+    ? (r.x1 - r.x0) + (r.x0 <= eps ? TP + lean.L : 0) + (r.x1 >= W - eps ? TP + lean.R : 0)
+    : (r.y1 - r.y0) + (r.y0 <= eps ? TP + lean.F : 0) + (r.y1 >= D - eps ? TP + lean.B : 0);
+  const fits = (r) => {
+    const ex = ext(r, "x"), ey = ext(r, "y");
+    return H <= pr.z && ((ex <= ux && ey <= uy) || (ey <= ux && ex <= uy));
+  };
+  const pieces = [], seams = [];
+  const groupRect = (node, r, a, b) => {
+    const ks = node.kids, ax = axOf(node), n = ks.length;
+    if (ax === "x") return { x0: a === 0 ? r.x0 : ks[a].node.box.x0 - TD / 2, x1: b === n - 1 ? r.x1 : ks[b].node.box.x1 + TD / 2, y0: r.y0, y1: r.y1 };
+    return { x0: r.x0, x1: r.x1, y0: a === 0 ? r.y0 : ks[a].node.box.y0 - TD / 2, y1: b === n - 1 ? r.y1 : ks[b].node.box.y1 + TD / 2 };
+  };
+  const seamPair = (node, i) => {
+    const ax = axOf(node), A = node.kids[i].node, B = node.kids[i + 1].node;
+    const la = leavesOf(A).filter((l) => Math.abs((ax === "x" ? l.box.x1 - A.box.x1 : l.box.y1 - A.box.y1)) < 0.01);
+    const lb = leavesOf(B).filter((l) => Math.abs((ax === "x" ? l.box.x0 - B.box.x0 : l.box.y0 - B.box.y0)) < 0.01);
+    for (const a of la) for (const b of lb) {
+      const ov = ax === "x" ? Math.min(a.box.y1, b.box.y1) - Math.max(a.box.y0, b.box.y0) : Math.min(a.box.x1, b.box.x1) - Math.max(a.box.x0, b.box.x0);
+      if (ov > 0.5) return [a, b];
+    }
+    return [la[0], lb[0]];
+  };
+  (function plan(node, r) {
+    if (fits(r)) { pieces.push(Object.assign({}, r, { leaves: leavesOf(node) })); return; }
+    if (node.kind === "leaf") { pieces.push(Object.assign({}, r, { leaves: [node], tooBig: true })); return; }
+    const ax = axOf(node), n = node.kids.length;
+    let groups = [];
+    if (ext(r, ax) > lim) {
+      let g = [0, 0];
+      for (let i = 1; i < n; i++) {
+        if (ext(groupRect(node, r, g[0], i), ax) <= lim) g = [g[0], i];
+        else { groups.push(g); g = [i, i]; }
+      }
+      groups.push(g);
+    } else groups = node.kids.map((_, i) => [i, i]);
+    for (let gi = 1; gi < groups.length; gi++) seams.push(seamPair(node, groups[gi - 1][1]));
+    for (const g of groups) {
+      const gr = groupRect(node, r, g[0], g[1]);
+      if (g[0] === g[1]) plan(node.kids[g[0]].node, gr);
+      else plan({ kind: "split", dir: node.dir, kids: node.kids.slice(g[0], g[1] + 1), box: node.box }, gr);
+    }
+  })(tree, { x0: 0, y0: 0, x1: W, y1: D });
+  pieces.sort((a, b) => (a.y0 - b.y0) || (a.x0 - b.x0));
+  pieces.forEach((p, i) => {
+    p.name = "P" + (i + 1); p.color = PIECE_COLORS[i % PIECE_COLORS.length];
+    p.ex = ext(p, "x"); p.ey = ext(p, "y");
+  });
+  return { pieces, seams };
+}
+
+// ---------------------------------------------------------------- solids (hexahedra) for 3D + filament estimate
+function solids() {
+  const { oW, oD, H, lean } = dims();
+  const { L, R, F, B } = lean;
+  const hexa = (b, t, z0, z1) => ({ b, t, z0, z1 });
+  const out = [];
+  out.push(hexa([[0, 0], [oW, 0], [oW, oD], [0, oD]], [[0, 0], [oW, 0], [oW, oD], [0, oD]], 0, FLOOR));
+  out.push(hexa([[0, 0], [oW, 0], [oW, TP], [0, TP]], [[-L, -F], [oW + R, -F], [oW + R, TP - F], [-L, TP - F]], 0, H));
+  out.push(hexa([[0, oD - TP], [oW, oD - TP], [oW, oD], [0, oD]], [[-L, oD - TP + B], [oW + R, oD - TP + B], [oW + R, oD + B], [-L, oD + B]], 0, H));
+  out.push(hexa([[0, 0], [TP, 0], [TP, oD], [0, oD]], [[-L, -F], [TP - L, -F], [TP - L, oD + B], [-L, oD + B]], 0, H));
+  out.push(hexa([[oW - TP, 0], [oW, 0], [oW, oD], [oW - TP, oD]], [[oW - TP + R, -F], [oW + R, -F], [oW + R, oD + B], [oW - TP + R, oD + B]], 0, H));
+  const { W, D } = dims();
+  for (const dv of layout().dividers) {
+    if (dv.ax === "x") {
+      const x0 = TP + dv.p, x1 = x0 + TD;
+      const yb0 = TP + dv.a, yb1 = TP + dv.b;
+      const yt0 = dv.a <= 0.01 ? TP - F : yb0, yt1 = dv.b >= D - 0.01 ? TP + D + B : yb1;
+      out.push(hexa([[x0, yb0], [x1, yb0], [x1, yb1], [x0, yb1]], [[x0, yt0], [x1, yt0], [x1, yt1], [x0, yt1]], 0, H));
+    } else {
+      const y0 = TP + dv.p, y1 = y0 + TD;
+      const xb0 = TP + dv.a, xb1 = TP + dv.b;
+      const xt0 = dv.a <= 0.01 ? TP - L : xb0, xt1 = dv.b >= W - 0.01 ? TP + W + R : xb1;
+      out.push(hexa([[xb0, y0], [xb1, y0], [xb1, y1], [xb0, y1]], [[xt0, y0], [xt1, y0], [xt1, y1], [xt0, y1]], 0, H));
+    }
+  }
+  return out;
+}
+function clipSolid(s, rg) {
+  const c = (p) => [Math.min(Math.max(p[0], rg.x0), rg.x1), Math.min(Math.max(p[1], rg.y0), rg.y1)];
+  const b = s.b.map(c), t = s.t.map(c);
+  const span = (q, k) => Math.max(...q.map((p) => p[k])) - Math.min(...q.map((p) => p[k]));
+  if (Math.max(span(b, 0), span(t, 0)) < 0.01 || Math.max(span(b, 1), span(t, 1)) < 0.01) return null;
+  return { b, t, z0: s.z0, z1: s.z1 };
+}
+const area = (q) => Math.abs(q.reduce((a, p, i) => { const n = q[(i + 1) % q.length]; return a + p[0] * n[1] - n[0] * p[1]; }, 0)) / 2;
+const volume = (s) => { const m = s.b.map((p, i) => [(p[0] + s.t[i][0]) / 2, (p[1] + s.t[i][1]) / 2]); return (s.z1 - s.z0) / 6 * (area(s.b) + 4 * area(m) + area(s.t)); };
+function pieceRegionGlobal(p) {
+  const { W, D } = dims(), big = 1e5, e = 1e-6;
+  return { x0: p.x0 <= e ? -big : TP + p.x0, x1: p.x1 >= W - e ? big : TP + p.x1, y0: p.y0 <= e ? -big : TP + p.y0, y1: p.y1 >= D - e ? big : TP + p.y1 };
+}
+function pieceSolids(p) { const rg = pieceRegionGlobal(p); return solids().map((s) => clipSolid(s, rg)).filter(Boolean); }
+const grams = (p) => pieceSolids(p).reduce((a, s) => a + volume(s), 0) / 1000 * PLA * INFILL_FACTOR;
+
+// ---------------------------------------------------------------- step 1: drawer form
+function fillDrawerForm() {
+  $("u-in").setAttribute("aria-pressed", S.units === "in"); $("u-mm").setAttribute("aria-pressed", S.units === "mm");
+  $("d-w").value = fmt(S.w, S.units, false); $("d-d").value = fmt(S.d, S.units, false);
+  $("d-h").value = fmt(S.h, S.units, false); $("o-h").value = fmt(S.oh, S.units, false);
+  $("d-tw").value = fmt(S.tw, S.units, false); $("d-td").value = fmt(S.td, S.units, false);
+  $("d-slope").checked = S.slope; $("slopefields").hidden = !S.slope;
+}
+function readDrawer() {
+  const v = {
+    w: parseLen($("d-w").value, S.units), d: parseLen($("d-d").value, S.units), h: parseLen($("d-h").value, S.units),
+    oh: parseLen($("o-h").value, S.units), tw: parseLen($("d-tw").value, S.units), td: parseLen($("d-td").value, S.units),
+  };
+  const problems = [];
+  const names = { w: "width", d: "depth", h: "drawer height", oh: "organizer height", tw: "width at the top", td: "depth at the top" };
+  for (const k of ["w", "d", "h", "oh"].concat($("d-slope").checked ? ["tw", "td"] : [])) {
+    if (!(v[k] > 0)) problems.push(`Enter the ${names[k]} as a number, e.g. 12, 12 1/2 or 300mm.`);
+  }
+  if (!problems.length) {
+    if (v.oh > v.h + 0.01) problems.push(`The organizer (${fmt(v.oh)}) can't be taller than the drawer (${fmt(v.h)}).`);
+    if (v.oh < 20) problems.push("The organizer needs to be at least 20 mm tall.");
+    if (v.w < 60 || v.d < 60) problems.push("That drawer is too small for an organizer (60 mm minimum each way).");
+    if ($("d-slope").checked && (v.tw < v.w - 0.01 || v.td < v.d - 0.01)) problems.push("The top measurement is smaller than the bottom. Re-measure: the drawer must be the same size or wider at the top.");
+    if ($("d-slope").checked && Math.atan2((v.tw - v.w) / 2, v.h) > 20 * Math.PI / 180) problems.push("That slope is over 20°. Please re-check the top measurement.");
+  }
+  return { v, problems };
+}
+function applyDrawer() {
+  const { v, problems } = readDrawer();
+  const box = $("drawer-msg");
+  if (problems.length) { box.hidden = false; box.className = "msg bad"; box.textContent = problems.join(" "); return false; }
+  const before = JSON.stringify(tree);
+  Object.assign(S, v); S.slope = $("d-slope").checked;
+  if (!S.slope) { S.tw = S.w; S.td = S.d; }
+  fitTree();
+  const small = tooSmall();
+  if (small.length) {
+    tree = JSON.parse(before); box.hidden = false; box.className = "msg bad";
+    box.textContent = `This drawer is too small for the current layout: ${small.map((l) => l.label).join(", ")} would be under ${fmt(MIN)}. Remove some compartments first.`;
+    fitTree(); return false;
+  }
+  const ang = dims().angW * 180 / Math.PI;
+  box.hidden = false; box.className = "msg ok";
+  box.textContent = `Organizer will be ${fmt(dims().oW)} × ${fmt(dims().oD)} at the bottom` + (S.slope && ang > 0.05 ? `, with sides leaning ${ang.toFixed(1)}° to follow your drawer.` : ".");
+  save(); return true;
+}
+
+// ---------------------------------------------------------------- step 2: editor
+let drag = null;
+function svgEl(tag, attrs, parent) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+function renderEditor() {
+  const svg = $("ed"); svg.innerHTML = "";
+  const { oW, oD, W, D } = dims();
+  const pad = Math.max(oW, oD) * 0.07;
+  svg.setAttribute("viewBox", `${-pad} ${-pad * 0.4} ${oW + 2 * pad} ${oD + pad * 1.6}`);
+  const Y = (y) => oD - y; // front at the bottom
+  const fs = Math.max(oW, oD) / 38;
+  svgEl("rect", { x: 0, y: 0, width: oW, height: oD, class: "perim", rx: 1 }, svg);
+  const { leaves, dividers } = layout();
+  const plan = showPieces ? planPieces() : null;
+  for (const l of leaves) {
+    const b = l.box;
+    let cls = "comp";
+    if (itemCheck) cls += itemFits(l) ? " fits" : " nofit";
+    else if (selected === l.id) cls += " sel";
+    const r = svgEl("rect", { x: TP + b.x0, y: Y(TP + b.y1), width: b.x1 - b.x0, height: b.y1 - b.y0, class: cls, "data-id": l.id }, svg);
+    r.addEventListener("click", () => select(l.id));
+    const cx = TP + (b.x0 + b.x1) / 2, cy = Y(TP + (b.y0 + b.y1) / 2);
+    const w = b.x1 - b.x0, h = b.y1 - b.y0;
+    const f = Math.min(fs, w / 6, h / 2.6);
+    if (f > fs * 0.45) {
+      const t1 = svgEl("text", { x: cx, y: cy - f * 0.2, "text-anchor": "middle", "font-size": f, class: "lbl" }, svg);
+      t1.textContent = l.label.length * f * 0.55 > w * 0.95 ? l.label.slice(0, Math.max(3, Math.floor(w * 0.95 / (f * 0.55)))) + "…" : l.label;
+      const dimText = `${fmt(w)} × ${fmt(h)}`;
+      if (dimText.length * f * 0.82 * 0.62 <= w * 0.95) {
+        const t2 = svgEl("text", { x: cx, y: cy + f * 1.05, "text-anchor": "middle", "font-size": f * 0.82, class: "dim" }, svg);
+        t2.textContent = dimText;
+      } else { // narrow compartment: width and depth on separate lines
+        const df = Math.min(f * 0.82, w * 0.95 / (Math.max(fmt(w).length, fmt(h).length + 2) * 0.62));
+        const a = svgEl("text", { x: cx, y: cy + f * 1.05, "text-anchor": "middle", "font-size": df, class: "dim" }, svg);
+        a.textContent = fmt(w);
+        const bb = svgEl("text", { x: cx, y: cy + f * 1.05 + df * 1.15, "text-anchor": "middle", "font-size": df, class: "dim" }, svg);
+        bb.textContent = "× " + fmt(h);
+      }
+    }
+  }
+  for (const dv of dividers) {
+    const hitW = Math.max(TD * 4, Math.max(oW, oD) / 26);
+    if (dv.ax === "x") {
+      const x = TP + dv.p, y0 = Y(TP + dv.b), len = dv.b - dv.a;
+      svgEl("rect", { x, y: y0, width: TD, height: len, class: "wallv" }, svg);
+      const hit = svgEl("rect", { x: x + TD / 2 - hitW / 2, y: y0, width: hitW, height: len, class: "hit" }, svg);
+      const g = svgEl("rect", { x: x + TD / 2 - fs * 0.32, y: y0 + len * 0.82 - fs * 0.9, width: fs * 0.64, height: fs * 1.8, rx: fs * 0.3, class: "grip", "stroke-width": fs * 0.06 }, svg);
+      [hit, g].forEach((el) => el.addEventListener("pointerdown", (e) => startDrag(e, dv)));
+    } else {
+      const y = Y(TP + dv.p + TD), x0 = TP + dv.a, len = dv.b - dv.a;
+      svgEl("rect", { x: x0, y, width: len, height: TD, class: "wallv" }, svg);
+      const hit = svgEl("rect", { x: x0, y: y + TD / 2 - hitW / 2, width: len, height: hitW, class: "hit rows" }, svg);
+      const g = svgEl("rect", { x: x0 + len * 0.18 - fs * 0.9, y: y + TD / 2 - fs * 0.32, width: fs * 1.8, height: fs * 0.64, rx: fs * 0.3, class: "grip", "stroke-width": fs * 0.06 }, svg);
+      [hit, g].forEach((el) => el.addEventListener("pointerdown", (e) => startDrag(e, dv)));
+    }
+  }
+  if (plan) {
+    for (const p of plan.pieces) {
+      const rg = pieceRegionGlobal(p);
+      const x0 = Math.max(rg.x0, 0), x1 = Math.min(rg.x1, oW), y0 = Math.max(rg.y0, 0), y1 = Math.min(rg.y1, oD);
+      svgEl("rect", { x: x0 + 1, y: Y(y1) + 1, width: x1 - x0 - 2, height: y1 - y0 - 2, class: "piece", stroke: p.color, "stroke-width": fs * 0.22 }, svg);
+      const t = svgEl("text", { x: x0 + fs * 0.6, y: Y(y1) + fs * 1.5, "font-size": fs * 1.25, class: "plabel", fill: p.color, "stroke-width": fs * 0.25 }, svg);
+      t.textContent = p.name;
+    }
+  }
+  // overall size rulers
+  const rw = svgEl("text", { x: oW / 2, y: oD + pad * 0.75, "text-anchor": "middle", "font-size": fs * 0.85, class: "ruler" }, svg);
+  rw.textContent = `FRONT · organizer ${fmt(oW)} wide × ${fmt(oD)} deep`;
+  const lm = $("layout-msg");
+  if (plan && plan.pieces.some((p) => p.tooBig)) {
+    lm.hidden = false; lm.className = "msg bad";
+    lm.textContent = tooBigText(plan);
+  } else if (plan) {
+    lm.hidden = false; lm.className = "msg note";
+    lm.textContent = `${plan.pieces.length} printed piece${plan.pieces.length > 1 ? "s" : ""} for the ${PRINTERS[S.printer].name}. Pieces split along walls and push together in the drawer.`;
+  } else lm.hidden = true;
+}
+function tooBigText(plan) {
+  const big = plan.pieces.filter((p) => p.tooBig).map((p) => p.leaves[0].label);
+  return `${big.join(", ")} ${big.length > 1 ? "are" : "is"} bigger than the ${PRINTERS[S.printer].name} can print in one piece. Split it with a wall, or choose a bigger printer at the Preview step.`;
+}
+function toMM(e) {
+  const svg = $("ed"); const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+  const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+  const { oD } = dims();
+  return { x: p.x - TP, y: oD - p.y - TP };
+}
+function startDrag(e, dv) {
+  e.preventDefault();
+  pushUndo();
+  const k = dv.node.kids;
+  drag = { nodeId: dv.node.id, i: dv.i, ax: dv.ax, start: toMM(e)[dv.ax], a0: k[dv.i].size, b0: k[dv.i + 1].size };
+  $("ed").setPointerCapture?.(e.pointerId);
+}
+function onDragMove(e) {
+  if (!drag) return;
+  const node = byId(drag.nodeId); if (!node) return;
+  const ka = node.kids[drag.i], kb = node.kids[drag.i + 1];
+  const minA = extentMin(ka.node, drag.ax), minB = extentMin(kb.node, drag.ax);
+  let a = drag.a0 + (toMM(e)[drag.ax] - drag.start);
+  // snap: whole millimetres or sixteenths of an inch, then line up with other walls within 4 mm
+  a = S.units === "mm" ? Math.round(a) : Math.round(a / MM_IN * 16) / 16 * MM_IN;
+  const startPos = (drag.ax === "x" ? ka.node.box.x0 : ka.node.box.y0);
+  const others = layout().dividers.filter((d) => d.ax === drag.ax && !(d.node.id === drag.nodeId && d.i === drag.i)).map((d) => d.p);
+  const target = startPos + a;
+  const near = others.reduce((best, p) => Math.abs(p - target) < Math.abs(best - target) ? p : best, Infinity);
+  if (Math.abs(near - target) < 4) a = near - startPos;
+  a = Math.min(Math.max(a, minA), drag.a0 + drag.b0 - minB);
+  ka.size = a; kb.size = drag.a0 + drag.b0 - a;
+  rescale(ka.node, drag.ax, ka.size); rescale(kb.node, drag.ax, kb.size);
+  renderEditor(); renderSelPanel();
+}
+function endDrag() { if (drag) { drag = null; save(); } }
+function pushUndo() { undoStack.push(JSON.stringify(tree)); if (undoStack.length > 50) undoStack.shift(); }
+function undo() { if (!undoStack.length) return; tree = JSON.parse(undoStack.pop()); fitTree(); if (selected && !byId(selected)) selected = null; refreshLayout(); save(); }
+function select(id) { selected = selected === id ? null : id; renderEditor(); renderSelPanel(); }
+function setMsg(id, cls, text) { const m = $(id); if (!text) { m.hidden = true; return; } m.hidden = false; m.className = "msg " + cls; m.textContent = text; }
+function renderSelPanel() {
+  const l = selected && byId(selected);
+  $("selpanel").hidden = !l;
+  if (!l) return;
+  layout();
+  const w = l.box.x1 - l.box.x0, d = l.box.y1 - l.box.y0;
+  $("sel-title").textContent = l.label;
+  $("sel-size").textContent = `${fmt(w)} × ${fmt(d)}`;
+  if (document.activeElement !== $("sel-name")) $("sel-name").value = l.label;
+  if (document.activeElement !== $("sel-w")) { $("sel-w").value = fmt(w, S.units, false); $("sel-w").dataset.shown = $("sel-w").value; }
+  if (document.activeElement !== $("sel-d")) { $("sel-d").value = fmt(d, S.units, false); $("sel-d").dataset.shown = $("sel-d").value; }
+}
+function resizeLeaf(l, ax, size) {
+  const path = findPath(l);
+  let entry = null;
+  for (let k = path.length - 1; k >= 0; k--) if (axOf(path[k].node) === ax) { entry = path[k]; break; }
+  const word = ax === "x" ? "width" : "depth";
+  if (!entry) return { error: `${l.label} already uses the full ${word} of the organizer. Change the drawer size to change it.` };
+  const P = entry.node, i = entry.i, kid = P.kids[i];
+  const j = i + 1 < P.kids.length ? i + 1 : i - 1, nb = P.kids[j];
+  const delta = size - kid.size;
+  if (size < extentMin(kid.node, ax)) return { error: `That's smaller than the ${fmt(MIN)} minimum.` };
+  if (nb.size - delta < extentMin(nb.node, ax) - 0.01) {
+    const room = kid.size + nb.size - extentMin(nb.node, ax);
+    return { error: `Not enough room. ${leavesOf(nb.node).map((x) => x.label).join(", ")} next to it would get too small. The most you can make it is ${fmt(room)}.` };
+  }
+  kid.size = size; nb.size -= delta;
+  rescale(kid.node, ax, kid.size); rescale(nb.node, ax, nb.size);
+  const alsoMine = leavesOf(kid.node).filter((x) => x !== l).map((x) => x.label);
+  const alsoNb = leavesOf(nb.node).map((x) => x.label);
+  return { changed: alsoNb, sameRow: alsoMine, word };
+}
+function applySel() {
+  const l = byId(selected); if (!l) return;
+  const name = $("sel-name").value.trim(); if (name) l.label = name.slice(0, 40);
+  layout();
+  const w = parseLen($("sel-w").value, S.units), d = parseLen($("sel-d").value, S.units);
+  if (!(w > 0) || !(d > 0)) { setMsg("sel-msg", "bad", "Enter sizes as numbers, e.g. 3, 2 1/2 or 75mm."); return; }
+  const curW = l.box.x1 - l.box.x0, curD = l.box.y1 - l.box.y0;
+  pushUndo();
+  const before = undoStack[undoStack.length - 1];
+  const notes = [];
+  for (const [ax, val, cur, el] of [["x", w, curW, $("sel-w")], ["y", d, curD, $("sel-d")]]) {
+    if (el.value.trim() === (el.dataset.shown || "").trim() || Math.abs(val - cur) < 0.05) continue;
+    const r = resizeLeaf(l, ax, val);
+    if (r.error) { tree = JSON.parse(before); undoStack.pop(); fitTree(); refreshLayout(); setMsg("sel-msg", "bad", r.error); return; }
+    let n = `Changed ${r.word}. ${r.changed.join(", ")} ${r.changed.length > 1 ? "were" : "was"} adjusted to make room.`;
+    if (r.sameRow.length) n += ` ${r.sameRow.join(", ")} share${r.sameRow.length > 1 ? "" : "s"} this ${r.word} and changed too.`;
+    notes.push(n);
+  }
+  refreshLayout(); save();
+  setMsg("sel-msg", "ok", notes.join(" ") || "Name saved.");
+}
+function splitLeaf(l, dir) {
+  layout();
+  const ax = dir === "cols" ? "x" : "y";
+  const ext = ax === "x" ? l.box.x1 - l.box.x0 : l.box.y1 - l.box.y0;
+  if (ext < 2 * MIN + TD) return `${l.label} is too small to split that way.`;
+  pushUndo();
+  const fresh = leaf("New");
+  const path = findPath(l), last = path[path.length - 1];
+  if (last && last.node.dir === dir) {
+    const k = last.node.kids[last.i]; const s = (k.size - TD) / 2;
+    k.size = s; last.node.kids.splice(last.i + 1, 0, { size: s, node: fresh });
+  } else {
+    const s = (ext - TD) / 2;
+    const node = { id: "n" + uid++, kind: "split", dir, kids: [{ size: s, node: l }, { size: s, node: fresh }] };
+    if (!last) tree = node; else last.node.kids[last.i].node = node;
+  }
+  fitTree(); selected = fresh.id; refreshLayout(); save();
+  return null;
+}
+function removeLeaf(l) {
+  const path = findPath(l);
+  if (!path.length) return "You need at least one compartment.";
+  pushUndo();
+  const { node: P, i } = path[path.length - 1];
+  const ax = axOf(P);
+  const gone = P.kids[i];
+  P.kids.splice(i, 1);
+  const nb = P.kids[i > 0 ? i - 1 : 0]; // the neighbour before it, or after it if it was first
+  nb.size += gone.size + TD; rescale(nb.node, ax, nb.size);
+  if (P.kids.length === 1) {
+    const only = P.kids[0].node;
+    if (path.length === 1) tree = only; else { const up = path[path.length - 2]; up.node.kids[up.i].node = only; }
+  }
+  fitTree(); selected = null; refreshLayout(); save();
+  return null;
+}
+function addCompartment() {
+  layout();
+  let l = selected && byId(selected);
+  if (!l) l = layout().leaves.reduce((a, b) => ((b.box.x1 - b.box.x0) * (b.box.y1 - b.box.y0) > (a.box.x1 - a.box.x0) * (a.box.y1 - a.box.y0) ? b : a));
+  const w = l.box.x1 - l.box.x0, d = l.box.y1 - l.box.y0;
+  const err = splitLeaf(l, w >= d ? "cols" : "rows") && splitLeaf(l, w >= d ? "rows" : "cols");
+  if (err) setMsg("layout-msg", "bad", "There's no room left for another compartment. Make one bigger or remove one first.");
+  else setMsg("sel-msg", "ok", `Added a new compartment next to ${l.label}. Drag the yellow handle or type exact sizes.`);
+}
+function itemFits(l) {
+  const w = l.box.x1 - l.box.x0, d = l.box.y1 - l.box.y0, { L, W } = itemCheck;
+  return (L <= d && W <= w) || (L <= w && W <= d);
+}
+function refreshLayout() { renderEditor(); renderSelPanel(); }
+
+// ---------------------------------------------------------------- step 3: pieces + 3D
+function renderPieces() {
+  const plan = planPieces();
+  const box = $("pieces"); box.innerHTML = "";
+  $("pieces-title").textContent = `${plan.pieces.length} printed piece${plan.pieces.length > 1 ? "s" : ""}`;
+  let total = 0;
+  for (const p of plan.pieces) {
+    const g = grams(p); total += g;
+    const row = document.createElement("div"); row.className = "pc";
+    row.innerHTML = `<i style="background:${p.color}"></i><span><b>${p.name}</b> · ${p.leaves.map((l) => l.label).join(", ")}</span><span class="mono">${fmt(p.ex)} × ${fmt(p.ey)}</span>`;
+    box.appendChild(row);
+  }
+  if (plan.pieces.some((p) => p.tooBig)) setMsg("pieces-msg", "bad", tooBigText(plan));
+  else setMsg("pieces-msg", "note", `About ${Math.round(total / 10) * 10} g of filament in total (estimate). Print time shows in your slicer.`);
+  return { plan, total };
+}
+const V = { ready: false, explode: false };
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#888"; }
+function init3D() {
+  if (V.ready) return true;
+  if (!window.THREE) { $("v3-loading").textContent = "The 3D preview needs an internet connection to load."; return false; }
+  const host = $("view3d");
+  V.renderer = new THREE.WebGLRenderer({ antialias: true });
+  V.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  host.appendChild(V.renderer.domElement);
+  V.scene = new THREE.Scene();
+  V.camera = new THREE.PerspectiveCamera(35, 4 / 3, 1, 10000);
+  V.camera.up.set(0, 0, 1);
+  V.scene.add(new THREE.HemisphereLight(0xffffff, 0x666660, 1.1));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.9); sun.position.set(300, -500, 800); V.scene.add(sun);
+  V.group = new THREE.Group(); V.scene.add(V.group);
+  V.orbit = { theta: -0.9, phi: 0.95, r: 900 };
+  const pts = new Map(); let pinch = null;
+  const el = V.renderer.domElement;
+  el.addEventListener("pointerdown", (e) => { pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId); });
+  el.addEventListener("pointermove", (e) => {
+    if (!pts.has(e.pointerId)) return;
+    const prev = pts.get(e.pointerId); pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pts.size === 1) {
+      V.orbit.theta -= (e.clientX - prev.x) * 0.008;
+      V.orbit.phi = Math.min(1.55, Math.max(0.05, V.orbit.phi - (e.clientY - prev.y) * 0.008));
+    } else if (pts.size === 2) {
+      const [a, b] = [...pts.values()]; const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (pinch) V.orbit.r = Math.min(4000, Math.max(150, V.orbit.r * pinch / dist));
+      pinch = dist;
+    }
+    draw3D();
+  });
+  const up = (e) => { pts.delete(e.pointerId); if (pts.size < 2) pinch = null; };
+  el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+  el.addEventListener("wheel", (e) => { e.preventDefault(); V.orbit.r = Math.min(4000, Math.max(150, V.orbit.r * (1 + Math.sign(e.deltaY) * 0.1))); draw3D(); }, { passive: false });
+  new ResizeObserver(() => draw3D()).observe(host);
+  $("v3-loading").hidden = true;
+  V.ready = true;
+  return true;
+}
+function hexGeometry(s) {
+  const B = s.b.map((p) => [p[0], p[1], s.z0]), T = s.t.map((p) => [p[0], p[1], s.z1]);
+  const quads = [[B[0], B[3], B[2], B[1]], [T[0], T[1], T[2], T[3]]];
+  for (let i = 0; i < 4; i++) { const j = (i + 1) % 4; quads.push([B[i], B[j], T[j], T[i]]); }
+  const pos = [];
+  for (const q of quads) pos.push(...q[0], ...q[1], ...q[2], ...q[0], ...q[2], ...q[3]);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  return g;
+}
+function build3D() {
+  if (!init3D()) return;
+  while (V.group.children.length) { const c = V.group.children.pop(); c.traverse?.((o) => o.geometry?.dispose()); }
+  const { plan } = renderPieces();
+  const { oW, oD, H } = dims();
+  V.size = Math.max(oW, oD, H);
+  V.pieceGroups = [];
+  for (const p of plan.pieces) {
+    const grp = new THREE.Group();
+    const mat = new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.75, side: THREE.DoubleSide });
+    for (const s of pieceSolids(p)) grp.add(new THREE.Mesh(hexGeometry(s), mat));
+    const rg = pieceRegionGlobal(p);
+    const cx = (Math.max(rg.x0, 0) + Math.min(rg.x1, oW)) / 2 - oW / 2, cy = (Math.max(rg.y0, 0) + Math.min(rg.y1, oD)) / 2 - oD / 2;
+    const n = Math.hypot(cx, cy) || 1;
+    grp.userData.dir = [cx / n, cy / n];
+    grp.position.set(-oW / 2, -oD / 2, 0);
+    V.group.add(grp); V.pieceGroups.push(grp);
+  }
+  V.orbit.r = V.size * 2.6;
+  applyExplode(); draw3D();
+}
+function applyExplode() {
+  if (!V.pieceGroups) return;
+  const { oW, oD } = dims();
+  const d = V.explode && V.pieceGroups.length > 1 ? V.size * 0.09 : 0;
+  for (const g of V.pieceGroups) g.position.set(-oW / 2 + g.userData.dir[0] * d, -oD / 2 + g.userData.dir[1] * d, 0);
+  $("v-explode").textContent = V.explode ? "Put together" : "Separate pieces";
+}
+function draw3D() {
+  if (!V.ready) return;
+  const host = $("view3d"); const w = host.clientWidth, h = host.clientHeight;
+  if (!w || !h) return;
+  V.renderer.setSize(w, h, false);
+  V.camera.aspect = w / h; V.camera.updateProjectionMatrix();
+  V.scene.background = new THREE.Color(cssVar("--sunken"));
+  const o = V.orbit, z0 = (dims().H) / 2;
+  V.camera.position.set(o.r * Math.sin(o.phi) * Math.cos(o.theta), o.r * Math.sin(o.phi) * Math.sin(o.theta), z0 + o.r * Math.cos(o.phi));
+  V.camera.lookAt(0, 0, z0);
+  V.renderer.render(V.scene, V.camera);
+}
+
+// ---------------------------------------------------------------- step 4: order + design file
+function designFile() {
+  const { plan } = { plan: planPieces() };
+  const used = new Set();
+  const slug = (l) => {
+    let base = l.label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "compartment";
+    let s = base, n = 2; while (used.has(s)) s = `${base}-${n++}`;
+    used.add(s); l._slug = s; return s;
+  };
+  const r2 = (v) => Math.round(v * 100) / 100;
+  const part = (k, last) => {
+    const base = last ? { fill: 1 } : { size: r2(k.size) };
+    if (k.node.kind === "leaf") return Object.assign({ id: slug(k.node), label: k.node.label }, base);
+    return Object.assign(base, { [k.node.dir === "cols" ? "columns" : "rows"]: k.node.kids.map((kk, i) => part(kk, i === k.node.kids.length - 1)) });
+  };
+  let layoutJson;
+  if (tree.kind === "leaf") layoutJson = { columns: [{ id: slug(tree), label: tree.label, fill: 1 }] };
+  else layoutJson = { [tree.dir === "cols" ? "columns" : "rows"]: tree.kids.map((k, i) => part(k, i === tree.kids.length - 1)) };
+  const drawer = { width: r2(S.w), depth: r2(S.d), height: r2(S.h), corner_radius: 0 };
+  if (S.slope && (S.tw > S.w + 0.01 || S.td > S.d + 0.01)) drawer.taper = { top_width: r2(S.tw), top_depth: r2(S.td), measured_at_height: r2(S.h) };
+  return {
+    spec_version: 1, design_id: S.designId || "GU-TEST", revision: 1,
+    name: "Test order from the configurator prototype",
+    notes: `Made in the configurator prototype. Fulfilment: ${S.fulfil === "digital" ? "printable files" : "printed by Ground Up"}.`,
+    units: "mm", drawer,
+    organizer: { height: r2(S.oh), fit_clearance: CLEAR },
+    construction: { perimeter_wall_mm: TP, divider_wall_mm: TD, floor_mm: FLOOR, top_edge_radius_mm: 0.7 },
+    layout: layoutJson,
+    seams: plan.seams.map(([a, b]) => ({ between: [a._slug, b._slug], owner: "split" })),
+    printer: { profile: S.fulfil === "digital" ? S.printer : "bambu-p1s" },
+  };
+}
+function renderOrder() {
+  $("f-digital").setAttribute("aria-pressed", S.fulfil === "digital");
+  $("f-printed").setAttribute("aria-pressed", S.fulfil === "printed");
+  $("printed-opts").hidden = S.fulfil !== "printed";
+  const { plan, total } = renderPieces();
+  const { oW, oD } = dims();
+  const rows = [
+    ["Drawer", `${fmt(S.w)} × ${fmt(S.d)}, ${fmt(S.h)} deep` + (S.slope && S.tw > S.w + 0.01 ? `, sloped sides` : "")],
+    ["Organizer", `${fmt(oW)} × ${fmt(oD)} × ${fmt(S.oh)} tall`],
+    ["Compartments", layout().leaves.map((l) => l.label).join(", ")],
+    ["Printed pieces", `${plan.pieces.length}` + (S.fulfil === "digital" ? ` (for ${PRINTERS[S.printer].name})` : "")],
+    ["Filament", `about ${Math.round(total / 10) * 10} g (estimate)`],
+  ];
+  if (S.fulfil === "printed") rows.push(["Options", `${$("mat").value}, ${$("col").value}, ${$("dlv").value}`]);
+  $("summary").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v.replace(/</g, "&lt;")}</dd>`).join("");
+  const bad = plan.pieces.some((p) => p.tooBig);
+  $("b-order").disabled = bad;
+  setMsg("order-msg", "bad", bad ? tooBigText(plan) : "");
+}
+
+// ---------------------------------------------------------------- navigation + events
+function go(step) {
+  if (S.step === "drawer" && step !== "drawer" && !applyDrawer()) return;
+  S.step = step; save();
+  for (const s of ["drawer", "layout", "preview", "order"]) {
+    $("step-" + s).hidden = s !== step;
+    $("nav-" + s).setAttribute("aria-current", s === step ? "step" : "false");
+  }
+  if (step === "drawer") fillDrawerForm();
+  if (step === "layout") refreshLayout();
+  if (step === "preview") { $("printer").value = S.printer; build3D(); }
+  if (step === "order") renderOrder();
+  window.scrollTo({ top: 0 });
+}
+document.querySelectorAll("[data-step]").forEach((b) => b.addEventListener("click", () => go(b.dataset.step)));
+document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => go(b.dataset.go)));
+document.querySelectorAll("[data-u]").forEach((b) => b.addEventListener("click", () => {
+  const { v, problems } = readDrawer();
+  if (!problems.length) Object.assign(S, v);
+  S.units = b.dataset.u; fillDrawerForm(); save();
+}));
+$("d-slope").addEventListener("change", () => {
+  $("slopefields").hidden = !$("d-slope").checked;
+  if ($("d-slope").checked && !(parseLen($("d-tw").value, S.units) > 0)) { $("d-tw").value = $("d-w").value; $("d-td").value = $("d-d").value; }
+});
+$("ed").addEventListener("pointermove", onDragMove);
+$("ed").addEventListener("pointerup", endDrag);
+$("ed").addEventListener("pointercancel", endDrag);
+$("b-add").addEventListener("click", addCompartment);
+$("b-undo").addEventListener("click", undo);
+$("show-pieces").addEventListener("change", (e) => { showPieces = e.target.checked; renderEditor(); });
+$("b-tpl").addEventListener("click", () => { $("tpl-confirm").hidden = false; });
+$("tpl-cancel").addEventListener("click", () => { $("tpl-confirm").hidden = true; });
+document.querySelectorAll("[data-tpl]").forEach((b) => b.addEventListener("click", () => {
+  pushUndo(); tree = templateTree(b.dataset.tpl); fitTree(); selected = null;
+  $("tpl-confirm").hidden = true; refreshLayout(); save();
+}));
+$("sel-apply").addEventListener("click", applySel);
+$("sel-name").addEventListener("keydown", (e) => { if (e.key === "Enter") applySel(); });
+["sel-w", "sel-d"].forEach((id) => $(id).addEventListener("keydown", (e) => { if (e.key === "Enter") applySel(); }));
+$("sel-splitx").addEventListener("click", () => { const e = splitLeaf(byId(selected), "cols"); setMsg("sel-msg", e ? "bad" : "ok", e || "Split in two. Drag the new wall to adjust."); });
+$("sel-splity").addEventListener("click", () => { const e = splitLeaf(byId(selected), "rows"); setMsg("sel-msg", e ? "bad" : "ok", e || "Split in two. Drag the new wall to adjust."); });
+$("sel-del").addEventListener("click", () => { const e = removeLeaf(byId(selected)); if (e) setMsg("sel-msg", "bad", e); });
+$("it-check").addEventListener("click", () => {
+  const L = parseLen($("it-l").value, S.units), W = parseLen($("it-w").value, S.units);
+  if (!(L > 0) || !(W > 0)) { setMsg("it-msg", "bad", "Enter the item's length and width, e.g. 8 1/4 and 1 1/2."); return; }
+  itemCheck = { L: Math.max(L, W), W: Math.min(L, W) };
+  const ls = layout().leaves, ok = ls.filter(itemFits);
+  renderEditor();
+  setMsg("it-msg", ok.length ? "ok" : "bad", ok.length
+    ? `Fits in: ${ok.map((l) => l.label).join(", ")} (shown green).`
+    : `Doesn't fit any compartment yet. The biggest is ${fmt(Math.max(...ls.map((l) => Math.max(l.box.x1 - l.box.x0, l.box.y1 - l.box.y0))))} long. Make one longer or wider.`);
+});
+$("it-clear").addEventListener("click", () => { itemCheck = null; $("it-l").value = ""; $("it-w").value = ""; setMsg("it-msg", "", ""); renderEditor(); });
+$("v-explode").addEventListener("click", () => { V.explode = !V.explode; applyExplode(); draw3D(); });
+$("v-top").addEventListener("click", () => { V.orbit.phi = 0.06; V.orbit.theta = -Math.PI / 2; draw3D(); });
+$("v-iso").addEventListener("click", () => { V.orbit.phi = 0.95; V.orbit.theta = -0.9; draw3D(); });
+$("printer").addEventListener("change", (e) => { S.printer = e.target.value; save(); build3D(); });
+document.querySelectorAll("[data-f]").forEach((b) => b.addEventListener("click", () => { S.fulfil = b.dataset.f; save(); renderOrder(); }));
+["mat", "col", "dlv"].forEach((id) => $(id).addEventListener("change", renderOrder));
+$("b-order").addEventListener("click", () => {
+  S.designId = "GU-T" + String(Math.floor(1000 + Math.random() * 9000)); save();
+  const json = JSON.stringify(designFile(), null, 2);
+  $("json").textContent = json;
+  $("conf-title").textContent = `Test order ${S.designId} received`;
+  $("confirm").hidden = false; $("copy-msg").textContent = "";
+  $("confirm").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("b-copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("json").textContent); $("copy-msg").textContent = "Copied."; }
+  catch (e) {
+    const r = document.createRange(); r.selectNodeContents($("json"));
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    $("copy-msg").textContent = "Selected. Use your device's Copy.";
+  }
+});
+window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener?.("change", () => draw3D());
+
+// test hook for automated checks
+window.__gu = { designFile, planPieces, layout, dims, get tree() { return tree; } };
+
+load();
+fitTree();
+go(S.step || "drawer");
+})();
+</script>
